@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<RDF xmlns="http://www.w3.org/1999/02/22-rdf-syntax-ns#" 
+ xmlns:em="http://www.mozilla.org/2004/em-rdf#">
+  <Description about="urn:mozilla:install-manifest">
+    <em:id>firestatus@astithas.com</em:id>
+    <em:name>FireStatus</em:name>
+    <em:version>1.0</em:version>
+    <em:creator>Panagiotis Astithas</em:creator>
+    <em:description>A status update utility for multiple social networks.</em:description>
+    <em:homepageURL>http://pastith.googlepages.com/</em:homepageURL>
+    <em:updateURL>http://pastith.googlepages.com/</em:updateURL>
+    <em:aboutURL>chrome://firestatus/content/about.xul</em:aboutURL>
+    <em:optionsURL>chrome://firestatus/content/options.xul</em:optionsURL>
+    <em:iconURL>chrome://firestatus/content/firestatus.png</em:iconURL>
+    <em:targetApplication>
+      <Description>
+        <em:id>{ec8030f7-c20a-464f-9b0e-13a3a9e97384}</em:id> <!-- firefox -->
+        <em:minVersion>1.5</em:minVersion>
+        <em:maxVersion>2.0.0.*</em:maxVersion>
+      </Description>
+    </em:targetApplication>
+  </Description>
+</RDF>
