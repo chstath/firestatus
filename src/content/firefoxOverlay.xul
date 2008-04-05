@@ -24,8 +24,14 @@
     <stringbundle id="firestatus-strings" src="chrome://firestatus/locale/firestatus.properties"/>
   </stringbundleset>
 
-  <menupopup id="menu_ToolsPopup">
-    <menuitem id="firestatus-hello" label="&firestatus.label;" 
-              oncommand="firestatus.onMenuItemCommand(event);"/>
-  </menupopup>
+    <statusbar id="status-bar">
+        <statusbarpanel id="firestatus-panel" popup="firestatus-popup">
+        	<image id="firestatus-icon" tooltiptext="Click for menu" src="chrome://firestatus/content/firestatus.png"/>
+            <menupopup id="firestatus-popup">
+                <menuitem id="firestatus-enabled" label="Enabled" type="checkbox"/>
+                <menuitem id="firestatus-update" label="&firestatus.label;" oncommand="firestatus.onMenuItemCommand(event);"/>
+                <menuitem id="firestatus-about" label="About..."/>
+            </menupopup>
+        </statusbarpanel>
+    </statusbar>
 </overlay>
