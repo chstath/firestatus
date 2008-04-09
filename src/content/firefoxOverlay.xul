@@ -30,7 +30,7 @@
             <menupopup id="firestatus-popup">
                 <menuitem id="firestatus-enabled" label="Enabled" type="checkbox"/>
                 <menuitem id="firestatus-update" label="&firestatus.label;" oncommand="firestatus.onMenuItemCommand(event);"/>
-                <menuitem id="firestatus-about" label="About..."/>
+                <menuitem id="firestatus-about" label="About..." oncommand="openDialog('chrome://firestatus/content/about.xul', 'about', 'chrome');"/>
             </menupopup>
         </statusbarpanel>
     </statusbar>
