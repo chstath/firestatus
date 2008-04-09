@@ -6,12 +6,14 @@
     <em:name>FireStatus</em:name>
     <em:version>1.0</em:version>
     <em:creator>Panagiotis Astithas</em:creator>
+    <em:contributor>Christos Stathis</em:contributor>
+    <em:contributor>Dionysios Synodinos</em:contributor>
     <em:description>A status update utility for multiple social networks.</em:description>
-    <em:homepageURL>http://pastith.googlepages.com/</em:homepageURL>
-    <em:updateURL>http://pastith.googlepages.com/</em:updateURL>
+    <em:homepageURL>http://code.google.com/p/firestatus/</em:homepageURL>
+    <em:updateURL>http://code.google.com/p/firestatus/</em:updateURL>
     <em:aboutURL>chrome://firestatus/content/about.xul</em:aboutURL>
     <em:optionsURL>chrome://firestatus/content/options.xul</em:optionsURL>
-    <em:iconURL>chrome://firestatus/content/firestatus.png</em:iconURL>
+    <em:iconURL>chrome://firestatus/content/fs-icon-32.png</em:iconURL>
     <em:targetApplication>
       <Description>
         <em:id>{ec8030f7-c20a-464f-9b0e-13a3a9e97384}</em:id> <!-- firefox -->
