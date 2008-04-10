@@ -1,25 +1,25 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<RDF xmlns="http://www.w3.org/1999/02/22-rdf-syntax-ns#" 
- xmlns:em="http://www.mozilla.org/2004/em-rdf#">
-  <Description about="urn:mozilla:install-manifest">
-    <em:id>firestatus@astithas.com</em:id>
-    <em:name>FireStatus</em:name>
-    <em:version>1.0</em:version>
-    <em:creator>Panagiotis Astithas</em:creator>
+<?xml version="1.0"?>
+<RDF:RDF xmlns:em="http://www.mozilla.org/2004/em-rdf#"
+         xmlns:NC="http://home.netscape.com/NC-rdf#"
+         xmlns:RDF="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+  <RDF:Description RDF:about="rdf:#$uSYcA1"
+                   em:id="{ec8030f7-c20a-464f-9b0e-13a3a9e97384}"
+                   em:minVersion="1.5"
+                   em:maxVersion="3.0.*" />
+  <RDF:Description RDF:about="urn:mozilla:install-manifest"
+                   em:id="firestatus@astithas.com"
+                   em:name="FireStatus"
+                   em:version="1.0"
+                   em:creator="Panagiotis Astithas"
+                   em:description="A status update utility for multiple social networks."
+                   em:homepageURL="http://code.google.com/p/firestatus/"
+                   em:updateURL="http://code.google.com/p/firestatus/"
+                   em:aboutURL="chrome://firestatus/content/about.xul"
+                   em:optionsURL="chrome://firestatus/content/options.xul"
+                   em:iconURL="chrome://firestatus/content/fs-icon-32.png"
+                   em:updateKey="MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC6fgbEjezo9Y8v/GzS0HZQs+WzCeDjolqjXosQYpWBoJm69qEUNtTrrpriMb9uhmZfR7PQjcsksv4+D7mvRbYeyvqAl9mwUvtggR2+evriiBnLuHmRLJW9wBsuBQaWOCUKqE50VluCsWFgDw3Ak1sMPhE2wDaqmpyLjneYIqqPEwIDAQAB">
     <em:contributor>Christos Stathis</em:contributor>
     <em:contributor>Dionysios Synodinos</em:contributor>
-    <em:description>A status update utility for multiple social networks.</em:description>
-    <em:homepageURL>http://code.google.com/p/firestatus/</em:homepageURL>
-    <em:updateURL>http://code.google.com/p/firestatus/</em:updateURL>
-    <em:aboutURL>chrome://firestatus/content/about.xul</em:aboutURL>
-    <em:optionsURL>chrome://firestatus/content/options.xul</em:optionsURL>
-    <em:iconURL>chrome://firestatus/content/fs-icon-32.png</em:iconURL>
-    <em:targetApplication>
-      <Description>
-        <em:id>{ec8030f7-c20a-464f-9b0e-13a3a9e97384}</em:id> <!-- firefox -->
-        <em:minVersion>1.5</em:minVersion>
-        <em:maxVersion>2.0.0.*</em:maxVersion>
-      </Description>
-    </em:targetApplication>
-  </Description>
-</RDF>
+    <em:targetApplication RDF:resource="rdf:#$uSYcA1"/>
+  </RDF:Description>
+</RDF:RDF>
