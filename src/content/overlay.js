@@ -57,10 +57,6 @@ var firestatus = {
 		    	this.twitterPassword = this.prefs.getCharPref("twitterPassword");
 		    	break;
 		}
-	},
-
-	onMenuItemCommand: function(e) {
-		window.open("chrome://firestatus/content/main.xul", "firestatus-main", "chrome,width=600,height=300")
 	}
 };
 window.addEventListener("load", function(e) { firestatus.onLoad(e); }, false);
