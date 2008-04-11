@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <project name="firestatus" default="package" basedir=".">
-	<description>The rdbnp project build file</description>
+	<description>The FireStatus project build file</description>
 
 	<property name="src.dir" value="${basedir}/src"/>
 	<property name="build.dir" value="${basedir}/build" />
