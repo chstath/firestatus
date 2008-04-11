@@ -43,7 +43,9 @@ function sendStatusUpdateTwitter() {
 	var status = encodeURIComponent(status);
 	req = new XMLHttpRequest ();   
 	//req.onreadystatechange = getTwitterResponse; 
-	req.open("POST","http://"+firestatus.twitterUsername+":"+firestatus.twitterPassword+"@twitter.com:80/statuses/update.xml?status="+statusText, true);
+	req.open("POST","http://twitter.com:80/statuses/update.xml?status="+statusText, true);
+	var auth = firestatus.twitterUsername+":"+firestatus.twitterPassword;
+	req.setRequestHeader("Authorization", "Basic "+btoa(auth));
 	req.send(null); 
 	
 }
