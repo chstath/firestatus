@@ -14,10 +14,6 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  * */
 
-const fsPrefs = Components.classes["@mozilla.org/preferences-service;1"]
-	.getService(Components.interfaces.nsIPrefService)
-	.QueryInterface(Components.interfaces.nsIPrefBranch);
-	
 var passwordManager = Components.classes["@mozilla.org/passwordmanager;1"]
 	.getService(Components.interfaces.nsIPasswordManager);	
 
@@ -27,16 +23,15 @@ function sendStatusUpdate() {
 	var statusText = document.getElementById('statusText').value;
 	alert('message was: '+statusText);
 	
-	/*if (document.getElementById("selectedConsumerTwitter").checked) {
+	if (firestatus.twitterEnabled) {
 		sendStatusUpdateTwitter();
 	}
-	if (document.getElementById("selectedConsumerLinkedIn").checked) {
+	/*if (document.getElementById("selectedConsumerLinkedIn").checked) {
 		sendStatusUpdateTwitter();
 	}
 	if (document.getElementById("selectedConsumerFacebook").checked) {
 		sendStatusUpdateFacebook();
 	}*/
-	sendStatusUpdateTwitter();
 	sendStatusUpdateLinkedIn();
 	sendStatusUpdateFacebook();
 	//sendStatusUpdateFriendFeed();
