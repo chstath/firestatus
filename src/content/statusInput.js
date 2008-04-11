@@ -27,6 +27,7 @@ function sendStatusUpdate() {
 	sendStatusUpdateTwitter();
 	sendStatusUpdateLinkedIn();
 	sendStatusUpdateFacebook();
+	//sendStatusUpdateFriendFeed();
 }
 
 function sendStatusUpdateTwitter() {
@@ -48,4 +49,14 @@ function sendStatusUpdateLinkedIn() {
 function sendStatusUpdateFacebook() {
 	alert("Sending to Facebook");
 	return true
+}
+
+function sendStatusUpdateFriendFeed() {
+	/* var statusText = document.getElementById('statusText').value;
+	alert("Sending to FriendFeed");
+	var status = encodeURIComponent(status);
+	req = new XMLHttpRequest ();   
+	//req.onreadystatechange = getTwitterResponse; 
+	req.open("POST","http://friendfeed.com//api/share?title="+statusText+"&nickname=firestatus&remotekey=rared739windy", true);
+	req.send(null); */
 }

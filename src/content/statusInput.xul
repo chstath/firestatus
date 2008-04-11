@@ -33,6 +33,7 @@
             <checkbox id="selectedConsumerTwitter" checked="true" label="&labelTwitter;"/>
 			<checkbox id="selectedConsumerLinkedIn" checked="true" label="&labelLinkedIn;"/>
             <checkbox id="selectedConsumerFacebook" checked="true" label="&labelFacebook;"/>
+			<!--<checkbox id="selectedConsumerFriendFeed" checked="true" label="&labelFriendFeed;"/>-->
         </hbox>
     </groupbox>
 </dialog>
