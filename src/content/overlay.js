@@ -15,16 +15,55 @@
  * */
 
 var firestatus = {
+	prefs: null,
+	twitterEnabled: false,
+	twitterUsername: "",
+	twitterPassword: "",
+
 	onLoad: function(){
-		// initialization code
+		// Initialization code
 		this.initialized = true;
 		this.strings = document.getElementById("firestatus-strings");
+
+		// Register to receive notifications of preference changes
+	    this.prefs = Components.classes["@mozilla.org/preferences-service;1"]
+	        .getService(Components.interfaces.nsIPrefService)
+	        .getBranch("extensions.firestatus.");
+	    this.prefs.QueryInterface(Components.interfaces.nsIPrefBranch2);
+	    this.prefs.addObserver("", this, false);
+	    
+	    this.twitterEnabled = this.prefs.getBoolPref("twitterEnabled");
+	    this.twitterUsername = this.prefs.getCharPref("twitterUsername");
+	    this.twitterPassword = this.prefs.getCharPref("twitterPassword");
 	},
 	
+	onUnload: function() {
+		this.prefs.removeObserver("", this);
+	},
+	
+	observe: function(subject, topic, data) {
+		if (topic != "nsPref:changed") {
+			return;
+		}
+		
+		switch(data) {
+			case "twitterEnabled":
+		    	this.twitterEnabled = this.prefs.getBoolPref("twitterEnabled");
+		    	break;
+			case "twitterUsername":
+		    	this.twitterUsername = this.prefs.getCharPref("twitterUsername");
+		    	break;
+			case "twitterPassword":
+		    	this.twitterPassword = this.prefs.getCharPref("twitterPassword");
+		    	break;
+		}
+	},
+
 	onMenuItemCommand: function(e) {
 		window.open("chrome://firestatus/content/main.xul", "firestatus-main", "chrome,width=600,height=300")
 	}
 };
 window.addEventListener("load", function(e) { firestatus.onLoad(e); }, false);
+window.addEventListener("unload", function(e) { firestatus.onUnload(e); }, false);
 
 

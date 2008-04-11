@@ -1,8 +1,8 @@
 <!ENTITY prefwindow.title "FireStatus preferences">
-<!ENTITY pane1.title "FireStatus preferences">
-<!ENTITY checkboolpref.label "A Boolean Preference">
-<!ENTITY checkboolpref.accesskey "B">
-<!ENTITY intpref.label "An Integer Preference">
-<!ENTITY intpref.accesskey "I">
-<!ENTITY stringpref.label "A String Preference">
-<!ENTITY stringpref.accesskey "S">
+<!ENTITY pref-pane.title "FireStatus preferences">
+<!ENTITY twitterEnabled.label "Use Twitter">
+<!ENTITY twitterEnabled.accesskey "T">
+<!ENTITY twitterUsername.label "Twitter username">
+<!ENTITY twitterUsername.accesskey "U">
+<!ENTITY twitterPassword.label "Twitter Password">
+<!ENTITY twitterPassword.accesskey "P">
