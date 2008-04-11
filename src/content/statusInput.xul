@@ -17,7 +17,10 @@
 
 <?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
 <!DOCTYPE dialog SYSTEM "chrome://firestatus/locale/statusInput.dtd">
-<dialog title="&statusTitle;" orient="vertical" autostretch="always" onload="sizeToContent()" buttons="accept" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+<dialog title="&statusTitle;" orient="vertical" autostretch="always" onload="sizeToContent()"
+ buttons="accept, cancel" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+ ondialogaccept="return sendStatusUpdate()">
+    <script type="application/x-javascript" src="chrome://firestatus/content/statusInput.js"/>
     <groupbox align="center" orient="horizontal">
         <caption label="&statusText;"/>
         <vbox>
@@ -25,10 +28,10 @@
         </vbox>
     </groupbox>
     <groupbox align="center" orient="horizontal">
-    	<caption label="&selectConsumers;"/>
+        <caption label="&selectConsumers;"/>
         <hbox>
-            <checkbox id="selectedConsumerLinkedIn" checked="true" label="&labelLinkedIn;"/>
             <checkbox id="selectedConsumerTwitter" checked="true" label="&labelTwitter;"/>
+			<checkbox id="selectedConsumerLinkedIn" checked="true" label="&labelLinkedIn;"/>
             <checkbox id="selectedConsumerFacebook" checked="true" label="&labelFacebook;"/>
         </hbox>
     </groupbox>
