@@ -29,8 +29,8 @@
         	<image id="firestatus-icon" tooltiptext="Click for menu" src="chrome://firestatus/content/fs-icon-16.png"/>
             <menupopup id="firestatus-popup">
                 <menuitem id="firestatus-update" label="&firestatus.update;" oncommand="openDialog('chrome://firestatus/content/statusInput.xul', 'statusInput', 'chrome');"/>
-                <menuitem id="firestatus-prefs" label="&firestatus.prefs;" oncommand="openDialog('chrome://firestatus/content/options.xul', 'prefs', 'chrome');"/>
-                <menuitem id="firestatus-about" label="&firestatus.about;" oncommand="openDialog('chrome://firestatus/content/about.xul', 'about', 'chrome');"/>
+                <menuitem id="firestatus-prefs" label="&firestatus.prefs;" oncommand="openDialog('chrome://firestatus/content/options.xul', 'prefs', 'chrome,resizable=yes');"/>
+                <menuitem id="firestatus-about" label="&firestatus.about;" oncommand="openDialog('chrome://firestatus/content/about.xul', 'about', 'chrome,resizable=yes');"/>
             </menupopup>
         </statusbarpanel>
     </statusbar>
