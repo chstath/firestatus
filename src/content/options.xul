@@ -26,6 +26,6 @@
     </preferences>
     <checkbox id="twitterEnabled" preference="twitterEnabled" label="&twitterEnabled.label;" accesskey="&twitterEnabled.accesskey;"/>
     <label accesskey="&twitterUsername.accesskey;" control="textTwitterUsername">&twitterUsername.label;</label><textbox id="textTwitterUsername" preference="twitterUsername"/>
-    <label accesskey="&twitterPassword.accesskey;" control="textTwitterPassword">&twitterPassword.label;</label><textbox id="textTwitterPassword" preference="twitterPassword"/>
+    <label accesskey="&twitterPassword.accesskey;" control="textTwitterPassword">&twitterPassword.label;</label><textbox id="textTwitterPassword" preference="twitterPassword" type="password"/>
   </prefpane>
 </prefwindow>
