@@ -24,7 +24,7 @@
     <groupbox align="center" orient="horizontal">
         <caption label="&statusText;"/>
         <vbox>
-            <textbox id="statusText" size="140"/>
+            <textbox id="statusText" maxlength="140" size="40"/>
         </vbox>
     </groupbox>
     <groupbox align="center" orient="horizontal">
