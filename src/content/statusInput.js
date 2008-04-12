@@ -22,8 +22,7 @@ var passwordManager = Components.classes["@mozilla.org/passwordmanager;1"]
 function sendStatusUpdate() {
 	var statusText = document.getElementById('statusText').value;
 	alert('message was: '+statusText);
-	
-	if (firestatus.twitterEnabled) {
+	if (firestatus.twitterEnabled && document.getElementById("selectedConsumerTwitter").checked) {
 		sendStatusUpdateTwitter();
 	}
 	/*if (document.getElementById("selectedConsumerLinkedIn").checked) {
