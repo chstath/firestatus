@@ -17,11 +17,11 @@
 var passwordManager = Components.classes["@mozilla.org/passwordmanager;1"]
 	.getService(Components.interfaces.nsIPasswordManager);	
 
+var firestatus = window.opener.firestatus;
 
 	
 function sendStatusUpdate() {
 	var statusText = document.getElementById('statusText').value;
-	alert('message was: '+statusText);
 	if (firestatus.twitterEnabled && document.getElementById("selectedConsumerTwitter").checked) {
 		sendStatusUpdateTwitter();
 	}
@@ -39,10 +39,10 @@ function sendStatusUpdate() {
 function sendStatusUpdateTwitter() {
 	var statusText = document.getElementById('statusText').value;
 	alert("Sending to Twitter");
-	var status = encodeURIComponent(status);
+	var status = encodeURIComponent(statusText);
 	req = new XMLHttpRequest ();   
 	//req.onreadystatechange = getTwitterResponse; 
-	req.open("POST","http://twitter.com:80/statuses/update.xml?status="+statusText, true);
+	req.open("POST","http://twitter.com:80/statuses/update.xml?status="+status, true);
 	var auth = firestatus.twitterUsername+":"+firestatus.twitterPassword;
 	req.setRequestHeader("Authorization", "Basic "+btoa(auth));
 	req.send(null); 

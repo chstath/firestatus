@@ -21,7 +21,6 @@
  buttons="accept, cancel" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
  ondialogaccept="return sendStatusUpdate()">
     <script type="application/x-javascript" src="chrome://firestatus/content/statusInput.js"/>
-    <script type="application/x-javascript" src="chrome://firestatus/content/overlay.js"/>
     <groupbox align="center" orient="horizontal">
         <caption label="&statusText;"/>
         <vbox>
