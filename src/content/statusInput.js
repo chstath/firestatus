@@ -37,7 +37,7 @@ function sendStatusUpdate() {
 }
 
 function sendStatusUpdateTwitter() {
-	var statusText = document.getElementById('statusText').value;
+	var statusText = document.getElementById('statusText').value +" "+ document.getElementById('statusTextUrl').value;
 	alert("Sending to Twitter");
 	var status = encodeURIComponent(statusText);
 	req = new XMLHttpRequest ();   
