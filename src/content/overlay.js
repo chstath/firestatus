@@ -19,7 +19,7 @@ var firestatus = {
 	twitterEnabled: false,
 	twitterUsername: "",
 	twitterPassword: "",
-
+	
 	onLoad: function(){
 		// Initialization code
 		this.initialized = true;

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2008 Dionysios Synodinos
+ * Copyright (c) 2008 Dionysios Synodinos, Christos V. Stathis
  *
  * Permission to use, copy, modify, and distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -31,8 +31,10 @@ function sendStatusUpdate() {
 	if (document.getElementById("selectedConsumerFacebook").checked) {
 		sendStatusUpdateFacebook();
 	}*/
-	sendStatusUpdateLinkedIn();
-	sendStatusUpdateFacebook();
+//	sendStatusUpdateLinkedIn();
+	if (document.getElementById("selectedConsumerFacebook").checked) {
+		sendStatusUpdateFacebook();
+	}
 	//sendStatusUpdateFriendFeed();
 }
 
@@ -40,24 +42,41 @@ function sendStatusUpdateTwitter() {
 	var statusText = document.getElementById('statusText').value +" "+ document.getElementById('statusTextUrl').value;
 	alert("Sending to Twitter");
 	var status = encodeURIComponent(statusText);
-	req = new XMLHttpRequest ();   
+	var req = new XMLHttpRequest ();   
 	//req.onreadystatechange = getTwitterResponse; 
 	req.open("POST","http://twitter.com:80/statuses/update.xml?status="+status, true);
 	var auth = firestatus.twitterUsername+":"+firestatus.twitterPassword;
 	req.setRequestHeader("Authorization", "Basic "+btoa(auth));
 	req.send(null); 
-	
 }
 
-function sendStatusUpdateLinkedIn() {
+function sendStatusUpdateLinkedIn(){
 	alert("Sending to LinkedIn");
-	return true
+	return true;
 }
 
-function sendStatusUpdateFacebook() {
+
+function sendStatusUpdateFacebook(){
+	dump("\n@@@@@@@@@@@@@@@@@@@@@Starting facebook update;")
+	var statusText = document.getElementById('statusText').value +" "+ document.getElementById('statusTextUrl').value;
 	alert("Sending to Facebook");
-	return true
+//	var status = encodeURIComponent(statusText); //Somehow the status update fails if the status is encoded
+
+	var Cc = Components.classes;
+	var Ci = Components.interfaces;
+	// Load facebook code...
+	Cc['@mozilla.org/moz/jssubscript-loader;1']
+   		.getService(Ci.mozIJSSubScriptLoader)
+   		.loadSubScript('chrome://firestatus/content/facebookClient.js'); //Is there any other way to gain access to the facebookClient object ??
+	var authToken = facebookClient.getAuthToken();
+	//After getting the auth token we MUST send the user to the login page. If he is
+	//already logged on to facebook all is well. If he is not the rest of the process will fail. We need to fix this by somehow waiting for the
+	//user to successfuly login (how do we know that?)
+	window.opener.open("http://www.facebook.com/login.php?api_key=53cc37e556054cec6af3b1a672ea5849&v=1.0&auth_token=" + authToken);
+	var session = facebookClient.getSession(authToken); //The session can be stored for subsequent calls to facebook api
+	facebookClient.updateStatus(session.sessionKey, session.secret, statusText);
 }
+
 
 function sendStatusUpdateFriendFeed() {
 	/* var statusText = document.getElementById('statusText').value;
