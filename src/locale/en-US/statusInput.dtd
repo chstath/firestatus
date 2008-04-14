@@ -1,5 +1,6 @@
 <!ENTITY statusTitle "Status Message">
-<!ENTITY statusText "Enter status text">
+<!ENTITY statusText "Text">
+<!ENTITY statusTextUrl "URL">
 <!ENTITY selectConsumers "Select services">
 <!ENTITY labelTwitter "Twitter">
 <!ENTITY labelLinkedIn "LinkedIn">

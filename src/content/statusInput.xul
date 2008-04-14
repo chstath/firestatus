@@ -16,15 +16,23 @@
 - -->
 
 <?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+<?xml-stylesheet href="chrome://firestatus/content/statusInput.css" type="text/css"?>
 <!DOCTYPE dialog SYSTEM "chrome://firestatus/locale/statusInput.dtd">
 <dialog title="&statusTitle;" orient="vertical" autostretch="always" onload="sizeToContent()"
  buttons="accept, cancel" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
  ondialogaccept="return sendStatusUpdate()">
-    <script type="application/x-javascript" src="chrome://firestatus/content/statusInput.js"/>
+ 	<image src="chrome://firestatus/content/firestatus.png" width="433" height="109"/>
+	<script type="application/x-javascript" src="chrome://firestatus/content/statusInput.js"/>
     <groupbox align="center" orient="horizontal">
         <caption label="&statusText;"/>
         <vbox>
             <textbox id="statusText" maxlength="140" size="40"/>
+        </vbox>
+    </groupbox>
+	    <groupbox align="center" orient="horizontal">
+        <caption label="&statusTextUrl;"/>
+        <vbox>
+            <textbox id="statusTextUrl" maxlength="140" size="40"/>
         </vbox>
     </groupbox>
     <groupbox align="center" orient="horizontal">
@@ -33,7 +41,7 @@
             <checkbox id="selectedConsumerTwitter" checked="true" label="&labelTwitter;"/>
 			<checkbox id="selectedConsumerLinkedIn" checked="true" label="&labelLinkedIn;"/>
             <checkbox id="selectedConsumerFacebook" checked="true" label="&labelFacebook;"/>
-			<!--<checkbox id="selectedConsumerFriendFeed" checked="true" label="&labelFriendFeed;"/>-->
+			<checkbox id="selectedConsumerFriendFeed" checked="false" label="&labelFriendFeed;" disabled="true"/>
         </hbox>
     </groupbox>
 </dialog>
