@@ -18,7 +18,7 @@
 <?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
 <?xml-stylesheet href="chrome://firestatus/content/statusInput.css" type="text/css"?>
 <!DOCTYPE dialog SYSTEM "chrome://firestatus/locale/statusInput.dtd">
-<dialog title="&statusTitle;" orient="vertical" autostretch="always" onload="sizeToContent()"
+<dialog title="&statusTitle;" orient="vertical" onload="sizeToContent()"
  buttons="accept, cancel" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
  ondialogaccept="return sendStatusUpdate()">
  	<image src="chrome://firestatus/content/firestatus.png" width="433" height="109"/>
@@ -39,9 +39,13 @@
         <caption label="&selectConsumers;"/>
         <hbox>
             <checkbox id="selectedConsumerTwitter" checked="true" label="&labelTwitter;"/>
+        	<image id="twitter-icon" src="chrome://firestatus/content/twitter.png" width="16" height="16"/>
 			<checkbox id="selectedConsumerLinkedIn" checked="true" label="&labelLinkedIn;"/>
+        	<image id="linkedin-icon" src="chrome://firestatus/content/linkedin.png" width="16" height="16"/>
             <checkbox id="selectedConsumerFacebook" checked="true" label="&labelFacebook;"/>
+        	<image id="facebook-icon" src="chrome://firestatus/content/facebook.png" width="16" height="16"/>
 			<checkbox id="selectedConsumerFriendFeed" checked="false" label="&labelFriendFeed;" disabled="true"/>
+        	<image id="friendfeed-icon" src="chrome://firestatus/content/friendfeed.png" width="16" height="16"/>
         </hbox>
     </groupbox>
 </dialog>
