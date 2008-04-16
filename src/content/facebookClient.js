@@ -59,7 +59,10 @@ var facebookClient = {
 		req.open('POST', "https://api.facebook.com/restserver.php?" + params.join('&'), false);//All calls are synchronous because when asynchronous I got some strange exceptions. We need to change that
 		req.send(null);
 		dump(req.responseText);
-		var sessionKey = req.responseXML.getElementsByTagName("session_key")[0].textContent;
+		session_key = req.responseXML.getElementsByTagName("session_key")[0];
+		if (session_key == undefined)
+			return {errorCode: req.responseXML.getElementsByTagName("error_code")[0].textContent};
+		var sessionKey = session_key.textContent;
 		var uid = req.responseXML.getElementsByTagName("uid")[0].textContent;
 		var secret = req.responseXML.getElementsByTagName("secret")[0].textContent;
 		return {sessionKey: sessionKey, uid: uid, secret: secret};
@@ -79,5 +82,11 @@ var facebookClient = {
 		req.send(null);
 		dump("Updating status");
 		dump(req.responseText);
+		var error_code = req.responseXML.getElementsByTagName("error_code")[0];
+		if (error_code == undefined)
+			dump("Status has been updated ... probably");
+		else {
+			return error_code.textContent
+		}
 	}
 }

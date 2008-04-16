@@ -74,7 +74,11 @@ function sendStatusUpdateFacebook(){
 	//user to successfuly login (how do we know that?)
 	window.opener.open("http://www.facebook.com/login.php?api_key=53cc37e556054cec6af3b1a672ea5849&v=1.0&auth_token=" + authToken);
 	var session = facebookClient.getSession(authToken); //The session can be stored for subsequent calls to facebook api
-	facebookClient.updateStatus(session.sessionKey, session.secret, statusText);
+	if (session.errorCode == undefined) {
+		var code = facebookClient.updateStatus(session.sessionKey, session.secret, statusText);
+		if (code == 250)
+			window.opener.open("http://www.facebook.com/authorize.php?api_key="+ facebookClient.apiKey + "&v=1.0&ext_perm=status_update");
+	}
 }
 
 
