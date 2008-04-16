@@ -39,15 +39,15 @@ function sendStatusUpdate() {
 }
 
 function sendStatusUpdateTwitter() {
-	var statusText = document.getElementById('statusText').value +" "+ document.getElementById('statusTextUrl').value;
-	alert("Sending to Twitter");
-	var status = encodeURIComponent(statusText);
-	var req = new XMLHttpRequest ();   
-	//req.onreadystatechange = getTwitterResponse; 
-	req.open("POST","http://twitter.com:80/statuses/update.xml?status="+status, true);
-	var auth = firestatus.twitterUsername+":"+firestatus.twitterPassword;
-	req.setRequestHeader("Authorization", "Basic "+btoa(auth));
-	req.send(null); 
+	var statusText = document.getElementById('statusText').value +" "+ getShrinkedUrl();
+    alert("Sending to Twitter");
+    var status = encodeURIComponent(statusText);
+    var req = new XMLHttpRequest ();   
+    //req.onreadystatechange = getTwitterResponse; 
+    req.open("POST","http://twitter.com:80/statuses/update.xml?status="+status, true);
+    var auth = firestatus.twitterUsername+":"+firestatus.twitterPassword;
+    req.setRequestHeader("Authorization", "Basic "+btoa(auth));
+    req.send(null); 
 }
 
 function sendStatusUpdateLinkedIn(){
@@ -86,4 +86,16 @@ function sendStatusUpdateFriendFeed() {
 	//req.onreadystatechange = getTwitterResponse; 
 	req.open("POST","http://friendfeed.com//api/share?title="+statusText+"&nickname=firestatus&remotekey=rared739windy", true);
 	req.send(null); */
+}
+
+function getShrinkedUrl() {
+	var tinyurl = "http://tinyurl.com/api-create.php?url="+encodeURI(document.getElementById('statusTextUrl').value);
+    var req = new XMLHttpRequest();
+	req.open('GET', tinyurl, false); 
+	req.send(null);
+	if(req.status == 200) {
+		return req.responseText;
+	} else {
+		return '';
+	}
 }
