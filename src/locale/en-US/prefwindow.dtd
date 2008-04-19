@@ -1,8 +1,12 @@
 <!ENTITY prefwindow.title "FireStatus preferences">
 <!ENTITY pref-pane.title "FireStatus preferences">
-<!ENTITY twitterEnabled.label "Use Twitter">
+<!ENTITY twitterEnabled.label "Send updates">
 <!ENTITY twitterEnabled.accesskey "T">
-<!ENTITY twitterUsername.label "Twitter username">
+<!ENTITY twitterUsername.label "Username">
 <!ENTITY twitterUsername.accesskey "U">
-<!ENTITY twitterPassword.label "Twitter Password">
+<!ENTITY twitterPassword.label "Password">
 <!ENTITY twitterPassword.accesskey "P">
+<!ENTITY twitterUpdatesEnabled.label "Receive updates">
+<!ENTITY twitterUpdatesEnabled.accesskey "S">
+<!ENTITY twitterTimeout.label "Update interval in seconds">
+<!ENTITY twitterTimeout.accesskey "M">

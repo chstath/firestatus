@@ -14,9 +14,6 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  * */
 
-var passwordManager = Components.classes["@mozilla.org/passwordmanager;1"]
-	.getService(Components.interfaces.nsIPasswordManager);	
-
 var firestatus = window.opener.firestatus;
 
 	
