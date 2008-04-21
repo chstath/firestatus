@@ -31,7 +31,7 @@ var facebookClient = {
             str += params[i];
         }
         str += secret;
-        return MD5(str);
+        return hex_md5(str);
 	},
 
 	getAuthToken: function() {
