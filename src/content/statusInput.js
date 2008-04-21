@@ -37,7 +37,6 @@ function sendStatusUpdate() {
 
 function sendStatusUpdateTwitter() {
 	var statusText = document.getElementById('statusText').value +" "+ getShrinkedUrl();
-    alert("Sending to Twitter");
     var status = encodeURIComponent(statusText);
     var req = new XMLHttpRequest ();   
     //req.onreadystatechange = getTwitterResponse; 
@@ -48,7 +47,6 @@ function sendStatusUpdateTwitter() {
 }
 
 function sendStatusUpdateLinkedIn(){
-	alert("Sending to LinkedIn");
 	return true;
 }
 
@@ -56,7 +54,6 @@ function sendStatusUpdateLinkedIn(){
 function sendStatusUpdateFacebook(){
 	dump("\n@@@@@@@@@@@@@@@@@@@@@Starting facebook update;")
 	var statusText = document.getElementById('statusText').value +" "+ document.getElementById('statusTextUrl').value;
-	alert("Sending to Facebook");
 //	var status = encodeURIComponent(statusText); //Somehow the status update fails if the status is encoded
 
 	var Cc = Components.classes;
@@ -81,7 +78,6 @@ function sendStatusUpdateFacebook(){
 
 function sendStatusUpdateFriendFeed() {
 	/* var statusText = document.getElementById('statusText').value;
-	alert("Sending to FriendFeed");
 	var status = encodeURIComponent(status);
 	req = new XMLHttpRequest ();   
 	//req.onreadystatechange = getTwitterResponse; 
