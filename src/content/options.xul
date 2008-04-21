@@ -17,8 +17,11 @@
 
 <?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
 <!DOCTYPE prefwindow SYSTEM "chrome://firestatus/locale/prefwindow.dtd">
-<prefwindow id="firestatusPreferences" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul" title="&prefwindow.title;">
-  <prefpane id="pref-pane" label="&pref-pane.title;">
+<prefwindow id="firestatusPreferences"
+			xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+			title="&prefwindow.title;"
+			type="prefwindow">
+  <prefpane id="pref-pane" label="&prefwindow.title;">
     <preferences>
       <preference id="twitterEnabled" name="extensions.firestatus.twitterEnabled" type="bool"/>
       <preference id="twitterUpdatesEnabled" name="extensions.firestatus.twitterUpdatesEnabled" type="bool"/>
@@ -26,16 +29,49 @@
       <preference id="twitterPassword" name="extensions.firestatus.twitterPassword" type="string"/> <!-- note that this is only an ASCII string - use unichar for unicode strings -->
       <preference id="twitterTimeout" name="extensions.firestatus.twitterTimeout" type="int"/>
       <preference id="lastTwitterId" name="extensions.firestatus.lastTwitterId" type="int"/>
+      <preference id="friendfeedEnabled" name="extensions.firestatus.friendfeedEnabled" type="bool"/>
+      <preference id="friendfeedUpdatesEnabled" name="extensions.firestatus.friendfeedUpdatesEnabled" type="bool"/>
+      <preference id="friendfeedUsername" name="extensions.firestatus.friendfeedUsername" type="string"/>
+      <preference id="friendfeedPassword" name="extensions.firestatus.friendfeedPassword" type="string"/> <!-- note that this is only an ASCII string - use unichar for unicode strings -->
+      <preference id="friendfeedTimeout" name="extensions.firestatus.friendfeedTimeout" type="int"/>
+      <preference id="lastFriendfeedId" name="extensions.firestatus.lastFriendfeedId" type="int"/>
     </preferences>
-    <groupbox>
-		<caption label="Twitter"/>
+﻿
+﻿    <tabbox id="tabboxPrefs" flex="1">
+
+      <tabs id="tabsElement">
+        <tab id="twitterTab" label="&twitterTab.label;"/>
+        <tab id="friendfeedTab" label="&friendfeedTab.label;"/>
+      </tabs>
+
+      <tabpanels flex="1">
+
+        <!-- Twitter -->
+        <tabpanel id="twitterPanel" orient="vertical">
+        
+			<hbox>
+		    <checkbox id="twitterEnabled" preference="twitterEnabled" label="&enabled.label;" accesskey="&twitterEnabled.accesskey;" image="chrome://firestatus/content/twitter.png"/>
+		    <checkbox id="twitterUpdatesEnabled" preference="twitterUpdatesEnabled" label="&updatesEnabled.label;" accesskey="&twitterUpdatesEnabled.accesskey;" image="chrome://firestatus/content/twitter.png"/>
+		    </hbox>
+		    <label accesskey="&twitterUsername.accesskey;" control="textTwitterUsername">&username.label;</label><textbox id="textTwitterUsername" preference="twitterUsername"/>
+		    <label accesskey="&twitterPassword.accesskey;" control="textTwitterPassword">&password.label;</label><textbox id="textTwitterPassword" preference="twitterPassword" type="password"/>
+		    <label accesskey="&twitterTimeout.accesskey;" control="textTwitterTimeout">&timeout.label;</label><textbox id="textTwitterTimeout" preference="twitterTimeout"/>
+		    
+		</tabpanel>
+
+        <!-- FriendFeed -->
+        <tabpanel id="friendfeedPanel" orient="vertical">
+        
 		<hbox>
-	    <checkbox id="twitterEnabled" preference="twitterEnabled" label="&twitterEnabled.label;" accesskey="&twitterEnabled.accesskey;" image="chrome://firestatus/content/twitter.png"/>
-	    <checkbox id="twitterUpdatesEnabled" preference="twitterUpdatesEnabled" label="&twitterUpdatesEnabled.label;" accesskey="&twitterUpdatesEnabled.accesskey;" image="chrome://firestatus/content/twitter.png"/>
+	    <checkbox id="friendfeedEnabled" preference="friendfeedEnabled" label="&enabled.label;" accesskey="&friendfeedEnabled.accesskey;" image="chrome://firestatus/content/friendfeed.png"/>
+	    <checkbox id="friendfeedUpdatesEnabled" preference="friendfeedUpdatesEnabled" label="&updatesEnabled.label;" accesskey="&friendfeedUpdatesEnabled.accesskey;" image="chrome://firestatus/content/friendfeed.png"/>
 	    </hbox>
-	    <label accesskey="&twitterUsername.accesskey;" control="textTwitterUsername">&twitterUsername.label;</label><textbox id="textTwitterUsername" preference="twitterUsername"/>
-	    <label accesskey="&twitterPassword.accesskey;" control="textTwitterPassword">&twitterPassword.label;</label><textbox id="textTwitterPassword" preference="twitterPassword" type="password"/>
-	    <label accesskey="&twitterTimeout.accesskey;" control="textTwitterTimeout">&twitterTimeout.label;</label><textbox id="textTwitterTimeout" preference="twitterTimeout"/>
-	</groupbox>
+	    <label accesskey="&friendfeedUsername.accesskey;" control="textFriendfeedUsername">&username.label;</label><textbox id="textFriendfeedUsername" preference="friendfeedUsername"/>
+	    <label accesskey="&friendfeedPassword.accesskey;" control="textFriendfeedPassword">&password.label;</label><textbox id="textFriendfeedPassword" preference="friendfeedPassword" type="password"/>
+	    <label accesskey="&friendfeedTimeout.accesskey;" control="textFriendfeedTimeout">&timeout.label;</label><textbox id="textFriendfeedTimeout" preference="friendfeedTimeout"/>
+	    
+	    </tabpanel>
+	 </tabpanels>
+	 ﻿</tabbox>
   </prefpane>
 </prefwindow>

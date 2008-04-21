@@ -23,6 +23,13 @@ var firestatus = {
 	twitterTimeoutId: 0,
 	twitterTimeout: 300,
 	lastTwitterId: 0,
+	friendfeedEnabled: false,
+	friendfeedUpdatesEnabled: false,
+	friendfeedUsername: "",
+	friendfeedPassword: "",
+	friendfeedTimeoutId: 0,
+	friendfeedTimeout: 300,
+	lastFriendfeedId: 0,
 
 	onLoad: function(){
 		// Initialization code
@@ -57,7 +64,19 @@ var firestatus = {
 			this.twitterTimeoutId = window.setInterval(this.twitterUpdates, this.twitterTimeout*1000);
 		}
 		
-	    dump("firestatus.lastTwitterId: "+firestatus.lastTwitterId);
+	    this.friendfeedEnabled = this.prefs.getBoolPref("friendfeedEnabled");
+	    this.friendfeedUpdatesEnabled = this.prefs.getBoolPref("friendfeedUpdatesEnabled");
+	    this.friendfeedUsername = this.prefs.getCharPref("friendfeedUsername");
+	    this.friendfeedPassword = this.prefs.getCharPref("friendfeedPassword");
+	    this.friendfeedTimeout = this.prefs.getIntPref("friendfeedTimeout");
+	    this.lastFriendfeedId = this.prefs.getIntPref("lastFriendfeedId");
+		
+		if (this.friendfeedUpdatesEnabled) {
+			this.friendfeedUpdates();
+			this.friendfeedTimeoutId = window.setInterval(this.friendfeedUpdates, this.friendfeedTimeout*1000);
+		}
+		
+	    dump("firestatus.lastFriendfeedId: "+firestatus.lastFriendfeedId);
 	},
 	
 	onUnload: function() {
@@ -94,6 +113,30 @@ var firestatus = {
 			        this.twitterTimeoutId = window.setInterval(this.twitterUpdates, this.twitterTimeout*1000);
 				}
 		    	break;
+			case "friendfeedEnabled":
+		    	this.friendfeedEnabled = this.prefs.getBoolPref("friendfeedEnabled");
+		    	break;
+			case "friendfeedUpdatesEnabled":
+		    	this.friendfeedUpdatesEnabled = this.prefs.getBoolPref("friendfeedUpdatesEnabled");
+				if (this.friendfeedUpdatesEnabled) {
+					this.friendfeedUpdates();
+			        this.friendfeedTimeoutId = window.setInterval(this.friendfeedUpdates, this.friendfeedTimeout*1000);
+				} else
+					this.cancelUpdates("friendfeed");
+		    	break;
+			case "friendfeedUsername":
+		    	this.friendfeedUsername = this.prefs.getCharPref("friendfeedUsername");
+		    	break;
+			case "friendfeedPassword":
+		    	this.friendfeedPassword = this.prefs.getCharPref("friendfeedPassword");
+		    	break;
+			case "friendfeedTimeout":
+		    	this.friendfeedTimeout = this.prefs.getIntPref("friendfeedTimeout");
+				if (this.friendfeedUpdatesEnabled) {
+					this.cancelUpdates("friendfeed");
+			        this.friendfeedTimeoutId = window.setInterval(this.friendfeedUpdates, this.friendfeedTimeout*1000);
+				}
+		    	break;
 		}
 	},
 	
@@ -101,6 +144,9 @@ var firestatus = {
 		switch(service) {
 			case "twitter":
 				window.clearInterval(this.twitterTimeoutId);
+				break;
+			case "friendfeed":
+				window.clearInterval(this.friendfeedTimeoutId);
 				break;
 		}
 	},
@@ -148,6 +194,9 @@ var firestatus = {
 	    var auth = firestatus.twitterUsername+":"+firestatus.twitterPassword;
 	    req.setRequestHeader("Authorization", "Basic "+btoa(auth));
 	    req.send(null);
+	},
+	
+	friendfeedUpdates: function() {
 	}
 
 };

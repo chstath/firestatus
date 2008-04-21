@@ -1,12 +1,21 @@
 <!ENTITY prefwindow.title "FireStatus preferences">
-<!ENTITY pref-pane.title "FireStatus preferences">
-<!ENTITY twitterEnabled.label "Send updates">
+<!ENTITY twitterTab.label "Twitter">
+<!ENTITY friendfeedTab.label "FriendFeed">
+<!ENTITY enabled.label "Send updates">
+<!ENTITY enabled.label "Send updates">
 <!ENTITY twitterEnabled.accesskey "T">
-<!ENTITY twitterUsername.label "Username">
+<!ENTITY username.label "Username">
 <!ENTITY twitterUsername.accesskey "U">
-<!ENTITY twitterPassword.label "Password">
+<!ENTITY password.label "Password">
 <!ENTITY twitterPassword.accesskey "P">
-<!ENTITY twitterUpdatesEnabled.label "Receive updates">
+<!ENTITY updatesEnabled.label "Receive updates">
 <!ENTITY twitterUpdatesEnabled.accesskey "S">
-<!ENTITY twitterTimeout.label "Update interval in seconds">
+<!ENTITY timeout.label "Update interval in seconds">
 <!ENTITY twitterTimeout.accesskey "M">
+<!ENTITY twitter-pane.title "Twitter preferences">
+<!ENTITY friendfeed-pane.title "FriendFeed preferences">
+<!ENTITY friendfeedEnabled.accesskey "T">
+<!ENTITY friendfeedUsername.accesskey "U">
+<!ENTITY friendfeedPassword.accesskey "P">
+<!ENTITY friendfeedUpdatesEnabled.accesskey "S">
+<!ENTITY friendfeedTimeout.accesskey "M">
