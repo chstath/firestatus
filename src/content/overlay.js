@@ -197,6 +197,50 @@ var firestatus = {
 	},
 	
 	friendfeedUpdates: function() {
+	    var cons = Components.classes["@mozilla.org/consoleservice;1"].
+	             getService(Components.interfaces.nsIConsoleService);
+		var FRIENDS_URL = 'http://friendfeed.com/api/feed/home?num=1';
+	    var req = new XMLHttpRequest();
+	    req.open('GET', FRIENDS_URL, true);
+	    req.onreadystatechange = function (aEvt) {
+	      if (req.readyState == 4) {
+	             if(req.status == 200) {
+	                    var jsonString = req.responseText;
+						var statuses = eval('(' + jsonString + ')').entries;
+						if (statuses.length == 0)
+							return;
+						// Sort the status updates, oldest first.
+						statuses.sort(function(a, b) {
+										return a.id - b.id;
+									});
+						dump('lastFriendfeedId: '+firestatus.lastFriendfeedId);
+						var status = statuses[0];
+						if (status.id != firestatus.lastFriendfeedId) {
+							dump('New FF update: '+status.id);
+							// TODO: Fetch the page title for the link
+							var text = status.title + '\n' + status.link;
+		                    try {
+								if ("@mozilla.org/alerts-service;1" in Components.classes) {
+									var alertService = Components.classes["@mozilla.org/alerts-service;1"].getService(Components.interfaces.nsIAlertsService);
+									if (alertService) {
+										alertService.showAlertNotification(status.service.iconUrl, status.user.name, text, false, "", null);
+									}
+									else {
+										cons.logStringMessage("alertsService failure: could not getService nsIAlertsService");
+									}
+								}
+		                     } catch(e) {
+		                            cons.logStringMessage("alertsService failure: " + e);
+		                     }
+							firestatus.lastFriendfeedId = status.id;
+						}
+	             } else
+	             	cons.logStringMessage("Error loading page\n");
+	      }
+	    };
+	    var auth = firestatus.friendfeedUsername+":"+firestatus.friendfeedPassword;
+	    req.setRequestHeader("Authorization", "Basic "+btoa(auth));
+	    req.send(null);
 	}
 
 };

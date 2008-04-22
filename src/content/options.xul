@@ -67,7 +67,7 @@
 	    <checkbox id="friendfeedUpdatesEnabled" preference="friendfeedUpdatesEnabled" label="&updatesEnabled.label;" accesskey="&friendfeedUpdatesEnabled.accesskey;" image="chrome://firestatus/content/friendfeed.png"/>
 	    </hbox>
 	    <label accesskey="&friendfeedUsername.accesskey;" control="textFriendfeedUsername">&username.label;</label><textbox id="textFriendfeedUsername" preference="friendfeedUsername"/>
-	    <label accesskey="&friendfeedPassword.accesskey;" control="textFriendfeedPassword">&password.label;</label><textbox id="textFriendfeedPassword" preference="friendfeedPassword" type="password"/>
+	    <label accesskey="&friendfeedPassword.accesskey;" control="textFriendfeedPassword">&remotekey.label;</label><textbox id="textFriendfeedPassword" preference="friendfeedPassword" type="password"/>
 	    <label accesskey="&friendfeedTimeout.accesskey;" control="textFriendfeedTimeout">&timeout.label;</label><textbox id="textFriendfeedTimeout" preference="friendfeedTimeout"/>
 	    
 	    </tabpanel>

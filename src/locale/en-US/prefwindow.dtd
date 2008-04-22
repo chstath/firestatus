@@ -19,3 +19,4 @@
 <!ENTITY friendfeedPassword.accesskey "P">
 <!ENTITY friendfeedUpdatesEnabled.accesskey "S">
 <!ENTITY friendfeedTimeout.accesskey "M">
+<!ENTITY remotekey.label "Remote Key">
