@@ -62,12 +62,16 @@ function sendStatusUpdateFacebook(){
 	Cc['@mozilla.org/moz/jssubscript-loader;1']
    		.getService(Ci.mozIJSSubScriptLoader)
    		.loadSubScript('chrome://firestatus/content/facebookClient.js'); //Is there any other way to gain access to the facebookClient object ??
-	var authToken = facebookClient.getAuthToken();
-	//After getting the auth token we MUST send the user to the login page. If he is
-	//already logged on to facebook all is well. If he is not the rest of the process will fail. We need to fix this by somehow waiting for the
-	//user to successfuly login (how do we know that?)
-	window.open("http://www.facebook.com/login.php?api_key=53cc37e556054cec6af3b1a672ea5849&v=1.0&auth_token=" + authToken, "", "chrome, centerscreen,width=646,height=520,modal=yes,dialog=yes,close=yes");
-	var session = facebookClient.getSession(authToken); //The session can be stored for subsequent calls to facebook api
+	var session = facebookClient.getSession(); //The session can be stored for subsequent calls to facebook api
+	if (session.errorCode != undefined) {
+	
+		var authToken = facebookClient.getAuthToken();
+		//After getting the auth token we MUST send the user to the login page. If he is
+		//already logged on to facebook all is well. If he is not the rest of the process will fail. We need to fix this by somehow waiting for the
+		//user to successfuly login (how do we know that?)
+		window.open("http://www.facebook.com/login.php?api_key=53cc37e556054cec6af3b1a672ea5849&v=1.0&auth_token=" + authToken, "", "chrome, centerscreen,width=646,height=520,modal=yes,dialog=yes,close=yes");
+		session = facebookClient.getSession(authToken); //The session can be stored for subsequent calls to facebook api
+	}
 	if (session.errorCode == undefined) {
 		var code = facebookClient.updateStatus(session.sessionKey, session.secret, statusText);
 		if (code == 250) {

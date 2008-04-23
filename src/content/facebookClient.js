@@ -17,7 +17,7 @@
 var facebookClient = {
 	defaultSecret: "f0abf7dde17155ff587728121607813f",
 	apiKey: "53cc37e556054cec6af3b1a672ea5849",
-	
+	session: {sessionKey: "", uid: "", secret: ""},
 	generateSig: function(params, secret) {
 		var Cc = Components.classes;
 		var Ci = Components.interfaces;
@@ -49,6 +49,8 @@ var facebookClient = {
 	},
 	
 	getSession: function(authToken) {
+		if (this.session.sessionKey != "")
+			return this.session;
 		var params = [];
 	    params.push('method=facebook.auth.getSession');
 	    params.push('api_key=' + this.apiKey);
@@ -65,7 +67,8 @@ var facebookClient = {
 		var sessionKey = session_key.textContent;
 		var uid = req.responseXML.getElementsByTagName("uid")[0].textContent;
 		var secret = req.responseXML.getElementsByTagName("secret")[0].textContent;
-		return {sessionKey: sessionKey, uid: uid, secret: secret};
+		this.session = {sessionKey: sessionKey, uid: uid, secret: secret};
+		return this.session;
 	},
 	
 	updateStatus: function(sessionKey, secret, status) {
