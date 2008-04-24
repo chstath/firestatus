@@ -218,7 +218,7 @@ var firestatus = {
 						if (status.id != firestatus.lastFriendfeedId) {
 							dump('New FF update: '+status.id);
 							// TODO: Fetch the page title for the link
-							var text = status.title + '\n' + status.link;
+							var text = status.title;
 		                    try {
 								if ("@mozilla.org/alerts-service;1" in Components.classes) {
 									var alertService = Components.classes["@mozilla.org/alerts-service;1"].getService(Components.interfaces.nsIAlertsService);
