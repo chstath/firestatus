@@ -15,6 +15,7 @@
  * */
 
 var firestatus = {
+	cons: null,
 	prefs: null,
 	twitterEnabled: false,
 	twitterUpdatesEnabled: false,
@@ -35,6 +36,10 @@ var firestatus = {
 		// Initialization code
 		this.initialized = true;
 		this.strings = document.getElementById("firestatus-strings");
+		
+	    this.cons = Components.classes["@mozilla.org/consoleservice;1"].
+        			getService(Components.interfaces.nsIConsoleService);
+
 
 		if ("@mozilla.org/passwordmanager;1" in Components.classes) {
 		   // Password Manager exists so this is not Firefox 3 (could be Firefox 2, Netscape, SeaMonkey, etc).
@@ -76,7 +81,7 @@ var firestatus = {
 			this.friendfeedTimeoutId = window.setInterval(this.friendfeedUpdates, this.friendfeedTimeout*1000);
 		}
 		
-	    dump("firestatus.lastFriendfeedId: "+firestatus.lastFriendfeedId);
+	    this.cons.logStringMessage("firestatus.lastFriendfeedId: "+firestatus.lastFriendfeedId);
 	},
 	
 	onUnload: function() {
@@ -152,8 +157,6 @@ var firestatus = {
 	},
   
 	twitterUpdates: function() {
-	    var cons = Components.classes["@mozilla.org/consoleservice;1"].
-	             getService(Components.interfaces.nsIConsoleService);
 		var FRIENDS_URL = 'http://twitter.com/statuses/friends_timeline.json';
 	    var req = new XMLHttpRequest();
 	    req.open('GET', FRIENDS_URL, true);
@@ -179,16 +182,16 @@ var firestatus = {
 										alertService.showAlertNotification(status.user.profile_image_url, status.user.name, status.text, false, "", null);
 									}
 									else {
-										cons.logStringMessage("alertsService failure: could not getService nsIAlertsService");
+										firestatus.cons.logStringMessage("alertsService failure: could not getService nsIAlertsService");
 									}
 								}
 		                     } catch(e) {
-		                            cons.logStringMessage("alertsService failure: " + e);
+		                            firestatus.cons.logStringMessage("alertsService failure: " + e);
 		                     }
 						}
 						firestatus.lastTwitterId = status.id;
 	             } else
-	             	cons.logStringMessage("Error loading page\n");
+	             	firestatus.cons.logStringMessage("Error loading page\n");
 	      }
 	    };
 	    var auth = firestatus.twitterUsername+":"+firestatus.twitterPassword;
@@ -197,8 +200,6 @@ var firestatus = {
 	},
 	
 	friendfeedUpdates: function() {
-	    var cons = Components.classes["@mozilla.org/consoleservice;1"].
-	             getService(Components.interfaces.nsIConsoleService);
 		var FRIENDS_URL = 'http://friendfeed.com/api/feed/home?num=1';
 	    var req = new XMLHttpRequest();
 	    req.open('GET', FRIENDS_URL, true);
@@ -213,7 +214,7 @@ var firestatus = {
 						statuses.sort(function(a, b) {
 										return a.id - b.id;
 									});
-						dump('lastFriendfeedId: '+firestatus.lastFriendfeedId);
+						firestatus.cons.logStringMessage('lastFriendfeedId: '+firestatus.lastFriendfeedId);
 						var status = statuses[0];
 						if (status.id != firestatus.lastFriendfeedId) {
 							dump('New FF update: '+status.id);
@@ -226,16 +227,16 @@ var firestatus = {
 										alertService.showAlertNotification(status.service.iconUrl, status.user.name, text, false, "", null);
 									}
 									else {
-										cons.logStringMessage("alertsService failure: could not getService nsIAlertsService");
+										firestatus.cons.logStringMessage("alertsService failure: could not getService nsIAlertsService");
 									}
 								}
 		                     } catch(e) {
-		                            cons.logStringMessage("alertsService failure: " + e);
+		                            firestatus.cons.logStringMessage("alertsService failure: " + e);
 		                     }
 							firestatus.lastFriendfeedId = status.id;
 						}
 	             } else
-	             	cons.logStringMessage("Error loading page\n");
+	             	firestatus.cons.logStringMessage("Error loading page\n");
 	      }
 	    };
 	    var auth = firestatus.friendfeedUsername+":"+firestatus.friendfeedPassword;

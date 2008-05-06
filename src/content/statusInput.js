@@ -1,5 +1,7 @@
 /*
- * Copyright (c) 2008 Dionysios Synodinos, Christos V. Stathis
+ * Copyright (c) 2008 Dionysios Synodinos
+ * Copyright (c) 2008 Christos V. Stathis
+ * Copyright (c) 2008 Panagiotis Astithas
  *
  * Permission to use, copy, modify, and distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -39,8 +41,43 @@ function sendStatusUpdateTwitter() {
 	var statusText = document.getElementById('statusText').value +" "+ getShrinkedUrl();
     var status = encodeURIComponent(statusText);
     var req = new XMLHttpRequest ();   
-    //req.onreadystatechange = getTwitterResponse; 
-    req.open("POST","http://twitter.com:80/statuses/update.xml?status="+status, true);
+    req.open("POST","http://twitter.com:80/statuses/update.json?status="+status, true);
+    req.onreadystatechange = function () {
+		firestatus.cons.logStringMessage("twitter readyState: "+req.readyState);
+		firestatus.cons.logStringMessage("twitter status: "+req.status);
+		firestatus.cons.logStringMessage("Twitter response: "+req.responseText);
+		if (req.readyState == 4) {
+		     switch(req.status) {
+			 	case 200:
+				 	firestatus.cons.logStringMessage("Twitter update sent.");
+					break;
+				case 400:
+					firestatus.cons.logStringMessage("Bad Request");
+					break;
+				case 401:
+					firestatus.cons.logStringMessage("Not Authorized");
+					break;
+				case 403:
+					firestatus.cons.logStringMessage("Forbidden");
+					break;
+				case 404:
+					firestatus.cons.logStringMessage("Not Found");
+					break;
+				case 500:
+					firestatus.cons.logStringMessage("Internal Server Error");
+					break;
+				case 502:
+					firestatus.cons.logStringMessage("Bad Gateway");
+					break;
+				case 503:
+					firestatus.cons.logStringMessage("Service Unavailable");
+					break;
+				default:
+					firestatus.cons.logStringMessage("Unknown twitter status: "+req.status);
+					firestatus.cons.logStringMessage("Twitter response: "+req.responseText);
+			 }
+		}
+	};
     var auth = firestatus.twitterUsername+":"+firestatus.twitterPassword;
     req.setRequestHeader("Authorization", "Basic "+btoa(auth));
     req.send(null); 
@@ -105,3 +142,4 @@ function getShrinkedUrl() {
 		return '';
 	}
 }
+
