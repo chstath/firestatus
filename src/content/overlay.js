@@ -74,14 +74,12 @@ var firestatus = {
 	    this.friendfeedUsername = this.prefs.getCharPref("friendfeedUsername");
 	    this.friendfeedPassword = this.prefs.getCharPref("friendfeedPassword");
 	    this.friendfeedTimeout = this.prefs.getIntPref("friendfeedTimeout");
-	    this.lastFriendfeedId = this.prefs.getIntPref("lastFriendfeedId");
+	    this.lastFriendfeedId = this.prefs.getCharPref("lastFriendfeedId");
 		
 		if (this.friendfeedUpdatesEnabled) {
 			this.friendfeedUpdates();
 			this.friendfeedTimeoutId = window.setInterval(this.friendfeedUpdates, this.friendfeedTimeout*1000);
 		}
-		
-	    this.cons.logStringMessage("firestatus.lastFriendfeedId: "+firestatus.lastFriendfeedId);
 	},
 	
 	onUnload: function() {
@@ -179,7 +177,7 @@ var firestatus = {
 								if ("@mozilla.org/alerts-service;1" in Components.classes) {
 									var alertService = Components.classes["@mozilla.org/alerts-service;1"].getService(Components.interfaces.nsIAlertsService);
 									if (alertService) {
-										alertService.showAlertNotification(status.user.profile_image_url, status.user.name, status.text, false, "", null);
+										alertService.showAlertNotification(status.user.profile_image_url, status.user.name, status.text, true, "twitter", firestatus.notificationClickHandler);
 									}
 									else {
 										firestatus.cons.logStringMessage("alertsService failure: could not getService nsIAlertsService");
@@ -190,6 +188,7 @@ var firestatus = {
 		                     }
 						}
 						firestatus.lastTwitterId = status.id;
+						firestatus.prefs.setIntPref("lastTwitterId", status.id);
 	             } else
 	             	firestatus.cons.logStringMessage("Error loading page\n");
 	      }
@@ -217,14 +216,14 @@ var firestatus = {
 						firestatus.cons.logStringMessage('lastFriendfeedId: '+firestatus.lastFriendfeedId);
 						var status = statuses[0];
 						if (status.id != firestatus.lastFriendfeedId) {
-							dump('New FF update: '+status.id);
+							firestatus.cons.logStringMessage('New FF update: '+status.id);
 							// TODO: Fetch the page title for the link
 							var text = status.title;
 		                    try {
 								if ("@mozilla.org/alerts-service;1" in Components.classes) {
 									var alertService = Components.classes["@mozilla.org/alerts-service;1"].getService(Components.interfaces.nsIAlertsService);
 									if (alertService) {
-										alertService.showAlertNotification(status.service.iconUrl, status.user.name, text, false, "", null);
+										alertService.showAlertNotification(status.service.iconUrl, status.user.name, text, true, "friendfeed", firestatus.notificationClickHandler);
 									}
 									else {
 										firestatus.cons.logStringMessage("alertsService failure: could not getService nsIAlertsService");
@@ -234,6 +233,8 @@ var firestatus = {
 		                            firestatus.cons.logStringMessage("alertsService failure: " + e);
 		                     }
 							firestatus.lastFriendfeedId = status.id;
+							firestatus.prefs.setCharPref("lastFriendfeedId", status.id);
+							firestatus.cons.logStringMessage('Set lastFriendfeedId: '+status.id);
 						}
 	             } else
 	             	firestatus.cons.logStringMessage("Error loading page\n");
@@ -242,6 +243,24 @@ var firestatus = {
 	    var auth = firestatus.friendfeedUsername+":"+firestatus.friendfeedPassword;
 	    req.setRequestHeader("Authorization", "Basic "+btoa(auth));
 	    req.send(null);
+	},
+	
+	notificationClickHandler: {
+		observe: function(subject, topic, data) {
+			var FRIENDFEED_URL = 'http://friendfeed.com';
+			var TWITTER_URL = 'http://twitter.com';
+			if (topic == 'alertclickcallback')
+				switch(data) {
+					case "twitter":
+						window.open(TWITTER_URL, 'notificationFull');
+						break;
+					case "friendfeed":
+						window.open(FRIENDFEED_URL, 'notificationFull');
+						break;
+				}
+//			else if (topic == 'alertfinished')
+//				TODO: pop next from the queue and show it
+		}
 	}
 
 };

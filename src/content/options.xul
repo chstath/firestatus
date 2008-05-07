@@ -34,7 +34,7 @@
       <preference id="friendfeedUsername" name="extensions.firestatus.friendfeedUsername" type="string"/>
       <preference id="friendfeedPassword" name="extensions.firestatus.friendfeedPassword" type="string"/> <!-- note that this is only an ASCII string - use unichar for unicode strings -->
       <preference id="friendfeedTimeout" name="extensions.firestatus.friendfeedTimeout" type="int"/>
-      <preference id="lastFriendfeedId" name="extensions.firestatus.lastFriendfeedId" type="int"/>
+      <preference id="lastFriendfeedId" name="extensions.firestatus.lastFriendfeedId" type="string"/>
     </preferences>
 ﻿
 ﻿    <tabbox id="tabboxPrefs" flex="1">
