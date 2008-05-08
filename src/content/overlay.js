@@ -217,13 +217,12 @@ var firestatus = {
 						var status = statuses[0];
 						if (status.id != firestatus.lastFriendfeedId) {
 							firestatus.cons.logStringMessage('New FF update: '+status.id);
-							// TODO: Fetch the page title for the link
 							var text = status.title;
 		                    try {
 								if ("@mozilla.org/alerts-service;1" in Components.classes) {
 									var alertService = Components.classes["@mozilla.org/alerts-service;1"].getService(Components.interfaces.nsIAlertsService);
 									if (alertService) {
-										alertService.showAlertNotification(status.service.iconUrl, status.user.name, text, true, "friendfeed", firestatus.notificationClickHandler);
+										alertService.showAlertNotification(status.service.iconUrl, status.user.name, text, true, status.link || "friendfeed", firestatus.notificationClickHandler);
 									}
 									else {
 										firestatus.cons.logStringMessage("alertsService failure: could not getService nsIAlertsService");
@@ -257,6 +256,9 @@ var firestatus = {
 					case "friendfeed":
 						window.open(FRIENDFEED_URL, 'notificationFull');
 						break;
+					default:
+						if (data != null)
+							window.open(data, 'notificationFull');
 				}
 //			else if (topic == 'alertfinished')
 //				TODO: pop next from the queue and show it
