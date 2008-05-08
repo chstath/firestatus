@@ -10,7 +10,7 @@
 <!ENTITY twitterPassword.accesskey "P">
 <!ENTITY updatesEnabled.label "Receive updates">
 <!ENTITY twitterUpdatesEnabled.accesskey "S">
-<!ENTITY timeout.label "Update interval in seconds">
+<!ENTITY timeout.label "Minutes between updates">
 <!ENTITY twitterTimeout.accesskey "M">
 <!ENTITY twitter-pane.title "Twitter preferences">
 <!ENTITY friendfeed-pane.title "FriendFeed preferences">

@@ -22,14 +22,14 @@ var firestatus = {
 	twitterUsername: "",
 	twitterPassword: "",
 	twitterTimeoutId: 0,
-	twitterTimeout: 300,
+	twitterTimeout: 5,
 	lastTwitterId: 0,
 	friendfeedEnabled: false,
 	friendfeedUpdatesEnabled: false,
 	friendfeedUsername: "",
 	friendfeedPassword: "",
 	friendfeedTimeoutId: 0,
-	friendfeedTimeout: 300,
+	friendfeedTimeout: 5,
 	lastFriendfeedId: 0,
 
 	onLoad: function(){
@@ -66,7 +66,7 @@ var firestatus = {
 		
 		if (this.twitterUpdatesEnabled) {
 			this.twitterUpdates();
-			this.twitterTimeoutId = window.setInterval(this.twitterUpdates, this.twitterTimeout*1000);
+			this.twitterTimeoutId = window.setInterval(this.twitterUpdates, this.twitterTimeout*60*1000);
 		}
 		
 	    this.friendfeedEnabled = this.prefs.getBoolPref("friendfeedEnabled");
@@ -78,7 +78,7 @@ var firestatus = {
 		
 		if (this.friendfeedUpdatesEnabled) {
 			this.friendfeedUpdates();
-			this.friendfeedTimeoutId = window.setInterval(this.friendfeedUpdates, this.friendfeedTimeout*1000);
+			this.friendfeedTimeoutId = window.setInterval(this.friendfeedUpdates, this.friendfeedTimeout*60*1000);
 		}
 	},
 	
@@ -99,7 +99,7 @@ var firestatus = {
 		    	this.twitterUpdatesEnabled = this.prefs.getBoolPref("twitterUpdatesEnabled");
 				if (this.twitterUpdatesEnabled) {
 					this.twitterUpdates();
-			        this.twitterTimeoutId = window.setInterval(this.twitterUpdates, this.twitterTimeout*1000);
+			        this.twitterTimeoutId = window.setInterval(this.twitterUpdates, this.twitterTimeout*60*1000);
 				} else
 					this.cancelUpdates("twitter");
 		    	break;
@@ -113,7 +113,7 @@ var firestatus = {
 		    	this.twitterTimeout = this.prefs.getIntPref("twitterTimeout");
 				if (this.twitterUpdatesEnabled) {
 					this.cancelUpdates("twitter");
-			        this.twitterTimeoutId = window.setInterval(this.twitterUpdates, this.twitterTimeout*1000);
+			        this.twitterTimeoutId = window.setInterval(this.twitterUpdates, this.twitterTimeout*60*1000);
 				}
 		    	break;
 			case "friendfeedEnabled":
@@ -123,7 +123,7 @@ var firestatus = {
 		    	this.friendfeedUpdatesEnabled = this.prefs.getBoolPref("friendfeedUpdatesEnabled");
 				if (this.friendfeedUpdatesEnabled) {
 					this.friendfeedUpdates();
-			        this.friendfeedTimeoutId = window.setInterval(this.friendfeedUpdates, this.friendfeedTimeout*1000);
+			        this.friendfeedTimeoutId = window.setInterval(this.friendfeedUpdates, this.friendfeedTimeout*60*1000);
 				} else
 					this.cancelUpdates("friendfeed");
 		    	break;
@@ -137,7 +137,7 @@ var firestatus = {
 		    	this.friendfeedTimeout = this.prefs.getIntPref("friendfeedTimeout");
 				if (this.friendfeedUpdatesEnabled) {
 					this.cancelUpdates("friendfeed");
-			        this.friendfeedTimeoutId = window.setInterval(this.friendfeedUpdates, this.friendfeedTimeout*1000);
+			        this.friendfeedTimeoutId = window.setInterval(this.friendfeedUpdates, this.friendfeedTimeout*60*1000);
 				}
 		    	break;
 		}
