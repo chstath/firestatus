@@ -15,6 +15,8 @@
  * */
 
 var firestatus = {
+	TWITTER_URL: 'http://twitter.com',
+	FRIENDFEED_URL: 'http://friendfeed.com',
 	cons: null,
 	prefs: null,
 	twitterEnabled: false,
@@ -24,6 +26,7 @@ var firestatus = {
 	twitterTimeoutId: 0,
 	twitterTimeout: 5,
 	lastTwitterId: 0,
+	lastTwitterTimestamp: 0,
 	friendfeedEnabled: false,
 	friendfeedUpdatesEnabled: false,
 	friendfeedUsername: "",
@@ -31,6 +34,7 @@ var firestatus = {
 	friendfeedTimeoutId: 0,
 	friendfeedTimeout: 5,
 	lastFriendfeedId: 0,
+	updateQueue: [],
 
 	onLoad: function(){
 		// Initialization code
@@ -63,6 +67,7 @@ var firestatus = {
 	    this.twitterPassword = this.prefs.getCharPref("twitterPassword");
 	    this.twitterTimeout = this.prefs.getIntPref("twitterTimeout");
 	    this.lastTwitterId = this.prefs.getIntPref("lastTwitterId");
+	    this.lastTwitterTimestamp = this.prefs.getIntPref("lastTwitterTimestamp");
 		
 		if (this.twitterUpdatesEnabled) {
 			this.twitterUpdates();
@@ -155,7 +160,7 @@ var firestatus = {
 	},
   
 	twitterUpdates: function() {
-		var FRIENDS_URL = 'http://twitter.com/statuses/friends_timeline.json';
+		var FRIENDS_URL = firestatus.TWITTER_URL + '/statuses/friends_timeline.json?since=' + new Date(firestatus.lastTwitterTimestamp).toUTCString();
 	    var req = new XMLHttpRequest();
 	    req.open('GET', FRIENDS_URL, true);
 	    req.onreadystatechange = function (aEvt) {
@@ -173,22 +178,20 @@ var firestatus = {
 							var status = statuses[i];
 							if (status.id <= firestatus.lastTwitterId)
 								continue;
-		                    try {
-								if ("@mozilla.org/alerts-service;1" in Components.classes) {
-									var alertService = Components.classes["@mozilla.org/alerts-service;1"].getService(Components.interfaces.nsIAlertsService);
-									if (alertService) {
-										alertService.showAlertNotification(status.user.profile_image_url, status.user.name, status.text, true, "twitter", firestatus.notificationHandler);
-									}
-									else {
-										firestatus.cons.logStringMessage("alertsService failure: could not getService nsIAlertsService");
-									}
-								}
-		                     } catch(e) {
-		                            firestatus.cons.logStringMessage("alertsService failure: " + e);
-		                     }
+							var t = Date.parse(status.created_at);
+							firestatus.updateQueue.push({id: status.id,
+														 timestamp: t,
+														 image: status.user.profile_image_url,
+														 title: status.user.name,
+														 text: status.text,
+														 link: firestatus.TWITTER_URL});
 						}
+						firestatus.displayNotification();
 						firestatus.lastTwitterId = status.id;
+						firestatus.cons.logStringMessage("t:"+t);
+						firestatus.lastTwitterTimestamp = t;
 						firestatus.prefs.setIntPref("lastTwitterId", status.id);
+						firestatus.prefs.setIntPref("lastTwitterTimestamp", t);
 	             } else
 	             	firestatus.cons.logStringMessage("Error loading page\n");
 	      }
@@ -198,8 +201,27 @@ var firestatus = {
 	    req.send(null);
 	},
 	
+	displayNotification: function() {
+		firestatus.cons.logStringMessage("pending notifications:"+firestatus.updateQueue.length);
+		var update = firestatus.updateQueue.shift();
+		if (update)
+	        try {
+				if ("@mozilla.org/alerts-service;1" in Components.classes) {
+					var alertService = Components.classes["@mozilla.org/alerts-service;1"].getService(Components.interfaces.nsIAlertsService);
+					if (alertService) {
+						alertService.showAlertNotification(update.image, update.title, update.text, true, update.link, firestatus.notificationHandler);
+					}
+					else {
+						firestatus.cons.logStringMessage("alertsService failure: could not getService nsIAlertsService");
+					}
+				}
+	        } catch(e) {
+	                firestatus.cons.logStringMessage("alertsService failure: " + e);
+	        }
+	},
+	
 	friendfeedUpdates: function() {
-		var FRIENDS_URL = 'http://friendfeed.com/api/feed/home?num=1';
+		var FRIENDS_URL = firestatus.FRIENDFEED_URL + '/api/feed/home?start=' + firestatus.lastFriendfeedId;
 	    var req = new XMLHttpRequest();
 	    req.open('GET', FRIENDS_URL, true);
 	    req.onreadystatechange = function (aEvt) {
@@ -207,34 +229,30 @@ var firestatus = {
 	             if(req.status == 200) {
 	                    var jsonString = req.responseText;
 						var statuses = eval('(' + jsonString + ')').entries;
-						if (statuses.length == 0)
-							return;
 						// Sort the status updates, oldest first.
 						statuses.sort(function(a, b) {
-										return a.id - b.id;
+										return Date.parse(a.updated) - Date.parse(b.updated);
 									});
 						firestatus.cons.logStringMessage('lastFriendfeedId: '+firestatus.lastFriendfeedId);
-						var status = statuses[0];
-						if (status.id != firestatus.lastFriendfeedId) {
-							firestatus.cons.logStringMessage('New FF update: '+status.id);
-							var text = status.title;
-		                    try {
-								if ("@mozilla.org/alerts-service;1" in Components.classes) {
-									var alertService = Components.classes["@mozilla.org/alerts-service;1"].getService(Components.interfaces.nsIAlertsService);
-									if (alertService) {
-										alertService.showAlertNotification(status.service.iconUrl, status.user.name, text, true, status.link || "friendfeed", firestatus.notificationHandler);
-									}
-									else {
-										firestatus.cons.logStringMessage("alertsService failure: could not getService nsIAlertsService");
-									}
-								}
-		                     } catch(e) {
-		                            firestatus.cons.logStringMessage("alertsService failure: " + e);
-		                     }
-							firestatus.lastFriendfeedId = status.id;
-							firestatus.prefs.setCharPref("lastFriendfeedId", status.id);
-							firestatus.cons.logStringMessage('Set lastFriendfeedId: '+status.id);
+						for (var i = 0; i < statuses.length; i++) {
+							var status = statuses[i];
+							if (status.id == firestatus.lastFriendfeedId)
+								continue;
+							firestatus.cons.logStringMessage('New FF update: ' + status.id);
+							var t = Date.parse(status.updated);
+							firestatus.cons.logStringMessage("FF t:"+t);
+							firestatus.updateQueue.push({
+								id: status.id,
+								timestamp: t,
+								image: status.service.iconUrl,
+								title: status.user.name,
+								text: status.title,
+								link: status.link || firestatus.FRIENDFEED_URL
+							});
 						}
+						firestatus.displayNotification();
+						firestatus.lastFriendfeedId = status.id;
+						firestatus.prefs.setCharPref("lastFriendfeedId", status.id);
 	             } else
 	             	firestatus.cons.logStringMessage("Error loading page\n");
 	      }
@@ -246,26 +264,14 @@ var firestatus = {
 	
 	notificationHandler: {
 		observe: function(subject, topic, data) {
-			var FRIENDFEED_URL = 'http://friendfeed.com';
-			var TWITTER_URL = 'http://twitter.com';
 			var wm = Components.classes["@mozilla.org/appshell/window-mediator;1"]
                    .getService(Components.interfaces.nsIWindowMediator);
 			var browser = wm.getMostRecentWindow("navigator:browser").getBrowser();
 
-			if (topic == 'alertclickcallback')
-				switch(data) {
-					case "twitter":
-						browser.selectedTab = browser.addTab(TWITTER_URL);
-						break;
-					case "friendfeed":
-						browser.selectedTab = browser.addTab(FRIENDFEED_URL);
-						break;
-					default:
-						if (data != null)
-							browser.selectedTab = browser.addTab(data);
-				}
-//			else if (topic == 'alertfinished')
-//				TODO: pop next from the queue and show it
+			if (topic == 'alertclickcallback' && data != null)
+				browser.selectedTab = browser.addTab(data);
+			else if (topic == 'alertfinished')
+				firestatus.displayNotification();
 		}
 	}
 

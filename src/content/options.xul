@@ -29,6 +29,7 @@
       <preference id="twitterPassword" name="extensions.firestatus.twitterPassword" type="string"/> <!-- note that this is only an ASCII string - use unichar for unicode strings -->
       <preference id="twitterTimeout" name="extensions.firestatus.twitterTimeout" type="int"/>
       <preference id="lastTwitterId" name="extensions.firestatus.lastTwitterId" type="int"/>
+      <preference id="lastTwitterTimestamp" name="extensions.firestatus.lastTwitterTimestamp" type="int"/>
       <preference id="friendfeedEnabled" name="extensions.firestatus.friendfeedEnabled" type="bool"/>
       <preference id="friendfeedUpdatesEnabled" name="extensions.firestatus.friendfeedUpdatesEnabled" type="bool"/>
       <preference id="friendfeedUsername" name="extensions.firestatus.friendfeedUsername" type="string"/>
