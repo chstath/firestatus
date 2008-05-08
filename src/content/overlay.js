@@ -177,7 +177,7 @@ var firestatus = {
 								if ("@mozilla.org/alerts-service;1" in Components.classes) {
 									var alertService = Components.classes["@mozilla.org/alerts-service;1"].getService(Components.interfaces.nsIAlertsService);
 									if (alertService) {
-										alertService.showAlertNotification(status.user.profile_image_url, status.user.name, status.text, true, "twitter", firestatus.notificationClickHandler);
+										alertService.showAlertNotification(status.user.profile_image_url, status.user.name, status.text, true, "twitter", firestatus.notificationHandler);
 									}
 									else {
 										firestatus.cons.logStringMessage("alertsService failure: could not getService nsIAlertsService");
@@ -222,7 +222,7 @@ var firestatus = {
 								if ("@mozilla.org/alerts-service;1" in Components.classes) {
 									var alertService = Components.classes["@mozilla.org/alerts-service;1"].getService(Components.interfaces.nsIAlertsService);
 									if (alertService) {
-										alertService.showAlertNotification(status.service.iconUrl, status.user.name, text, true, status.link || "friendfeed", firestatus.notificationClickHandler);
+										alertService.showAlertNotification(status.service.iconUrl, status.user.name, text, true, status.link || "friendfeed", firestatus.notificationHandler);
 									}
 									else {
 										firestatus.cons.logStringMessage("alertsService failure: could not getService nsIAlertsService");
@@ -244,21 +244,24 @@ var firestatus = {
 	    req.send(null);
 	},
 	
-	notificationClickHandler: {
+	notificationHandler: {
 		observe: function(subject, topic, data) {
 			var FRIENDFEED_URL = 'http://friendfeed.com';
 			var TWITTER_URL = 'http://twitter.com';
+			var wm = Components.classes["@mozilla.org/appshell/window-mediator;1"]
+                   .getService(Components.interfaces.nsIWindowMediator);
+			var win = wm.getMostRecentWindow("");
 			if (topic == 'alertclickcallback')
 				switch(data) {
 					case "twitter":
-						window.open(TWITTER_URL, 'notificationFull');
+						win.open(TWITTER_URL, 'notificationFull');
 						break;
 					case "friendfeed":
-						window.open(FRIENDFEED_URL, 'notificationFull');
+						win.open(FRIENDFEED_URL, 'notificationFull');
 						break;
 					default:
 						if (data != null)
-							window.open(data, 'notificationFull');
+							win.open(data, 'notificationFull');
 				}
 //			else if (topic == 'alertfinished')
 //				TODO: pop next from the queue and show it
