@@ -250,18 +250,19 @@ var firestatus = {
 			var TWITTER_URL = 'http://twitter.com';
 			var wm = Components.classes["@mozilla.org/appshell/window-mediator;1"]
                    .getService(Components.interfaces.nsIWindowMediator);
-			var win = wm.getMostRecentWindow("");
+			var browser = wm.getMostRecentWindow("navigator:browser").getBrowser();
+
 			if (topic == 'alertclickcallback')
 				switch(data) {
 					case "twitter":
-						win.open(TWITTER_URL, 'notificationFull');
+						browser.selectedTab = browser.addTab(TWITTER_URL);
 						break;
 					case "friendfeed":
-						win.open(FRIENDFEED_URL, 'notificationFull');
+						browser.selectedTab = browser.addTab(FRIENDFEED_URL);
 						break;
 					default:
 						if (data != null)
-							win.open(data, 'notificationFull');
+							browser.selectedTab = browser.addTab(data);
 				}
 //			else if (topic == 'alertfinished')
 //				TODO: pop next from the queue and show it
