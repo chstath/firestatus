@@ -34,6 +34,7 @@ var firestatus = {
 	friendfeedTimeoutId: 0,
 	friendfeedTimeout: 5,
 	lastFriendfeedId: 0,
+	// A FIFO queue that contains pending notifications.
 	updateQueue: [],
 	processingQueue: false,
 
@@ -187,9 +188,9 @@ var firestatus = {
 									});
 						for (var i = 0; i < statuses.length; i++) {
 							var status = statuses[i];
+							var t = Date.parse(status.created_at);
 							if (status.id <= firestatus.lastTwitterId)
 								continue;
-							var t = Date.parse(status.created_at);
 							firestatus.updateQueue.push({id: status.id,
 														 timestamp: t,
 														 image: status.user.profile_image_url,
@@ -217,30 +218,6 @@ var firestatus = {
 	    req.send(null);
 	},
 	
-	displayNotification: function() {
-		firestatus.cons.logStringMessage("pending notifications:"+firestatus.updateQueue.length);
-		var update = firestatus.updateQueue.shift();
-		if (update)
-	        try {
-				if ("@mozilla.org/alerts-service;1" in Components.classes) {
-					var alertService = Components.classes["@mozilla.org/alerts-service;1"]
-										.getService(Components.interfaces.nsIAlertsService);
-					if (alertService) {
-						alertService.showAlertNotification(update.image, update.title, update.text,
-												 true, update.link, firestatus.notificationHandler);
-					}
-					else {
-						firestatus.cons.logStringMessage("alertsService failure: " +
-														"could not getService nsIAlertsService");
-					}
-				}
-	        } catch(e) {
-	                firestatus.cons.logStringMessage("alertsService failure: " + e);
-	        }
-		else
-			firestatus.processingQueue = false;
-	},
-	
 	friendfeedUpdates: function() {
 		if (firestatus.processingQueue) return;
 		var FRIENDS_URL = firestatus.FRIENDFEED_URL + '/api/feed/home';
@@ -259,7 +236,8 @@ var firestatus = {
 													firestatus.lastFriendfeedId);
 						for (var i = 0; i < statuses.length; i++) {
 							var status = statuses[i];
-							firestatus.cons.logStringMessage('New FF update: ' + status.id);
+							firestatus.cons.logStringMessage('New FF update: ' + status.id +
+															 ' text: ' + status.title);
 							if (status.id == firestatus.lastFriendfeedId) {
 								// Clear what was inserted so far since it's been already displayed.
 								// TODO: the queue should be locked because we may remove updates
@@ -293,6 +271,30 @@ var firestatus = {
 	    req.send(null);
 	},
 	
+	displayNotification: function() {
+		firestatus.cons.logStringMessage("pending notifications:"+firestatus.updateQueue.length);
+		var update = firestatus.updateQueue.shift();
+		if (update)
+	        try {
+				if ("@mozilla.org/alerts-service;1" in Components.classes) {
+					var alertService = Components.classes["@mozilla.org/alerts-service;1"]
+										.getService(Components.interfaces.nsIAlertsService);
+					if (alertService) {
+						alertService.showAlertNotification(update.image, update.title, update.text,
+												 true, update.link, firestatus.notificationHandler);
+					}
+					else {
+						firestatus.cons.logStringMessage("alertsService failure: " +
+														"could not getService nsIAlertsService");
+					}
+				}
+	        } catch(e) {
+	                firestatus.cons.logStringMessage("alertsService failure: " + e);
+	        }
+		else
+			firestatus.processingQueue = false;
+	},
+	
 	notificationHandler: {
 		observe: function(subject, topic, data) {
 			var wm = Components.classes["@mozilla.org/appshell/window-mediator;1"]
@@ -307,6 +309,7 @@ var firestatus = {
 	}
 
 };
+
 window.addEventListener("load", function(e) { firestatus.onLoad(e); }, false);
 window.addEventListener("unload", function(e) { firestatus.onUnload(e); }, false);
 
