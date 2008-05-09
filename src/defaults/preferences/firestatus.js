@@ -4,7 +4,7 @@ pref("extensions.firestatus.twitterUsername", "");
 pref("extensions.firestatus.twitterPassword", "");
 pref("extensions.firestatus.twitterTimeout", 5);
 pref("extensions.firestatus.lastTwitterId", 0);
-pref("extensions.firestatus.lastTwitterTimestamp", 0);
+pref("extensions.firestatus.lastTwitterTimestamp", "0");
 pref("extensions.firestatus.friendfeedEnabled", false);
 pref("extensions.firestatus.friendfeedUpdatesEnabled", false);
 pref("extensions.firestatus.friendfeedUsername", "");

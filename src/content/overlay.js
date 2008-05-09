@@ -26,7 +26,7 @@ var firestatus = {
 	twitterTimeoutId: 0,
 	twitterTimeout: 5,
 	lastTwitterId: 0,
-	lastTwitterTimestamp: 0,
+	lastTwitterTimestamp: "0",
 	friendfeedEnabled: false,
 	friendfeedUpdatesEnabled: false,
 	friendfeedUsername: "",
@@ -68,7 +68,7 @@ var firestatus = {
 	    this.twitterPassword = this.prefs.getCharPref("twitterPassword");
 	    this.twitterTimeout = this.prefs.getIntPref("twitterTimeout");
 	    this.lastTwitterId = this.prefs.getIntPref("lastTwitterId");
-	    this.lastTwitterTimestamp = this.prefs.getIntPref("lastTwitterTimestamp");
+	    this.lastTwitterTimestamp = this.prefs.getCharPref("lastTwitterTimestamp");
 		
 		if (this.twitterUpdatesEnabled) {
 			this.twitterUpdates();
@@ -162,7 +162,8 @@ var firestatus = {
   
 	twitterUpdates: function() {
 		if (firestatus.processingQueue) return;
-		var FRIENDS_URL = firestatus.TWITTER_URL + '/statuses/friends_timeline.json?since=' + new Date(firestatus.lastTwitterTimestamp).toUTCString();
+		var milliseconds = new Number(firestatus.lastTwitterTimestamp);
+		var FRIENDS_URL = firestatus.TWITTER_URL + '/statuses/friends_timeline.json?since=' + encodeURIComponent(new Date(milliseconds).toUTCString());
 	    var req = new XMLHttpRequest();
 	    req.open('GET', FRIENDS_URL, true);
 	    req.onreadystatechange = function (aEvt) {
@@ -192,13 +193,15 @@ var firestatus = {
 						firestatus.cons.logStringMessage("t:"+t);
 						firestatus.lastTwitterTimestamp = t;
 						firestatus.prefs.setIntPref("lastTwitterId", status.id);
-						firestatus.prefs.setIntPref("lastTwitterTimestamp", t);
+						firestatus.prefs.setCharPref("lastTwitterTimestamp", t);
 						if (!firestatus.processingQueue) {
 							firestatus.processingQueue = true;
 							firestatus.displayNotification();
 						}
-	             } else
-	             	firestatus.cons.logStringMessage("Error loading page\n");
+	             } else if(req.status == 304)
+				 	return;
+				 else
+	             	firestatus.cons.logStringMessage("Error loading page. req.status="+req.status);
 	      }
 	    };
 	    var auth = firestatus.twitterUsername+":"+firestatus.twitterPassword;
@@ -269,7 +272,7 @@ var firestatus = {
 							firestatus.displayNotification();
 						}
 	             } else
-	             	firestatus.cons.logStringMessage("Error loading page\n");
+	             	firestatus.cons.logStringMessage("Error loading page. req.status="+req.status);
 	      }
 	    };
 	    var auth = firestatus.friendfeedUsername+":"+firestatus.friendfeedPassword;
