@@ -47,7 +47,8 @@ var firestatus = {
 
 
 		if ("@mozilla.org/passwordmanager;1" in Components.classes) {
-		   // Password Manager exists so this is not Firefox 3 (could be Firefox 2, Netscape, SeaMonkey, etc).
+		   // Password Manager exists so this is not Firefox 3 (could be Firefox 2,
+		   // Netscape, SeaMonkey, etc).
 		   // Password Manager code
 		}
 		else if ("@mozilla.org/login-manager;1" in Components.classes) {
@@ -72,7 +73,8 @@ var firestatus = {
 		
 		if (this.twitterUpdatesEnabled) {
 			this.twitterUpdates();
-			this.twitterTimeoutId = window.setInterval(this.twitterUpdates, this.twitterTimeout*60*1000);
+			this.twitterTimeoutId = window.setInterval(this.twitterUpdates,
+													   this.twitterTimeout*60*1000);
 		}
 		
 	    this.friendfeedEnabled = this.prefs.getBoolPref("friendfeedEnabled");
@@ -84,7 +86,8 @@ var firestatus = {
 		
 		if (this.friendfeedUpdatesEnabled) {
 			this.friendfeedUpdates();
-			this.friendfeedTimeoutId = window.setInterval(this.friendfeedUpdates, this.friendfeedTimeout*60*1000);
+			this.friendfeedTimeoutId = window.setInterval(this.friendfeedUpdates,
+														  this.friendfeedTimeout*60*1000);
 		}
 	},
 	
@@ -105,7 +108,8 @@ var firestatus = {
 		    	this.twitterUpdatesEnabled = this.prefs.getBoolPref("twitterUpdatesEnabled");
 				if (this.twitterUpdatesEnabled) {
 					this.twitterUpdates();
-			        this.twitterTimeoutId = window.setInterval(this.twitterUpdates, this.twitterTimeout*60*1000);
+			        this.twitterTimeoutId = window.setInterval(this.twitterUpdates,
+															   this.twitterTimeout*60*1000);
 				} else
 					this.cancelUpdates("twitter");
 		    	break;
@@ -119,7 +123,8 @@ var firestatus = {
 		    	this.twitterTimeout = this.prefs.getIntPref("twitterTimeout");
 				if (this.twitterUpdatesEnabled) {
 					this.cancelUpdates("twitter");
-			        this.twitterTimeoutId = window.setInterval(this.twitterUpdates, this.twitterTimeout*60*1000);
+			        this.twitterTimeoutId = window.setInterval(this.twitterUpdates,
+															   this.twitterTimeout*60*1000);
 				}
 		    	break;
 			case "friendfeedEnabled":
@@ -129,7 +134,8 @@ var firestatus = {
 		    	this.friendfeedUpdatesEnabled = this.prefs.getBoolPref("friendfeedUpdatesEnabled");
 				if (this.friendfeedUpdatesEnabled) {
 					this.friendfeedUpdates();
-			        this.friendfeedTimeoutId = window.setInterval(this.friendfeedUpdates, this.friendfeedTimeout*60*1000);
+			        this.friendfeedTimeoutId = window.setInterval(this.friendfeedUpdates,
+																  this.friendfeedTimeout*60*1000);
 				} else
 					this.cancelUpdates("friendfeed");
 		    	break;
@@ -143,7 +149,8 @@ var firestatus = {
 		    	this.friendfeedTimeout = this.prefs.getIntPref("friendfeedTimeout");
 				if (this.friendfeedUpdatesEnabled) {
 					this.cancelUpdates("friendfeed");
-			        this.friendfeedTimeoutId = window.setInterval(this.friendfeedUpdates, this.friendfeedTimeout*60*1000);
+			        this.friendfeedTimeoutId = window.setInterval(this.friendfeedUpdates,
+																  this.friendfeedTimeout*60*1000);
 				}
 		    	break;
 		}
@@ -163,7 +170,8 @@ var firestatus = {
 	twitterUpdates: function() {
 		if (firestatus.processingQueue) return;
 		var milliseconds = new Number(firestatus.lastTwitterTimestamp);
-		var FRIENDS_URL = firestatus.TWITTER_URL + '/statuses/friends_timeline.json?since=' + encodeURIComponent(new Date(milliseconds).toUTCString());
+		var FRIENDS_URL = firestatus.TWITTER_URL + '/statuses/friends_timeline.json?since=' +
+						encodeURIComponent(new Date(milliseconds).toUTCString());
 	    var req = new XMLHttpRequest();
 	    req.open('GET', FRIENDS_URL, true);
 	    req.onreadystatechange = function (aEvt) {
@@ -215,12 +223,15 @@ var firestatus = {
 		if (update)
 	        try {
 				if ("@mozilla.org/alerts-service;1" in Components.classes) {
-					var alertService = Components.classes["@mozilla.org/alerts-service;1"].getService(Components.interfaces.nsIAlertsService);
+					var alertService = Components.classes["@mozilla.org/alerts-service;1"]
+										.getService(Components.interfaces.nsIAlertsService);
 					if (alertService) {
-						alertService.showAlertNotification(update.image, update.title, update.text, true, update.link, firestatus.notificationHandler);
+						alertService.showAlertNotification(update.image, update.title, update.text,
+												 true, update.link, firestatus.notificationHandler);
 					}
 					else {
-						firestatus.cons.logStringMessage("alertsService failure: could not getService nsIAlertsService");
+						firestatus.cons.logStringMessage("alertsService failure: " +
+														"could not getService nsIAlertsService");
 					}
 				}
 	        } catch(e) {
@@ -244,13 +255,15 @@ var firestatus = {
 						statuses.sort(function(a, b) {
 										return a.updated > b.updated? 1: a.updated < b.updated? -1: 0;
 									});
-						firestatus.cons.logStringMessage('lastFriendfeedId: '+firestatus.lastFriendfeedId);
+						firestatus.cons.logStringMessage('lastFriendfeedId: ' +
+													firestatus.lastFriendfeedId);
 						for (var i = 0; i < statuses.length; i++) {
 							var status = statuses[i];
 							firestatus.cons.logStringMessage('New FF update: ' + status.id);
 							if (status.id == firestatus.lastFriendfeedId) {
 								// Clear what was inserted so far since it's been already displayed.
-								// TODO: the queue should be locked because we may remove updates from other services here.
+								// TODO: the queue should be locked because we may remove updates
+								// from other services here.
 								firestatus.updateQueue = [];
 								continue;
 							}
