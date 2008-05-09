@@ -35,6 +35,7 @@ var firestatus = {
 	friendfeedTimeout: 5,
 	lastFriendfeedId: 0,
 	updateQueue: [],
+	processingQueue: false,
 
 	onLoad: function(){
 		// Initialization code
@@ -160,6 +161,7 @@ var firestatus = {
 	},
   
 	twitterUpdates: function() {
+		if (firestatus.processingQueue) return;
 		var FRIENDS_URL = firestatus.TWITTER_URL + '/statuses/friends_timeline.json?since=' + new Date(firestatus.lastTwitterTimestamp).toUTCString();
 	    var req = new XMLHttpRequest();
 	    req.open('GET', FRIENDS_URL, true);
@@ -186,12 +188,15 @@ var firestatus = {
 														 text: status.text,
 														 link: firestatus.TWITTER_URL});
 						}
-						firestatus.displayNotification();
 						firestatus.lastTwitterId = status.id;
 						firestatus.cons.logStringMessage("t:"+t);
 						firestatus.lastTwitterTimestamp = t;
 						firestatus.prefs.setIntPref("lastTwitterId", status.id);
 						firestatus.prefs.setIntPref("lastTwitterTimestamp", t);
+						if (!firestatus.processingQueue) {
+							firestatus.processingQueue = true;
+							firestatus.displayNotification();
+						}
 	             } else
 	             	firestatus.cons.logStringMessage("Error loading page\n");
 	      }
@@ -218,9 +223,12 @@ var firestatus = {
 	        } catch(e) {
 	                firestatus.cons.logStringMessage("alertsService failure: " + e);
 	        }
+		else
+			firestatus.processingQueue = false;
 	},
 	
 	friendfeedUpdates: function() {
+		if (firestatus.processingQueue) return;
 		var FRIENDS_URL = firestatus.FRIENDFEED_URL + '/api/feed/home?start=' + firestatus.lastFriendfeedId;
 	    var req = new XMLHttpRequest();
 	    req.open('GET', FRIENDS_URL, true);
@@ -231,15 +239,15 @@ var firestatus = {
 						var statuses = eval('(' + jsonString + ')').entries;
 						// Sort the status updates, oldest first.
 						statuses.sort(function(a, b) {
-										return Date.parse(a.updated) - Date.parse(b.updated);
+										return a.updated > b.updated? 1: a.updated < b.updated? -1: 0;
 									});
 						firestatus.cons.logStringMessage('lastFriendfeedId: '+firestatus.lastFriendfeedId);
 						for (var i = 0; i < statuses.length; i++) {
 							var status = statuses[i];
+							firestatus.cons.logStringMessage('New FF update: ' + status.id);
 							if (status.id == firestatus.lastFriendfeedId)
 								continue;
-							firestatus.cons.logStringMessage('New FF update: ' + status.id);
-							var t = Date.parse(status.updated);
+							var t = status.updated; // TODO: parse the RFC 3339 string
 							firestatus.cons.logStringMessage("FF t:"+t);
 							firestatus.updateQueue.push({
 								id: status.id,
@@ -250,9 +258,12 @@ var firestatus = {
 								link: status.link || firestatus.FRIENDFEED_URL
 							});
 						}
-						firestatus.displayNotification();
 						firestatus.lastFriendfeedId = status.id;
 						firestatus.prefs.setCharPref("lastFriendfeedId", status.id);
+						if (!firestatus.processingQueue) {
+							firestatus.processingQueue = true;
+							firestatus.displayNotification();
+						}
 	             } else
 	             	firestatus.cons.logStringMessage("Error loading page\n");
 	      }
