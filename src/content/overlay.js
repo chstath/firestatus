@@ -229,7 +229,7 @@ var firestatus = {
 	
 	friendfeedUpdates: function() {
 		if (firestatus.processingQueue) return;
-		var FRIENDS_URL = firestatus.FRIENDFEED_URL + '/api/feed/home?start=' + firestatus.lastFriendfeedId;
+		var FRIENDS_URL = firestatus.FRIENDFEED_URL + '/api/feed/home';
 	    var req = new XMLHttpRequest();
 	    req.open('GET', FRIENDS_URL, true);
 	    req.onreadystatechange = function (aEvt) {
@@ -245,8 +245,12 @@ var firestatus = {
 						for (var i = 0; i < statuses.length; i++) {
 							var status = statuses[i];
 							firestatus.cons.logStringMessage('New FF update: ' + status.id);
-							if (status.id == firestatus.lastFriendfeedId)
+							if (status.id == firestatus.lastFriendfeedId) {
+								// Clear what was inserted so far since it's been already displayed.
+								// TODO: the queue should be locked because we may remove updates from other services here.
+								firestatus.updateQueue = [];
 								continue;
+							}
 							var t = status.updated; // TODO: parse the RFC 3339 string
 							firestatus.cons.logStringMessage("FF t:"+t);
 							firestatus.updateQueue.push({
