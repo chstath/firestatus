@@ -36,6 +36,8 @@ var firestatus = {
 	lastFriendfeedId: 0,
 	// A FIFO queue that contains pending notifications.
 	updateQueue: [],
+	// An initial queue for ordering FF updates before putting them in updateQueue.
+	ffInitialQueue: [],
 	processingQueue: false,
 
 	onLoad: function(){
@@ -210,7 +212,8 @@ var firestatus = {
 	             } else if(req.status == 304)
 				 	return;
 				 else
-	             	firestatus.cons.logStringMessage("Error loading page. req.status="+req.status);
+	             	firestatus.cons.logStringMessage("Error loading Twitter page. " +
+													 "req.status="+req.status);
 	      }
 	    };
 	    var auth = firestatus.twitterUsername+":"+firestatus.twitterPassword;
@@ -228,9 +231,9 @@ var firestatus = {
 	             if(req.status == 200) {
 	                    var jsonString = req.responseText;
 						var statuses = eval('(' + jsonString + ')').entries;
-						// Sort the status updates, oldest first.
+						// Sort the status updates, newest first.
 						statuses.sort(function(a, b) {
-										return a.updated > b.updated? 1: a.updated < b.updated? -1: 0;
+										return a.updated > b.updated? -1: a.updated < b.updated? 1: 0;
 									});
 						firestatus.cons.logStringMessage('lastFriendfeedId: ' +
 													firestatus.lastFriendfeedId);
@@ -238,16 +241,10 @@ var firestatus = {
 							var status = statuses[i];
 							firestatus.cons.logStringMessage('New FF update: ' + status.id +
 															 ' text: ' + status.title);
-							if (status.id == firestatus.lastFriendfeedId) {
-								// Clear what was inserted so far since it's been already displayed.
-								// TODO: the queue should be locked because we may remove updates
-								// from other services here.
-								firestatus.updateQueue = [];
-								continue;
-							}
+							if (status.id == firestatus.lastFriendfeedId) break;
 							var t = status.updated; // TODO: parse the RFC 3339 string
 							firestatus.cons.logStringMessage("FF t:"+t);
-							firestatus.updateQueue.push({
+							firestatus.ffInitialQueue.push({
 								id: status.id,
 								timestamp: t,
 								image: status.service.iconUrl,
@@ -256,14 +253,17 @@ var firestatus = {
 								link: status.link || firestatus.FRIENDFEED_URL
 							});
 						}
-						firestatus.lastFriendfeedId = status.id;
-						firestatus.prefs.setCharPref("lastFriendfeedId", status.id);
+						firestatus.updateQueue = firestatus.updateQueue.concat(
+												firestatus.ffInitialQueue.reverse());
+						firestatus.ffInitialQueue = [];
+						firestatus.lastFriendfeedId = statuses[0].id;
+						firestatus.prefs.setCharPref("lastFriendfeedId", statuses[0].id);
 						if (!firestatus.processingQueue) {
 							firestatus.processingQueue = true;
 							firestatus.displayNotification();
 						}
 	             } else
-	             	firestatus.cons.logStringMessage("Error loading page. req.status="+req.status);
+	             	firestatus.cons.logStringMessage("Error loading FF page. req.status="+req.status);
 	      }
 	    };
 	    var auth = firestatus.friendfeedUsername+":"+firestatus.friendfeedPassword;
