@@ -43,12 +43,19 @@ var facebookClient = {
 	    var req = new XMLHttpRequest();
 	    req.open("GET", "http://api.facebook.com/restserver.php?"+params.join('&'), false); //All calls are synchronous because when asynchronous I got some strange exceptions. We need to change that
 		req.send(null);
-		dump(req.responseText);
+		dump(req.responseText + "\n");
 	    var authToken = eval(req.responseText);//req.responseXML.getElementsByTagName("auth_createToken_response")[0].textContent;
 		return authToken;
 	},
 	
-	getSession: function() {
+	getSession: function(refresh) {
+		var firestatus = window.opener.firestatus;
+		var session_key = firestatus.prefs.getCharPref("fbSessionKey");
+		var secret = firestatus.prefs.getCharPref("fbSecret");
+		dump(session_key + "\n");
+		dump(secret + "\n");
+		if (!refresh && session_key != undefined && secret != undefined)
+			return {session_key:session_key, secret:secret};
 		var authToken = this.getAuthToken();
 		if (authToken != undefined) {
 			//After getting the auth token we MUST send the user to the login page. If he is
@@ -65,9 +72,11 @@ var facebookClient = {
 	    	var req = new XMLHttpRequest();
 			req.open("GET", "https://api.facebook.com/restserver.php?" + params.join('&'), false);//All calls are synchronous because when asynchronous I got some strange exceptions. We need to change that
 			req.send(null);
-			dump(req.responseText);
+			dump(req.responseText + "\n");
 			var session = eval( "(" + req.responseText + ")");
-			dump(session);
+			dump(session.session_key + "\n");
+			firestatus.prefs.setCharPref("fbSessionKey", session.session_key);
+			firestatus.prefs.setCharPref("fbSecret", session.secret);
 			return session;
 		}
 	},
@@ -85,11 +94,11 @@ var facebookClient = {
 	    var req = new XMLHttpRequest();
 		req.open("GET", "http://api.facebook.com/restserver.php?"+params.join('&'), false);//All calls are synchronous because when asynchronous I got some strange exceptions. We need to change that
 		req.send(null);
-		dump("Updating status");
-		dump(req.responseText);
+		dump("Updating status\n");
+		dump(req.responseText + "\n");
 		var result = eval("(" + req.responseText + ")");
 		if (result.error_code == undefined) {
-			dump("Status has been updated ... probably");
+			dump("Status has been updated ... probably\n");
 			return "";
 		}
 		else {

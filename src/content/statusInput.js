@@ -83,7 +83,7 @@ function sendStatusUpdateLinkedIn(){
 
 
 function sendStatusUpdateFacebook(){
-	dump("\n@@@@@@@@@@@@@@@@@@@@@Starting facebook update;")
+	dump("\n@@@@@@@@@@@@@@@@@@@@@Starting facebook update\n")
 	var statusText = document.getElementById('statusText').value +" "+ document.getElementById('statusTextUrl').value;
 //	var status = encodeURIComponent(statusText); //Somehow the status update fails if the status is encoded
 
@@ -94,20 +94,27 @@ function sendStatusUpdateFacebook(){
    		.getService(Ci.mozIJSSubScriptLoader)
    		.loadSubScript('chrome://firestatus/content/facebookClient.js'); //Is there any other way to gain access to the facebookClient object ??
 	var session = facebookClient.getSession(); //The session can be stored for subsequent calls to facebook api
-	dump(session.session_key);
-	dump(session.error_code);
+	dump(session.session_key + "\n");
+	dump(session.error_code + "\n");
 	if (session.error_code == undefined) {
-		var code = facebookClient.updateStatus(session.session_key, session.secret, statusText);
-		if (code == 250) {
-			window.open("http://www.facebook.com/authorize.php?api_key=" + facebookClient.apiKey + "&v=1.0&ext_perm=status_update", "", "chrome, centerscreen,width=646,height=520,modal=yes,dialog=yes,close=yes");
-			code = facebookClient.updateStatus(session.session_key, session.secret, statusText);
-			if (code != undefined)
-				alert("Facebook status will not be updated");
-		}
+		sendFacebook(session, statusText);
 	}
 	else alert("Facebook status will not be updated");
 }
 
+	function sendFacebook(session, statusText) {
+		var code = facebookClient.updateStatus(session.session_key, session.secret, statusText);
+		if (code == 250) {
+			window.open("http://www.facebook.com/authorize.php?api_key=" + facebookClient.apiKey + "&v=1.0&ext_perm=status_update", "", "chrome, centerscreen,width=646,height=520,modal=yes,dialog=yes,close=yes");
+			sendFacebook(session, statusText);
+		}
+		else if (code == 102) {
+			session = facebookClient.getSession(true);
+			sendFacebook(session, statusText);
+		}
+		else if (code != "")
+			alert("Facebook status will not be updated");
+	}
 
 function sendStatusUpdateFriendFeed() {
 	/* var statusText = document.getElementById('statusText').value;
