@@ -17,7 +17,6 @@
 var facebookClient = {
 	defaultSecret: "f0abf7dde17155ff587728121607813f",
 	apiKey: "53cc37e556054cec6af3b1a672ea5849",
-	session: {sessionKey: "", uid: "", secret: ""},
 	generateSig: function(params, secret) {
 		var Cc = Components.classes;
 		var Ci = Components.interfaces;
@@ -39,36 +38,38 @@ var facebookClient = {
 	    params.push('method=facebook.auth.createToken');
 	    params.push('api_key=' + this.apiKey);
 	    params.push('v=1.0');
+	    params.push('format=JSON');
 	    params.push('sig=' + this.generateSig(params, this.defaultSecret));
 	    var req = new XMLHttpRequest();
-	    req.open('POST', "http://api.facebook.com/restserver.php?"+params.join('&'), false); //All calls are synchronous because when asynchronous I got some strange exceptions. We need to change that
+	    req.open("GET", "http://api.facebook.com/restserver.php?"+params.join('&'), false); //All calls are synchronous because when asynchronous I got some strange exceptions. We need to change that
 		req.send(null);
 		dump(req.responseText);
-	    var authToken = req.responseXML.getElementsByTagName("auth_createToken_response")[0].textContent;
+	    var authToken = eval(req.responseText);//req.responseXML.getElementsByTagName("auth_createToken_response")[0].textContent;
 		return authToken;
 	},
 	
-	getSession: function(authToken) {
-		if (this.session.sessionKey != "")
-			return this.session;
-		var params = [];
-	    params.push('method=facebook.auth.getSession');
-	    params.push('api_key=' + this.apiKey);
-	    params.push('v=1.0');
-		params.push('auth_token='+authToken);
-	    params.push('sig=' + this.generateSig(params, this.defaultSecret));
-	    var req = new XMLHttpRequest();
-		req.open('POST', "https://api.facebook.com/restserver.php?" + params.join('&'), false);//All calls are synchronous because when asynchronous I got some strange exceptions. We need to change that
-		req.send(null);
-		dump(req.responseText);
-		session_key = req.responseXML.getElementsByTagName("session_key")[0];
-		if (session_key == undefined)
-			return {errorCode: req.responseXML.getElementsByTagName("error_code")[0].textContent};
-		var sessionKey = session_key.textContent;
-		var uid = req.responseXML.getElementsByTagName("uid")[0].textContent;
-		var secret = req.responseXML.getElementsByTagName("secret")[0].textContent;
-		this.session = {sessionKey: sessionKey, uid: uid, secret: secret};
-		return this.session;
+	getSession: function() {
+		var authToken = this.getAuthToken();
+		if (authToken != undefined) {
+			//After getting the auth token we MUST send the user to the login page. If he is
+			//already logged on to facebook all is well. If he is not the rest of the process will fail. We need to fix this by somehow waiting for the
+			//user to successfuly login (how do we know that?)
+			window.open("http://www.facebook.com/login.php?api_key=53cc37e556054cec6af3b1a672ea5849&v=1.0&auth_token=" + authToken, "", "chrome, centerscreen,width=646,height=520,modal=yes,dialog=yes,close=yes");
+			var params = [];
+	    	params.push('method=facebook.auth.getSession');
+	    	params.push('api_key=' + this.apiKey);
+	    	params.push('v=1.0');
+			params.push('auth_token='+authToken);
+		    params.push('format=JSON');
+	    	params.push('sig=' + this.generateSig(params, this.defaultSecret));
+	    	var req = new XMLHttpRequest();
+			req.open("GET", "https://api.facebook.com/restserver.php?" + params.join('&'), false);//All calls are synchronous because when asynchronous I got some strange exceptions. We need to change that
+			req.send(null);
+			dump(req.responseText);
+			var session = eval( "(" + req.responseText + ")");
+			dump(session);
+			return session;
+		}
 	},
 	
 	updateStatus: function(sessionKey, secret, status) {
@@ -78,18 +79,21 @@ var facebookClient = {
 	    params.push('v=1.0');
 		params.push('session_key=' + sessionKey);
 		params.push('call_id=' + new Date().getTime());
+	    params.push('format=JSON');
 		params.push('status=' + status);
 	    params.push('sig=' + this.generateSig(params, secret));
 	    var req = new XMLHttpRequest();
-		req.open('POST', "http://api.facebook.com/restserver.php?"+params.join('&'), false);//All calls are synchronous because when asynchronous I got some strange exceptions. We need to change that
+		req.open("GET", "http://api.facebook.com/restserver.php?"+params.join('&'), false);//All calls are synchronous because when asynchronous I got some strange exceptions. We need to change that
 		req.send(null);
 		dump("Updating status");
 		dump(req.responseText);
-		var error_code = req.responseXML.getElementsByTagName("error_code")[0];
-		if (error_code == undefined)
+		var result = eval("(" + req.responseText + ")");
+		if (result.error_code == undefined) {
 			dump("Status has been updated ... probably");
+			return "";
+		}
 		else {
-			return error_code.textContent
+			return result.error_code;
 		}
 	}
 }

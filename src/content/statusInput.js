@@ -24,12 +24,6 @@ function sendStatusUpdate() {
 	if (firestatus.twitterEnabled && document.getElementById("selectedConsumerTwitter").checked) {
 		sendStatusUpdateTwitter();
 	}
-	/*if (document.getElementById("selectedConsumerLinkedIn").checked) {
-		sendStatusUpdateTwitter();
-	}
-	if (document.getElementById("selectedConsumerFacebook").checked) {
-		sendStatusUpdateFacebook();
-	}*/
 //	sendStatusUpdateLinkedIn();
 	if (document.getElementById("selectedConsumerFacebook").checked) {
 		sendStatusUpdateFacebook();
@@ -43,9 +37,9 @@ function sendStatusUpdateTwitter() {
     var req = new XMLHttpRequest ();   
     req.open("POST","http://twitter.com:80/statuses/update.json?status="+status, true);
     req.onreadystatechange = function () {
-		firestatus.cons.logStringMessage("twitter readyState: "+req.readyState);
-		firestatus.cons.logStringMessage("twitter status: "+req.status);
-		firestatus.cons.logStringMessage("Twitter response: "+req.responseText);
+//		firestatus.cons.logStringMessage("twitter readyState: "+req.readyState);
+//		firestatus.cons.logStringMessage("twitter status: "+req.status);
+//		firestatus.cons.logStringMessage("Twitter response: "+req.responseText);
 		if (req.readyState == 4) {
 		     switch(req.status) {
 			 	case 200:
@@ -100,20 +94,13 @@ function sendStatusUpdateFacebook(){
    		.getService(Ci.mozIJSSubScriptLoader)
    		.loadSubScript('chrome://firestatus/content/facebookClient.js'); //Is there any other way to gain access to the facebookClient object ??
 	var session = facebookClient.getSession(); //The session can be stored for subsequent calls to facebook api
-	if (session.errorCode != undefined) {
-	
-		var authToken = facebookClient.getAuthToken();
-		//After getting the auth token we MUST send the user to the login page. If he is
-		//already logged on to facebook all is well. If he is not the rest of the process will fail. We need to fix this by somehow waiting for the
-		//user to successfuly login (how do we know that?)
-		window.open("http://www.facebook.com/login.php?api_key=53cc37e556054cec6af3b1a672ea5849&v=1.0&auth_token=" + authToken, "", "chrome, centerscreen,width=646,height=520,modal=yes,dialog=yes,close=yes");
-		session = facebookClient.getSession(authToken); //The session can be stored for subsequent calls to facebook api
-	}
-	if (session.errorCode == undefined) {
-		var code = facebookClient.updateStatus(session.sessionKey, session.secret, statusText);
+	dump(session.session_key);
+	dump(session.error_code);
+	if (session.error_code == undefined) {
+		var code = facebookClient.updateStatus(session.session_key, session.secret, statusText);
 		if (code == 250) {
 			window.open("http://www.facebook.com/authorize.php?api_key=" + facebookClient.apiKey + "&v=1.0&ext_perm=status_update", "", "chrome, centerscreen,width=646,height=520,modal=yes,dialog=yes,close=yes");
-			code = facebookClient.updateStatus(session.sessionKey, session.secret, statusText);
+			code = facebookClient.updateStatus(session.session_key, session.secret, statusText);
 			if (code != undefined)
 				alert("Facebook status will not be updated");
 		}
