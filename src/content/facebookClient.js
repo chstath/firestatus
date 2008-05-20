@@ -50,12 +50,18 @@ var facebookClient = {
 	
 	getSession: function(refresh) {
 		var firestatus = window.opener.firestatus;
-		var session_key = firestatus.prefs.getCharPref("fbSessionKey");
-		var secret = firestatus.prefs.getCharPref("fbSecret");
-		dump(session_key + "\n");
-		dump(secret + "\n");
-		if (!refresh && session_key != undefined && secret != undefined)
+		if (firestatus.prefs.prefHasUserValue("fbSessionKey") && 
+			firestatus.prefs.prefHasUserValue("fbSecret")) {
+			var session_key = firestatus.prefs.getCharPref("fbSessionKey");
+			var secret = firestatus.prefs.getCharPref("fbSecret");
+			dump(session_key + "\n");
+			dump(secret + "\n");
+			dump(refresh + "\n");
+		}
+		if (!refresh && session_key != undefined && secret != undefined) {
+			dump("Using existing key...\n");
 			return {session_key:session_key, secret:secret};
+		}
 		var authToken = this.getAuthToken();
 		if (authToken != undefined) {
 			//After getting the auth token we MUST send the user to the login page. If he is
