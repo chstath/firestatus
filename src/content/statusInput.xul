@@ -40,12 +40,12 @@
         <hbox>
             <checkbox id="selectedConsumerTwitter" checked="true" label="&labelTwitter;"/>
         	<image id="twitter-icon" src="chrome://firestatus/content/twitter.png" width="16" height="16"/>
-			<checkbox id="selectedConsumerLinkedIn" checked="true" label="&labelLinkedIn;"/>
-        	<image id="linkedin-icon" src="chrome://firestatus/content/linkedin.png" width="16" height="16"/>
-            <checkbox id="selectedConsumerFacebook" checked="true" label="&labelFacebook;"/>
+			<!--checkbox id="selectedConsumerLinkedIn" checked="false" label="&labelLinkedIn;"/>
+        	<image id="linkedin-icon" src="chrome://firestatus/content/linkedin.png" width="16" height="16"/-->
+            <checkbox id="selectedConsumerFacebook" checked="false" label="&labelFacebook;"/>
         	<image id="facebook-icon" src="chrome://firestatus/content/facebook.png" width="16" height="16"/>
-			<checkbox id="selectedConsumerFriendFeed" checked="false" label="&labelFriendFeed;" disabled="true"/>
-        	<image id="friendfeed-icon" src="chrome://firestatus/content/friendfeed.png" width="16" height="16"/>
+			<!--checkbox id="selectedConsumerFriendFeed" checked="false" label="&labelFriendFeed;" disabled="true"/>
+        	<image id="friendfeed-icon" src="chrome://firestatus/content/friendfeed.png" width="16" height="16"/-->
         </hbox>
     </groupbox>
 </dialog>
