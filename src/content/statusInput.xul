@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 - Copyright (c) 2008 Panagiotis Astithas
+- Copyright (c) 2008 Christos V. Stathis
 -
 - Permission to use, copy, modify, and distribute this software for any
 - purpose with or without fee is hereby granted, provided that the above
@@ -20,7 +21,7 @@
 <!DOCTYPE dialog SYSTEM "chrome://firestatus/locale/statusInput.dtd">
 <dialog title="&statusTitle;" orient="vertical" onload="sizeToContent()"
  buttons="accept, cancel" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
- ondialogaccept="return sendStatusUpdate()">
+ ondialogaccept="statusInput.sendStatusUpdate()" >
  	<image src="chrome://firestatus/content/firestatus.png" width="433" height="109"/>
 	<script type="application/x-javascript" src="chrome://firestatus/content/statusInput.js"/>
     <groupbox align="center" orient="horizontal">
