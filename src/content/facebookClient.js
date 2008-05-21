@@ -67,7 +67,7 @@ var facebookClient = {
 			//After getting the auth token we MUST send the user to the login page. If he is
 			//already logged on to facebook all is well. If he is not the rest of the process will fail. We need to fix this by somehow waiting for the
 			//user to successfuly login (how do we know that?)
-			window.open("http://www.facebook.com/login.php?api_key=53cc37e556054cec6af3b1a672ea5849&v=1.0&auth_token=" + authToken, "", "chrome, centerscreen,width=646,height=520,modal=yes,dialog=yes,close=yes");
+			window.open("http://www.facebook.com/login.php?api_key=53cc37e556054cec6af3b1a672ea5849&v=1.0&popup=&auth_token=" + authToken, "", "chrome, centerscreen,width=646,height=520,modal=yes,dialog=yes,close=yes");
 			var params = [];
 	    	params.push('method=facebook.auth.getSession');
 	    	params.push('api_key=' + this.apiKey);
