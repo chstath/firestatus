@@ -40,6 +40,9 @@ var statusInput = {
 			document.getElementById("selectedConsumerFacebook").checked = true;
 			this.firestatus.prefs.setBoolPref("lastFacebookChecked", true);
 		}
+		var urlText = document.getElementById("statusTextUrl");
+		urlText.value = window.opener.document.getElementById("urlbar").value;
+		urlText.select();
 	},
 	
 	onUnload: function() {
