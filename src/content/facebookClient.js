@@ -49,7 +49,10 @@ var facebookClient = {
 	},
 	
 	getSession: function(refresh) {
-		var firestatus = window.opener.firestatus;
+		if (window.opener == undefined)
+			var firestatus = window.firestatus;
+		else
+			var firestatus = window.opener.firestatus;
 		if (firestatus.prefs.prefHasUserValue("fbSessionKey") && 
 			firestatus.prefs.prefHasUserValue("fbSecret")) {
 			var session_key = firestatus.prefs.getCharPref("fbSessionKey");
@@ -106,6 +109,32 @@ var facebookClient = {
 		if (result.error_code == undefined) {
 			dump("Status has been updated ... probably\n");
 			return "";
+		}
+		else {
+			return result.error_code;
+		}
+	},
+
+	getNotifications: function(sessionKey, secret) {
+		var params = [];
+	    params.push('method=notifications.get');
+	    params.push('api_key=' + this.apiKey);
+		params.push('session_key=' + sessionKey);
+		params.push('call_id=' + new Date().getTime());
+	    params.push('v=1.0');
+	    params.push('format=JSON');
+		params.push('status=' + status);
+	    params.push('sig=' + this.generateSig(params, secret));
+	    var req = new XMLHttpRequest();
+		req.open("GET", "http://api.facebook.com/restserver.php?"+params.join('&'), false);//All calls are synchronous because when asynchronous I got some strange exceptions. We need to change that
+		req.send(null);
+		dump(req.responseText + "\n");
+		var result = eval("(" + req.responseText + ")");
+		if (result.error_code == undefined) {
+			return {messages: result.messages.unread,
+					pokes: result.pokes.unread,
+					shares: result.shares.unread
+					};
 		}
 		else {
 			return result.error_code;

@@ -34,6 +34,9 @@ var firestatus = {
 	friendfeedTimeoutId: 0,
 	friendfeedTimeout: 5,
 	lastFriendfeedId: 0,
+	facebookUpdatesEnabled: false,
+	facebookTimeout: 5,
+	facebookTimeoutId: 0,
 	// A FIFO queue that contains pending notifications.
 	updateQueue: [],
 	// An initial queue for ordering FF updates before putting them in updateQueue.
@@ -91,6 +94,14 @@ var firestatus = {
 			this.friendfeedUpdates();
 			this.friendfeedTimeoutId = window.setInterval(this.friendfeedUpdates,
 														  this.friendfeedTimeout*60*1000);
+		}
+		
+	    this.facebookUpdatesEnabled = this.prefs.getBoolPref("facebookUpdatesEnabled");
+	    this.facebookTimeout = this.prefs.getIntPref("facebookTimeout");
+		if (this.facebookUpdatesEnabled) {
+			this.facebookUpdates();
+			this.facebookTimeoutId = window.setInterval(this.facebookUpdates,
+														  this.facebookTimeout*60*1000);
 		}
 	},
 	
@@ -156,6 +167,16 @@ var firestatus = {
 																  this.friendfeedTimeout*60*1000);
 				}
 		    	break;
+		    case "facebookUpdatesEnabled":
+		    	this.facebookUpdatesEnabled = this.prefs.getBoolPref("facebookUpdatesEnabled");
+				if (this.facebookUpdatesEnabled) {
+					this.facebookUpdates();
+			        this.facebookTimeoutId = window.setInterval(this.facebookUpdates,
+																  this.facebookTimeout*60*1000);
+				} else
+					this.cancelUpdates("facebook");
+		    	break;
+		    	
 		}
 	},
 	
@@ -166,6 +187,9 @@ var firestatus = {
 				break;
 			case "friendfeed":
 				window.clearInterval(this.friendfeedTimeoutId);
+				break;
+			case "facebook":
+				window.clearInterval(this.facebookTimeoutId);
 				break;
 		}
 	},
@@ -271,6 +295,24 @@ var firestatus = {
 	    req.send(null);
 	},
 	
+	facebookUpdates: function() {
+		var Cc = Components.classes;
+		var Ci = Components.interfaces;
+		// Load facebook code...
+		Cc['@mozilla.org/moz/jssubscript-loader;1']
+	   		.getService(Ci.mozIJSSubScriptLoader)
+	   		.loadSubScript('chrome://firestatus/content/facebookClient.js'); //Is there any other way to gain access to the facebookClient object ??
+		var session = facebookClient.getSession(); //The session can be stored for subsequent calls to facebook api
+		dump(session.session_key + "\n");
+		dump(session.error_code + "\n");
+		if (session.error_code == undefined) {
+			var notifications = facebookClient.getNotifications(session.session_key, session.secret);
+			firestatus.updateQueue.push({title: "Facebook",
+										 text: "Messages: " + notifications.messages + " Pokes: " + notifications.pokes + " Shares: " + notifications.shares
+										 });
+		}
+	},
+
 	displayNotification: function() {
 		firestatus.cons.logStringMessage("pending notifications:"+firestatus.updateQueue.length);
 		var update = firestatus.updateQueue.shift();

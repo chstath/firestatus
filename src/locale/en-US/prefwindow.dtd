@@ -1,6 +1,7 @@
 <!ENTITY prefwindow.title "FireStatus preferences">
 <!ENTITY twitterTab.label "Twitter">
 <!ENTITY friendfeedTab.label "FriendFeed">
+<!ENTITY facebookTab.label "Facebook">
 <!ENTITY enabled.label "Send updates">
 <!ENTITY enabled.label "Send updates">
 <!ENTITY twitterEnabled.accesskey "T">
@@ -19,4 +20,6 @@
 <!ENTITY friendfeedPassword.accesskey "P">
 <!ENTITY friendfeedUpdatesEnabled.accesskey "S">
 <!ENTITY friendfeedTimeout.accesskey "M">
+<!ENTITY facebookUpdatesEnabled.accesskey "S">
+<!ENTITY facebookTimeout.accesskey "M">
 <!ENTITY remotekey.label "Remote Key">

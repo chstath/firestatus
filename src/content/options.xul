@@ -36,6 +36,8 @@
       <preference id="friendfeedPassword" name="extensions.firestatus.friendfeedPassword" type="string"/> <!-- note that this is only an ASCII string - use unichar for unicode strings -->
       <preference id="friendfeedTimeout" name="extensions.firestatus.friendfeedTimeout" type="int"/>
       <preference id="lastFriendfeedId" name="extensions.firestatus.lastFriendfeedId" type="string"/>
+      <preference id="facebookUpdatesEnabled" name="extensions.firestatus.facebookUpdatesEnabled" type="bool"/>
+      <preference id="facebookTimeout" name="extensions.firestatus.facebookTimeout" type="int"/>
     </preferences>
 ﻿
 ﻿    <tabbox id="tabboxPrefs" flex="1">
@@ -43,6 +45,7 @@
       <tabs id="tabsElement">
         <tab id="twitterTab" label="&twitterTab.label;"/>
         <tab id="friendfeedTab" label="&friendfeedTab.label;"/>
+        <tab id="facebookTab" label="&facebookTab.label;"/>
       </tabs>
 
       <tabpanels flex="1">
@@ -60,7 +63,7 @@
 		    
 		</tabpanel>
 
-        <!-- FriendFeed -->
+		<!-- FriendFeed -->
         <tabpanel id="friendfeedPanel" orient="vertical">
         
 		<hbox>
@@ -70,6 +73,16 @@
 	    <label accesskey="&friendfeedUsername.accesskey;" control="textFriendfeedUsername">&username.label;</label><textbox id="textFriendfeedUsername" preference="friendfeedUsername"/>
 	    <label accesskey="&friendfeedPassword.accesskey;" control="textFriendfeedPassword">&remotekey.label;</label><textbox id="textFriendfeedPassword" preference="friendfeedPassword" type="password"/>
 	    <label accesskey="&friendfeedTimeout.accesskey;" control="textFriendfeedTimeout">&timeout.label;</label><textbox id="textFriendfeedTimeout" preference="friendfeedTimeout"/>
+	    
+	    </tabpanel>
+
+        <!-- Facebook -->
+        <tabpanel id="facebookPanel" orient="vertical">
+        
+		<hbox>
+	    <checkbox id="facebookUpdatesEnabled" preference="facebookUpdatesEnabled" label="&updatesEnabled.label;" accesskey="&facebookUpdatesEnabled.accesskey;" image="chrome://firestatus/content/facebook.png"/>
+	    </hbox>
+	    <label accesskey="&facebookTimeout.accesskey;" control="textFacebookTimeout">&timeout.label;</label><textbox id="textFacebookTimeout" preference="facebookTimeout"/>
 	    
 	    </tabpanel>
 	 </tabpanels>
