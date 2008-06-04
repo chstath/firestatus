@@ -16,7 +16,7 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  * */
 var statusInput = {
-	firestatus : window.opener.firestatus,
+	firestatus: window.opener.firestatus,
 	
 	onLoad: function(event) {
 		if (this.firestatus.twitterEnabled) {
@@ -52,66 +52,14 @@ var statusInput = {
 	
 	sendStatusUpdate: function() {
 		var statusText = document.getElementById('statusText').value;
+		var url = document.getElementById('statusTextUrl').value;
 		if (this.firestatus.twitterEnabled && document.getElementById("selectedConsumerTwitter").checked) {
-			this.sendStatusUpdateTwitter();
+			this.firestatus.sendStatusUpdateTwitter(statusText, url);
 		}
-	//	sendStatusUpdateLinkedIn();
 		if (document.getElementById("selectedConsumerFacebook").checked) {
 			this.sendStatusUpdateFacebook();
 		}
-		//sendStatusUpdateFriendFeed();
 	},
-
-	sendStatusUpdateTwitter: function () {
-		var statusText = document.getElementById('statusText').value +" "+ getShrinkedUrl();
-	    var status = encodeURIComponent(statusText);
-	    var req = new XMLHttpRequest ();   
-	    req.open("POST","http://twitter.com:80/statuses/update.json?status="+status, true);
-	    req.onreadystatechange = function () {
-	//		firestatus.cons.logStringMessage("twitter readyState: "+req.readyState);
-	//		firestatus.cons.logStringMessage("twitter status: "+req.status);
-	//		firestatus.cons.logStringMessage("Twitter response: "+req.responseText);
-			if (req.readyState == 4) {
-			     switch(req.status) {
-				 	case 200:
-					 	this.firestatus.cons.logStringMessage("Twitter update sent.");
-						break;
-					case 400:
-						this.firestatus.cons.logStringMessage("Bad Request");
-						break;
-					case 401:
-						this.firestatus.cons.logStringMessage("Not Authorized");
-						break;
-					case 403:
-						this.firestatus.cons.logStringMessage("Forbidden");
-						break;
-					case 404:
-						this.firestatus.cons.logStringMessage("Not Found");
-						break;
-					case 500:
-						this.firestatus.cons.logStringMessage("Internal Server Error");
-						break;
-					case 502:
-						this.firestatus.cons.logStringMessage("Bad Gateway");
-						break;
-					case 503:
-						this.firestatus.cons.logStringMessage("Service Unavailable");
-						break;
-					default:
-						this.firestatus.cons.logStringMessage("Unknown twitter status: "+req.status);
-						this.firestatus.cons.logStringMessage("Twitter response: "+req.responseText);
-				 }
-			}
-		};
-	    var auth = this.firestatus.twitterUsername+":"+this.firestatus.twitterPassword;
-	    req.setRequestHeader("Authorization", "Basic "+btoa(auth));
-	    req.send(null); 
-	},
-
-	sendStatusUpdateLinkedIn: function (){
-		return true;
-	},
-
 
 	sendStatusUpdateFacebook: function (){
 		dump("\n@@@@@@@@@@@@@@@@@@@@@Starting facebook update\n")
@@ -145,29 +93,9 @@ var statusInput = {
 		}
 		else if (code != "")
 			alert("Facebook status will not be updated");
-	},
-
-	sendStatusUpdateFriendFeed: function () {
-		/* var statusText = document.getElementById('statusText').value;
-		var status = encodeURIComponent(status);
-		req = new XMLHttpRequest ();   
-		//req.onreadystatechange = getTwitterResponse; 
-		req.open("POST","http://friendfeed.com//api/share?title="+statusText+"&nickname=firestatus&remotekey=rared739windy", true);
-		req.send(null); */
-	},
-
-	getShrinkedUrl: function () {
-		var tinyurl = "http://tinyurl.com/api-create.php?url="+encodeURI(document.getElementById('statusTextUrl').value);
-	    var req = new XMLHttpRequest();
-		req.open('GET', tinyurl, false); 
-		req.send(null);
-		if(req.status == 200) {
-			return req.responseText;
-		} else {
-			return '';
-		}
 	}
-}
+
+};
 
 window.addEventListener("load", function(e) { statusInput.onLoad(e); }, false);
 window.addEventListener("unload", function(e) { statusInput.onUnload(e); }, false);

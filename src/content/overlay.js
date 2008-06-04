@@ -306,7 +306,66 @@ var firestatus = {
 			else if (topic == 'alertfinished')
 				firestatus.displayNotification();
 		}
-	}
+	},
+	
+	getShrinkedUrl: function (url) {
+		var tinyurl = "http://tinyurl.com/api-create.php?url=" + url;
+	    var req = new XMLHttpRequest();
+		req.open('GET', tinyurl, false); 
+		req.send(null);
+		if (req.status == 200) {
+			return req.responseText;
+		} else {
+			return '';
+		}
+	},
+	
+	sendStatusUpdateTwitter: function (statusText, url) {
+		if (url)
+			statusText += " "+ firestatus.getShrinkedUrl(encodeURI(url));
+	    var status = encodeURIComponent(statusText);
+	    var req = new XMLHttpRequest ();   
+	    req.open("POST","http://twitter.com/statuses/update.json?status="+status, true);
+	    req.onreadystatechange = function () {
+			if (req.readyState == 4) {
+			     switch(req.status) {
+				 	case 200:
+					 	firestatus.cons.logStringMessage("Twitter update sent.");
+						break;
+					case 400:
+						firestatus.cons.logStringMessage("Bad Request");
+						break;
+					case 401:
+						firestatus.cons.logStringMessage("Not Authorized");
+						break;
+					case 403:
+						firestatus.cons.logStringMessage("Forbidden");
+						break;
+					case 404:
+						firestatus.cons.logStringMessage("Not Found");
+						break;
+					case 500:
+						firestatus.cons.logStringMessage("Internal Server Error");
+						break;
+					case 502:
+						firestatus.cons.logStringMessage("Bad Gateway");
+						break;
+					case 503:
+						firestatus.cons.logStringMessage("Service Unavailable");
+						break;
+					default:
+						firestatus.cons.logStringMessage("Unknown twitter status: "+req.status);
+						firestatus.cons.logStringMessage("Twitter response: "+req.responseText);
+				 }
+			}
+		};
+	    var auth = firestatus.twitterUsername + ":" + firestatus.twitterPassword;
+	    req.setRequestHeader("Authorization", "Basic "+btoa(auth));
+	    req.send(null); 
+	},
+
+
+
 
 };
 
