@@ -32,10 +32,10 @@ var firestatus = {
 	friendfeedUsername: "",
 	friendfeedPassword: "",
 	friendfeedTimeoutId: 0,
-	friendfeedTimeout: 5,
+	friendfeedTimeout: 4,
 	lastFriendfeedId: 0,
 	facebookUpdatesEnabled: false,
-	facebookTimeout: 5,
+	facebookTimeout: 6,
 	facebookTimeoutId: 0,
 	// A FIFO queue that contains pending notifications.
 	updateQueue: [],
@@ -307,9 +307,12 @@ var firestatus = {
 		dump(session.error_code + "\n");
 		if (session.error_code == undefined) {
 			var notifications = facebookClient.getNotifications(session.session_key, session.secret);
-			firestatus.updateQueue.push({title: "Facebook",
-										 text: "Messages: " + notifications.messages + " Pokes: " + notifications.pokes + " Shares: " + notifications.shares
-										 });
+			if (notifications.messages > 0 ||
+				notifications.pokes > 0 ||
+				notifications.shares > 0)
+					firestatus.updateQueue.push({title: "Facebook",
+												 text: "Messages: " + notifications.messages + " Pokes: " + notifications.pokes + " Shares: " + notifications.shares
+												 });
 		}
 	},
 
