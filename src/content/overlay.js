@@ -17,6 +17,7 @@
 var firestatus = {
 	TWITTER_URL: 'http://twitter.com',
 	FRIENDFEED_URL: 'http://friendfeed.com',
+	FACEBOOK_URL: 'http://facebook.com',
 	cons: null,
 	prefs: null,
 	twitterEnabled: false,
@@ -311,7 +312,9 @@ var firestatus = {
 				notifications.pokes > 0 ||
 				notifications.shares > 0)
 					firestatus.updateQueue.push({title: "Facebook",
-												 text: "Messages: " + notifications.messages + " Pokes: " + notifications.pokes + " Shares: " + notifications.shares
+												 image: "chrome://firestatus/content/facebook.png",
+												 text: "Messages: " + notifications.messages + " Pokes: " + notifications.pokes + " Shares: " + notifications.shares,
+												 link: firestatus.FACEBOOK_URL
 												 });
 		}
 	},
