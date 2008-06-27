@@ -373,7 +373,7 @@ var firestatus = {
 			statusText += " "+ firestatus.getShrinkedUrl(encodeURI(url));
 	    var status = encodeURIComponent(statusText);
 	    var req = new XMLHttpRequest ();   
-	    req.open("POST","http://twitter.com/statuses/update.json?status="+status, true);
+	    req.open("POST","http://twitter.com/statuses/update.json?source=firestatus&status="+status, true);
 	    req.onreadystatechange = function () {
 			if (req.readyState == 4) {
 			     switch(req.status) {
