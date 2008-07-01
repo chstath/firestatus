@@ -44,7 +44,11 @@ var facebookClient = {
 	    req.open("GET", "http://api.facebook.com/restserver.php?"+params.join('&'), false); //All calls are synchronous because when asynchronous I got some strange exceptions. We need to change that
 		req.send(null);
 		dump(req.responseText + "\n");
-	    var authToken = eval(req.responseText);//req.responseXML.getElementsByTagName("auth_createToken_response")[0].textContent;
+    	var Ci = Components.interfaces;
+    	var Cc = Components.classes;
+    	var nativeJSON = Cc["@mozilla.org/dom/json;1"].createInstance(Ci.nsIJSON);
+        var jsonString = req.responseText;
+		var authToken = nativeJSON.decode(jsonString);
 		return authToken;
 	},
 	
@@ -82,7 +86,11 @@ var facebookClient = {
 			req.open("GET", "https://api.facebook.com/restserver.php?" + params.join('&'), false);//All calls are synchronous because when asynchronous I got some strange exceptions. We need to change that
 			req.send(null);
 			dump(req.responseText + "\n");
-			var session = eval( "(" + req.responseText + ")");
+	    	var Ci = Components.interfaces;
+	    	var Cc = Components.classes;
+	    	var nativeJSON = Cc["@mozilla.org/dom/json;1"].createInstance(Ci.nsIJSON);
+	        var jsonString = req.responseText;
+			var session = nativeJSON.decode(jsonString);
 			dump(session.session_key + "\n");
 			firestatus.prefs.setCharPref("fbSessionKey", session.session_key);
 			firestatus.prefs.setCharPref("fbSecret", session.secret);
@@ -105,7 +113,11 @@ var facebookClient = {
 		req.send(null);
 		dump("Updating status\n");
 		dump(req.responseText + "\n");
-		var result = eval("(" + req.responseText + ")");
+    	var Ci = Components.interfaces;
+    	var Cc = Components.classes;
+    	var nativeJSON = Cc["@mozilla.org/dom/json;1"].createInstance(Ci.nsIJSON);
+        var jsonString = req.responseText;
+		var result = nativeJSON.decode(jsonString);
 		if (result.error_code == undefined) {
 			dump("Status has been updated ... probably\n");
 			return "";
@@ -129,7 +141,11 @@ var facebookClient = {
 		req.open("GET", "http://api.facebook.com/restserver.php?"+params.join('&'), false);//All calls are synchronous because when asynchronous I got some strange exceptions. We need to change that
 		req.send(null);
 		dump(req.responseText + "\n");
-		var result = eval("(" + req.responseText + ")");
+    	var Ci = Components.interfaces;
+    	var Cc = Components.classes;
+    	var nativeJSON = Cc["@mozilla.org/dom/json;1"].createInstance(Ci.nsIJSON);
+        var jsonString = req.responseText;
+		var result = nativeJSON.decode(jsonString);
 		if (result.error_code == undefined) {
 			return {messages: result.messages.unread,
 					pokes: result.pokes.unread,
