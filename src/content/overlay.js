@@ -110,6 +110,16 @@ var firestatus = {
 		this.prefs.removeObserver("", this);
 	},
 	
+	onClick: function(event) {
+		if (event.button == 0 && !event.ctrlKey) {
+			window.openDialog('chrome://firestatus/content/statusInput.xul', 'statusInput', 'chrome,resizable=yes');
+		} else if (event.button == 2 || event.ctrlKey) {
+			var panel = window.document.getElementById('firestatus-panel');
+			var popup = window.document.getElementById('firestatus-popup');
+			popup.openPopup(panel, 'after_start', 12, 4, true, false);
+		}
+	},
+	
 	observe: function(subject, topic, data) {
 		if (topic != "nsPref:changed") {
 			return;
