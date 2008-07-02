@@ -17,6 +17,7 @@
 var facebookClient = {
 	defaultSecret: "f0abf7dde17155ff587728121607813f",
 	apiKey: "53cc37e556054cec6af3b1a672ea5849",
+	firestatus: window.firestatus,
 	generateSig: function(params, secret) {
 		var Cc = Components.classes;
 		var Ci = Components.interfaces;
@@ -53,14 +54,10 @@ var facebookClient = {
 	},
 	
 	getSession: function(refresh) {
-		if (window.opener == undefined)
-			var firestatus = window.firestatus;
-		else
-			var firestatus = window.opener.firestatus;
-		if (firestatus.prefs.prefHasUserValue("fbSessionKey") && 
-			firestatus.prefs.prefHasUserValue("fbSecret")) {
-			var session_key = firestatus.prefs.getCharPref("fbSessionKey");
-			var secret = firestatus.prefs.getCharPref("fbSecret");
+		if (this.firestatus.prefs.prefHasUserValue("fbSessionKey") && 
+			this.firestatus.prefs.prefHasUserValue("fbSecret")) {
+			var session_key = this.firestatus.prefs.getCharPref("fbSessionKey");
+			var secret = this.firestatus.prefs.getCharPref("fbSecret");
 			dump(session_key + "\n");
 			dump(secret + "\n");
 			dump(refresh + "\n");
@@ -92,8 +89,8 @@ var facebookClient = {
 	        var jsonString = req.responseText;
 			var session = nativeJSON.decode(jsonString);
 			dump(session.session_key + "\n");
-			firestatus.prefs.setCharPref("fbSessionKey", session.session_key);
-			firestatus.prefs.setCharPref("fbSecret", session.secret);
+			this.firestatus.prefs.setCharPref("fbSessionKey", session.session_key);
+			this.firestatus.prefs.setCharPref("fbSecret", session.secret);
 			return session;
 		}
 	},
@@ -106,25 +103,69 @@ var facebookClient = {
 		params.push('session_key=' + sessionKey);
 		params.push('call_id=' + new Date().getTime());
 	    params.push('format=JSON');
+	    params.push('status_includes_verb=1');
 		params.push('status=' + status);
 	    params.push('sig=' + this.generateSig(params, secret));
 	    var req = new XMLHttpRequest();
-		req.open("GET", "http://api.facebook.com/restserver.php?"+params.join('&'), false);//All calls are synchronous because when asynchronous I got some strange exceptions. We need to change that
+		req.open("GET", "http://api.facebook.com/restserver.php?"+params.join('&'), true);
+	    req.onreadystatechange = function () {
+			if (req.readyState == 4) {
+				dump(req.responseText + "\n");
+				dump(req.status + "\n");
+			     switch(req.status) {
+				 	case 200:
+				    	var Ci = Components.interfaces;
+				    	var Cc = Components.classes;
+				    	var nativeJSON = Cc["@mozilla.org/dom/json;1"].createInstance(Ci.nsIJSON);
+				        var jsonString = req.responseText;
+						//var result = nativeJSON.decode(jsonString);
+						var result = eval("(" + jsonString + ")");
+						var code = result.error_code;
+						if (code == undefined) {
+					 		firestatus.cons.logStringMessage("Facebook update sent.");
+						}
+						else {
+							if (code == 250) {
+								window.open("http://www.facebook.com/authorize.php?api_key=" + facebookClient.apiKey + "&v=1.0&ext_perm=status_update&popup=", "", "chrome, centerscreen,width=646,height=520,modal=yes,dialog=yes,close=yes");
+								req.send(null);
+							}
+							else if (code == 102) {
+								session = facebookClient.getSession(true);
+								req.send(null);
+							}
+							else if (code != "")
+								alert("Facebook status will not be updated");
+						}
+						break;
+					case 400:
+						firestatus.cons.logStringMessage("Bad Request");
+						break;
+					case 401:
+						firestatus.cons.logStringMessage("Not Authorized");
+						break;
+					case 403:
+						firestatus.cons.logStringMessage("Forbidden");
+						break;
+					case 404:
+						firestatus.cons.logStringMessage("Not Found");
+						break;
+					case 500:
+						firestatus.cons.logStringMessage("Internal Server Error");
+						break;
+					case 502:
+						firestatus.cons.logStringMessage("Bad Gateway");
+						break;
+					case 503:
+						firestatus.cons.logStringMessage("Service Unavailable");
+						break;
+					default:
+						firestatus.cons.logStringMessage("Unknown facebook code: "+req.status);
+						firestatus.cons.logStringMessage("Facebook response: "+req.responseText);
+				 }
+			}
+		};
+		firestatus.cons.logStringMessage("Updating facebook status\n");
 		req.send(null);
-		dump("Updating status\n");
-		dump(req.responseText + "\n");
-    	var Ci = Components.interfaces;
-    	var Cc = Components.classes;
-    	var nativeJSON = Cc["@mozilla.org/dom/json;1"].createInstance(Ci.nsIJSON);
-        var jsonString = req.responseText;
-		var result = nativeJSON.decode(jsonString);
-		if (result.error_code == undefined) {
-			dump("Status has been updated ... probably\n");
-			return "";
-		}
-		else {
-			return result.error_code;
-		}
 	},
 
 	getNotifications: function(sessionKey, secret) {
@@ -140,7 +181,7 @@ var facebookClient = {
 	    var req = new XMLHttpRequest();
 		req.open("GET", "http://api.facebook.com/restserver.php?"+params.join('&'), false);//All calls are synchronous because when asynchronous I got some strange exceptions. We need to change that
 		req.send(null);
-		dump(req.responseText + "\n");
+		this.firestatus.cons.logStringMessage(req.responseText + "\n");
     	var Ci = Components.interfaces;
     	var Cc = Components.classes;
     	var nativeJSON = Cc["@mozilla.org/dom/json;1"].createInstance(Ci.nsIJSON);

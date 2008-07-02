@@ -62,19 +62,16 @@ var statusInput = {
 	},
 
 	sendStatusUpdateFacebook: function (){
-		dump("\n@@@@@@@@@@@@@@@@@@@@@Starting facebook update\n")
-		var statusText = document.getElementById('statusText').value +" "+ document.getElementById('statusTextUrl').value;
+		this.firestatus.cons.logStringMessage("Starting facebook update...")
+		var url = document.getElementById('statusTextUrl').value;
+		var statusText = document.getElementById('statusText').value;
+		if (url)
+			statusText += " " + this.firestatus.getShrinkedUrl(encodeURI(url));
 	//	var status = encodeURIComponent(statusText); //Somehow the status update fails if the status is encoded
 	
-		var Cc = Components.classes;
-		var Ci = Components.interfaces;
-		// Load facebook code...
-		Cc['@mozilla.org/moz/jssubscript-loader;1']
-	   		.getService(Ci.mozIJSSubScriptLoader)
-	   		.loadSubScript('chrome://firestatus/content/facebookClient.js'); //Is there any other way to gain access to the facebookClient object ??
-		var session = facebookClient.getSession(); //The session can be stored for subsequent calls to facebook api
-		dump(session.session_key + "\n");
-		dump(session.error_code + "\n");
+		var session = this.firestatus.facebookClient.getSession(); //The session can be stored for subsequent calls to facebook api
+		this.firestatus.cons.logStringMessage("Session key=" + session.session_key);
+		this.firestatus.cons.logStringMessage("Error code=" + session.error_code);
 		if (session.error_code == undefined) {
 			this.sendFacebook(session, statusText);
 		}
@@ -82,17 +79,7 @@ var statusInput = {
 	},
 
 	sendFacebook: function (session, statusText) {
-		var code = facebookClient.updateStatus(session.session_key, session.secret, statusText);
-		if (code == 250) {
-			window.open("http://www.facebook.com/authorize.php?api_key=" + facebookClient.apiKey + "&v=1.0&ext_perm=status_update&popup=", "", "chrome, centerscreen,width=646,height=520,modal=yes,dialog=yes,close=yes");
-			this.sendFacebook(session, statusText);
-		}
-		else if (code == 102) {
-			session = facebookClient.getSession(true);
-			this.sendFacebook(session, statusText);
-		}
-		else if (code != "")
-			alert("Facebook status will not be updated");
+		this.firestatus.facebookClient.updateStatus(session.session_key, session.secret, statusText);
 	}
 
 };

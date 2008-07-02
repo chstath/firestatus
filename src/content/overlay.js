@@ -96,7 +96,12 @@ var firestatus = {
 			this.friendfeedTimeoutId = window.setInterval(this.friendfeedUpdates,
 														  this.friendfeedTimeout*60*1000);
 		}
+				// Load facebook code...
+		Cc['@mozilla.org/moz/jssubscript-loader;1']
+	   		.getService(Ci.mozIJSSubScriptLoader)
+	   		.loadSubScript('chrome://firestatus/content/facebookClient.js'); //Is there any other way to gain access to the facebookClient object ??
 		
+		this.facebookClient = facebookClient;
 	    this.facebookUpdatesEnabled = this.prefs.getBoolPref("facebookUpdatesEnabled");
 	    this.facebookTimeout = this.prefs.getIntPref("facebookTimeout");
 		if (this.facebookUpdatesEnabled) {
@@ -313,15 +318,9 @@ var firestatus = {
 	},
 	
 	facebookUpdates: function() {
-		var Cc = Components.classes;
-		var Ci = Components.interfaces;
-		// Load facebook code...
-		Cc['@mozilla.org/moz/jssubscript-loader;1']
-	   		.getService(Ci.mozIJSSubScriptLoader)
-	   		.loadSubScript('chrome://firestatus/content/facebookClient.js'); //Is there any other way to gain access to the facebookClient object ??
 		var session = facebookClient.getSession(); //The session can be stored for subsequent calls to facebook api
-		dump(session.session_key + "\n");
-		dump(session.error_code + "\n");
+		firestatus.cons.logStringMessage("Session key=" + session.session_key);
+		firestatus.cons.logStringMessage(session.error_code + "\n");
 		if (session.error_code == undefined) {
 			var notifications = facebookClient.getNotifications(session.session_key, session.secret);
 			if (notifications.messages > 0 ||
