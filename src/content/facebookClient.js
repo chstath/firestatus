@@ -18,6 +18,7 @@ var facebookClient = {
 	defaultSecret: "f0abf7dde17155ff587728121607813f",
 	apiKey: "53cc37e556054cec6af3b1a672ea5849",
 	firestatus: window.firestatus,
+	
 	generateSig: function(params, secret) {
 		var Cc = Components.classes;
 		var Ci = Components.interfaces;
@@ -44,12 +45,13 @@ var facebookClient = {
 	    var req = new XMLHttpRequest();
 	    req.open("GET", "http://api.facebook.com/restserver.php?"+params.join('&'), false); //All calls are synchronous because when asynchronous I got some strange exceptions. We need to change that
 		req.send(null);
-		dump(req.responseText + "\n");
+		firestatus.cons.logStringMessage("Response from getAuthToken: "  + req.responseText);
     	var Ci = Components.interfaces;
     	var Cc = Components.classes;
     	var nativeJSON = Cc["@mozilla.org/dom/json;1"].createInstance(Ci.nsIJSON);
-        var jsonString = req.responseText;
-		var authToken = nativeJSON.decode(jsonString);
+        var jsonString = "(" + req.responseText + ")";
+//		var authToken = nativeJSON.decode(jsonString);
+		var authToken = eval("(" + req.responseText + ")");
 		return authToken;
 	},
 	
@@ -58,15 +60,16 @@ var facebookClient = {
 			this.firestatus.prefs.prefHasUserValue("fbSecret")) {
 			var session_key = this.firestatus.prefs.getCharPref("fbSessionKey");
 			var secret = this.firestatus.prefs.getCharPref("fbSecret");
-			dump(session_key + "\n");
-			dump(secret + "\n");
-			dump(refresh + "\n");
+			firestatus.cons.logStringMessage("Session key exists: " + session_key);
+			firestatus.cons.logStringMessage("Secret exists: " + secret);
+			firestatus.cons.logStringMessage("Refresh: " + refresh);
 		}
 		if (!refresh && session_key != undefined && secret != undefined) {
-			dump("Using existing key...\n");
+			firestatus.cons.logStringMessage("Using existing key...\n");
 			return {session_key:session_key, secret:secret};
 		}
 		var authToken = this.getAuthToken();
+		firestatus.cons.logStringMessage("authToken retrieved: " + authToken);
 		if (authToken != undefined) {
 			//After getting the auth token we MUST send the user to the login page. If he is
 			//already logged on to facebook all is well. If he is not the rest of the process will fail. We need to fix this by somehow waiting for the
@@ -82,13 +85,13 @@ var facebookClient = {
 	    	var req = new XMLHttpRequest();
 			req.open("GET", "https://api.facebook.com/restserver.php?" + params.join('&'), false);//All calls are synchronous because when asynchronous I got some strange exceptions. We need to change that
 			req.send(null);
-			dump(req.responseText + "\n");
+			firestatus.cons.logStringMessage("Response from getSession: " + req.responseText);
 	    	var Ci = Components.interfaces;
 	    	var Cc = Components.classes;
 	    	var nativeJSON = Cc["@mozilla.org/dom/json;1"].createInstance(Ci.nsIJSON);
 	        var jsonString = req.responseText;
 			var session = nativeJSON.decode(jsonString);
-			dump(session.session_key + "\n");
+			firestatus.cons.logStringMessage("Session key: " + session.session_key);
 			this.firestatus.prefs.setCharPref("fbSessionKey", session.session_key);
 			this.firestatus.prefs.setCharPref("fbSecret", session.secret);
 			return session;
@@ -106,6 +109,10 @@ var facebookClient = {
 	    params.push('status_includes_verb=1');
 		params.push('status=' + status);
 	    params.push('sig=' + this.generateSig(params, secret));
+	    facebookClient.sendUpdate(params);
+	},
+
+	sendUpdate: function(params) {
 	    var req = new XMLHttpRequest();
 		req.open("GET", "http://api.facebook.com/restserver.php?"+params.join('&'), true);
 	    req.onreadystatechange = function () {
@@ -127,14 +134,16 @@ var facebookClient = {
 						else {
 							if (code == 250) {
 								window.open("http://www.facebook.com/authorize.php?api_key=" + facebookClient.apiKey + "&v=1.0&ext_perm=status_update&popup=", "", "chrome, centerscreen,width=646,height=520,modal=yes,dialog=yes,close=yes");
-								req.send(null);
+								facebookClient.sendUpdate(params);
 							}
 							else if (code == 102) {
 								session = facebookClient.getSession(true);
-								req.send(null);
+								facebookClient.sendUpdate(params);
 							}
-							else if (code != "")
+							else if (code != "") {
+								firestatus.cons.logStringMessage("Facebook sent code: " + code);
 								alert("Facebook status will not be updated");
+							}
 						}
 						break;
 					case 400:
@@ -164,10 +173,10 @@ var facebookClient = {
 				 }
 			}
 		};
-		firestatus.cons.logStringMessage("Updating facebook status\n");
+		firestatus.cons.logStringMessage("Updating facebook status");
 		req.send(null);
 	},
-
+	
 	getNotifications: function(sessionKey, secret) {
 		var params = [];
 	    params.push('method=notifications.get');
@@ -181,7 +190,7 @@ var facebookClient = {
 	    var req = new XMLHttpRequest();
 		req.open("GET", "http://api.facebook.com/restserver.php?"+params.join('&'), false);//All calls are synchronous because when asynchronous I got some strange exceptions. We need to change that
 		req.send(null);
-		this.firestatus.cons.logStringMessage(req.responseText + "\n");
+		this.firestatus.cons.logStringMessage(req.responseText);
     	var Ci = Components.interfaces;
     	var Cc = Components.classes;
     	var nativeJSON = Cc["@mozilla.org/dom/json;1"].createInstance(Ci.nsIJSON);

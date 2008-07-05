@@ -323,7 +323,8 @@ var firestatus = {
 		firestatus.cons.logStringMessage(session.error_code + "\n");
 		if (session.error_code == undefined) {
 			var notifications = facebookClient.getNotifications(session.session_key, session.secret);
-			if (notifications.messages > 0 ||
+			firestatus.cons.logStringMessage("Facebook notifications: " + notifications.messages);
+			if (notifications.messages > 0 || 
 				notifications.pokes > 0 ||
 				notifications.shares > 0)
 					firestatus.updateQueue.push({title: "Facebook",
@@ -331,6 +332,11 @@ var firestatus = {
 												 text: "Messages: " + notifications.messages + " Pokes: " + notifications.pokes + " Shares: " + notifications.shares,
 												 link: firestatus.FACEBOOK_URL
 												 });
+			firestatus.cons.logStringMessage("pending notifications:"+firestatus.updateQueue.length);
+			if (!firestatus.processingQueue) {
+				firestatus.processingQueue = true;
+				firestatus.displayNotification();
+			}
 		}
 	},
 
@@ -425,7 +431,7 @@ var firestatus = {
 	    var auth = firestatus.twitterUsername + ":" + firestatus.twitterPassword;
 	    req.setRequestHeader("Authorization", "Basic "+btoa(auth));
 	    req.send(null); 
-	},
+	}
 
 
 
