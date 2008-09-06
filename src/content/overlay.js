@@ -322,21 +322,7 @@ var firestatus = {
 		firestatus.cons.logStringMessage("Session key=" + session.session_key);
 		firestatus.cons.logStringMessage(session.error_code + "\n");
 		if (session.error_code == undefined) {
-			var notifications = facebookClient.getNotifications(session.session_key, session.secret);
-			firestatus.cons.logStringMessage("Facebook notifications: " + notifications.messages);
-			if (notifications.messages > 0 || 
-				notifications.pokes > 0 ||
-				notifications.shares > 0)
-					firestatus.updateQueue.push({title: "Facebook",
-												 image: "chrome://firestatus/content/facebook.png",
-												 text: "Messages: " + notifications.messages + " Pokes: " + notifications.pokes + " Shares: " + notifications.shares,
-												 link: firestatus.FACEBOOK_URL
-												 });
-			firestatus.cons.logStringMessage("pending notifications:"+firestatus.updateQueue.length);
-			if (!firestatus.processingQueue) {
-				firestatus.processingQueue = true;
-				firestatus.displayNotification();
-			}
+			facebookClient.getNotifications(session.session_key, session.secret);
 		}
 	},
 

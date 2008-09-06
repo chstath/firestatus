@@ -188,22 +188,72 @@ var facebookClient = {
 		params.push('status=' + status);
 	    params.push('sig=' + this.generateSig(params, secret));
 	    var req = new XMLHttpRequest();
-		req.open("GET", "http://api.facebook.com/restserver.php?"+params.join('&'), false);//All calls are synchronous because when asynchronous I got some strange exceptions. We need to change that
+		req.open("GET", "http://api.facebook.com/restserver.php?"+params.join('&'), true);
+	    req.onreadystatechange = function () {
+			if (req.readyState == 4) {
+				dump(req.responseText + "\n");
+				dump(req.status + "\n");
+			     switch(req.status) {
+				 	case 200:
+				    	var Ci = Components.interfaces;
+				    	var Cc = Components.classes;
+				    	var nativeJSON = Cc["@mozilla.org/dom/json;1"].createInstance(Ci.nsIJSON);
+				        var jsonString = req.responseText;
+						var result = nativeJSON.decode(jsonString);
+						var code = result.error_code;
+						if (code == undefined) {
+							var notifications = {messages: result.messages.unread,
+								pokes: result.pokes.unread,
+								shares: result.shares.unread
+								};
+							if (notifications.messages > 0 || 
+									notifications.pokes > 0 ||
+									notifications.shares > 0)
+										firestatus.updateQueue.push({title: "Facebook",
+																	 image: "chrome://firestatus/content/facebook.png",
+																	 text: "Messages: " + notifications.messages + " Pokes: " + notifications.pokes + " Shares: " + notifications.shares,
+																	 link: firestatus.FACEBOOK_URL
+																	 });
+								firestatus.cons.logStringMessage("pending notifications:"+firestatus.updateQueue.length);
+								if (!firestatus.processingQueue) {
+									firestatus.processingQueue = true;
+									firestatus.displayNotification();
+								}
+						}
+						else {
+							if (code != "") {
+								firestatus.cons.logStringMessage("Error while getting notifications. Facebook sent code: " + code);
+							}
+						}
+						break;
+					case 400:
+						firestatus.cons.logStringMessage("Bad Request");
+						break;
+					case 401:
+						firestatus.cons.logStringMessage("Not Authorized");
+						break;
+					case 403:
+						firestatus.cons.logStringMessage("Forbidden");
+						break;
+					case 404:
+						firestatus.cons.logStringMessage("Not Found");
+						break;
+					case 500:
+						firestatus.cons.logStringMessage("Internal Server Error");
+						break;
+					case 502:
+						firestatus.cons.logStringMessage("Bad Gateway");
+						break;
+					case 503:
+						firestatus.cons.logStringMessage("Service Unavailable");
+						break;
+					default:
+						firestatus.cons.logStringMessage("Unknown facebook code: "+req.status);
+						firestatus.cons.logStringMessage("Facebook response: "+req.responseText);
+				 }
+			}
+		};
+		firestatus.cons.logStringMessage("Getting facebook notifications");
 		req.send(null);
-		this.firestatus.cons.logStringMessage(req.responseText);
-    	var Ci = Components.interfaces;
-    	var Cc = Components.classes;
-    	var nativeJSON = Cc["@mozilla.org/dom/json;1"].createInstance(Ci.nsIJSON);
-        var jsonString = req.responseText;
-		var result = nativeJSON.decode(jsonString);
-		if (result.error_code == undefined) {
-			return {messages: result.messages.unread,
-					pokes: result.pokes.unread,
-					shares: result.shares.unread
-					};
-		}
-		else {
-			return result.error_code;
-		}
 	}
 }
