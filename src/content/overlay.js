@@ -35,6 +35,7 @@ var firestatus = {
 	friendfeedTimeoutId: 0,
 	friendfeedTimeout: 4,
 	lastFriendfeedId: 0,
+	facebookEnabled: false,
 	facebookUpdatesEnabled: false,
 	facebookTimeout: 6,
 	facebookTimeoutId: 0,
@@ -102,6 +103,7 @@ var firestatus = {
 	   		.loadSubScript('chrome://firestatus/content/facebookClient.js'); //Is there any other way to gain access to the facebookClient object ??
 		
 		this.facebookClient = facebookClient;
+	    this.facebookEnabled = this.prefs.getBoolPref("facebookEnabled");
 	    this.facebookUpdatesEnabled = this.prefs.getBoolPref("facebookUpdatesEnabled");
 	    this.facebookTimeout = this.prefs.getIntPref("facebookTimeout");
 		if (this.facebookUpdatesEnabled) {
@@ -182,6 +184,9 @@ var firestatus = {
 			        this.friendfeedTimeoutId = window.setInterval(this.friendfeedUpdates,
 																  this.friendfeedTimeout*60*1000);
 				}
+		    	break;
+			case "facebookEnabled":
+		    	this.facebookEnabled = this.prefs.getBoolPref("facebookEnabled");
 		    	break;
 		    case "facebookUpdatesEnabled":
 		    	this.facebookUpdatesEnabled = this.prefs.getBoolPref("facebookUpdatesEnabled");

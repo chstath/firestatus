@@ -47,12 +47,19 @@ var statusInput = {
 			document.getElementById("selectedConsumerFriendfeed").checked = false;
 			this.firestatus.prefs.setBoolPref("lastFriendfeedChecked", false);
 		}
-		if (this.firestatus.prefs.prefHasUserValue("lastFacebookChecked")) {
-			document.getElementById("selectedConsumerFacebook").checked = this.firestatus.prefs.getBoolPref("lastFacebookChecked");
+		if (this.firestatus.facebookEnabled) {
+			if (this.firestatus.prefs.prefHasUserValue("lastFacebookChecked")) {
+				document.getElementById("selectedConsumerFacebook").checked = this.firestatus.prefs.getBoolPref("lastFacebookChecked");
+			}
+			else {
+				document.getElementById("selectedConsumerFacebook").checked = true;
+				this.firestatus.prefs.setBoolPref("lastFacebookChecked", true);
+			}
 		}
 		else {
-			document.getElementById("selectedConsumerFacebook").checked = true;
-			this.firestatus.prefs.setBoolPref("lastFacebookChecked", true);
+			document.getElementById("selectedConsumerFacebook").disabled = true;
+			document.getElementById("selectedConsumerFacebook").checked = false;
+			this.firestatus.prefs.setBoolPref("lastFacebookChecked", false);
 		}
 		var urlText = document.getElementById("statusTextUrl");
 		urlText.value = window.opener.document.getElementById("urlbar").value;

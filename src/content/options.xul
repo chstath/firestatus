@@ -36,12 +36,13 @@
       <preference id="friendfeedPassword" name="extensions.firestatus.friendfeedPassword" type="string"/> <!-- note that this is only an ASCII string - use unichar for unicode strings -->
       <preference id="friendfeedTimeout" name="extensions.firestatus.friendfeedTimeout" type="int"/>
       <preference id="lastFriendfeedId" name="extensions.firestatus.lastFriendfeedId" type="string"/>
+      <preference id="facebookEnabled" name="extensions.firestatus.facebookEnabled" type="bool"/>
       <preference id="facebookUpdatesEnabled" name="extensions.firestatus.facebookUpdatesEnabled" type="bool"/>
       <preference id="facebookTimeout" name="extensions.firestatus.facebookTimeout" type="int"/>
     </preferences>
 
 	<hbox>
-	﻿<groupbox>
+	<groupbox>
 		<caption label="&twitterTab.label;"/>
         
 		    <checkbox id="twitterEnabled" preference="twitterEnabled" label="&enabled.label;" accesskey="&twitterEnabled.accesskey;" image="chrome://firestatus/content/twitter.png"/>
@@ -65,11 +66,10 @@
 
 	<groupbox>
         <caption label="&facebookTab.label;"/>
-        <vbox>
-		    <checkbox id="facebookUpdatesEnabled" preference="facebookUpdatesEnabled" label="&updatesEnabled.label;" accesskey="&facebookUpdatesEnabled.accesskey;" image="chrome://firestatus/content/facebook.png"/>
-		    <label accesskey="&facebookTimeout.accesskey;" control="textFacebookTimeout">&timeout.label;</label><textbox id="textFacebookTimeout" preference="facebookTimeout"/>
-	    </vbox>
-	﻿</groupbox>
+	    <checkbox id="facebookEnabled" preference="facebookEnabled" label="&enabled.label;" accesskey="&facebookEnabled.accesskey;" image="chrome://firestatus/content/facebook.png"/>
+	    <checkbox id="facebookUpdatesEnabled" preference="facebookUpdatesEnabled" label="&updatesEnabled.label;" accesskey="&facebookUpdatesEnabled.accesskey;" image="chrome://firestatus/content/facebook.png"/>
+	    <label accesskey="&facebookTimeout.accesskey;" control="textFacebookTimeout">&timeout.label;</label><textbox id="textFacebookTimeout" preference="facebookTimeout"/>
+	</groupbox>
 	</hbox>
   </prefpane>
 </prefwindow>

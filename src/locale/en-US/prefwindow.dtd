@@ -20,6 +20,7 @@
 <!ENTITY friendfeedPassword.accesskey "P">
 <!ENTITY friendfeedUpdatesEnabled.accesskey "S">
 <!ENTITY friendfeedTimeout.accesskey "M">
+<!ENTITY facebookEnabled.accesskey "S">
 <!ENTITY facebookUpdatesEnabled.accesskey "S">
 <!ENTITY facebookTimeout.accesskey "M">
 <!ENTITY remotekey.label "Remote Key">
