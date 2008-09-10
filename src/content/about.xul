@@ -22,7 +22,7 @@
 <groupbox align="center" orient="horizontal">
 <vbox>
   <image src="chrome://firestatus/content/firestatus.png"/>
-  <text value="&version; 1.0"/>
+  <text value="&version; 1.0b1"/>
   <separator class="thin"/>
   <text value="&createdBy;" style="font-weight: bold;"/>
   <text value="Panagiotis Astithas"/>

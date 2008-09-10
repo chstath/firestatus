@@ -9,7 +9,7 @@
   <RDF:Description RDF:about="urn:mozilla:install-manifest"
                    em:id="firestatus@astithas.com"
                    em:name="FireStatus"
-                   em:version="1.0"
+                   em:version="1.0b1"
                    em:creator="Panagiotis Astithas"
                    em:description="A status update utility for multiple social networks."
                    em:homepageURL="http://code.google.com/p/firestatus/"
