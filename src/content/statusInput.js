@@ -33,6 +33,20 @@ var statusInput = {
 			document.getElementById("selectedConsumerTwitter").checked = false;
 			this.firestatus.prefs.setBoolPref("lastTwitterChecked", false);
 		}
+		if (this.firestatus.friendfeedEnabled) {
+			if (this.firestatus.prefs.prefHasUserValue("lastFriendfeedChecked")) {
+				document.getElementById("selectedConsumerFriendfeed").checked = this.firestatus.prefs.getBoolPref("lastFriendfeedChecked");
+			}
+			else {
+				document.getElementById("selectedConsumerFriendfeed").checked = true;
+				this.firestatus.prefs.setBoolPref("lastFriendfeedChecked", true);
+			}
+		}
+		else {
+			document.getElementById("selectedConsumerFriendfeed").disabled = true;
+			document.getElementById("selectedConsumerFriendfeed").checked = false;
+			this.firestatus.prefs.setBoolPref("lastFriendfeedChecked", false);
+		}
 		if (this.firestatus.prefs.prefHasUserValue("lastFacebookChecked")) {
 			document.getElementById("selectedConsumerFacebook").checked = this.firestatus.prefs.getBoolPref("lastFacebookChecked");
 		}
@@ -47,6 +61,7 @@ var statusInput = {
 	
 	onUnload: function() {
 		this.firestatus.prefs.setBoolPref("lastTwitterChecked", document.getElementById("selectedConsumerTwitter").checked);
+		this.firestatus.prefs.setBoolPref("lastFriendfeedChecked", document.getElementById("selectedConsumerFriendfeed").checked);
 		this.firestatus.prefs.setBoolPref("lastFacebookChecked", document.getElementById("selectedConsumerFacebook").checked);
 	},
 	
@@ -55,6 +70,9 @@ var statusInput = {
 		var url = document.getElementById('statusTextUrl').value;
 		if (this.firestatus.twitterEnabled && document.getElementById("selectedConsumerTwitter").checked) {
 			this.firestatus.sendStatusUpdateTwitter(statusText, url);
+		}
+		if (this.firestatus.friendfeedEnabled && document.getElementById("selectedConsumerFriendfeed").checked) {
+			this.firestatus.sendStatusUpdateFriendfeed(statusText, url);
 		}
 		if (document.getElementById("selectedConsumerFacebook").checked) {
 			this.sendStatusUpdateFacebook();

@@ -417,10 +417,55 @@ var firestatus = {
 	    var auth = firestatus.twitterUsername + ":" + firestatus.twitterPassword;
 	    req.setRequestHeader("Authorization", "Basic "+btoa(auth));
 	    req.send(null); 
+	},
+
+	sendStatusUpdateFriendfeed: function(statusText, url) {
+	    var status = encodeURIComponent(statusText);
+	    var params = "title="+status;
+		if (url)
+			params += "&link="+ encodeURIComponent(firestatus.getShrinkedUrl(encodeURI(url)));
+	    var req = new XMLHttpRequest();   
+		var POST_URL = firestatus.FRIENDFEED_URL + '/api/share';
+	    req.open("POST", POST_URL, true);
+	    req.onreadystatechange = function () {
+			if (req.readyState == 4) {
+			     switch(req.status) {
+				 	case 200:
+					 	firestatus.cons.logStringMessage("FriendFeed update sent.");
+						break;
+					case 400:
+						firestatus.cons.logStringMessage("FriendFeed response: Bad Request");
+						break;
+					case 401:
+						firestatus.cons.logStringMessage("FriendFeed response: Not Authorized");
+						break;
+					case 403:
+						firestatus.cons.logStringMessage("FriendFeed response: Forbidden");
+						break;
+					case 404:
+						firestatus.cons.logStringMessage("FriendFeed response: Not Found");
+						break;
+					case 500:
+						firestatus.cons.logStringMessage("FriendFeed response: Internal Server Error");
+						break;
+					case 502:
+						firestatus.cons.logStringMessage("FriendFeed response: Bad Gateway");
+						break;
+					case 503:
+						firestatus.cons.logStringMessage("FriendFeed response: Service Unavailable");
+						break;
+					default:
+						firestatus.cons.logStringMessage("Unknown friendfeed status: "+req.status);
+						firestatus.cons.logStringMessage("FriendFeed response: "+req.responseText);
+				 }
+			}
+		};
+	    var auth = firestatus.friendfeedUsername + ":" + firestatus.friendfeedPassword;
+	    req.setRequestHeader("Authorization", "Basic "+btoa(auth));
+	    req.setRequestHeader("Content-length", params.length);
+	    req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;");
+	    req.send(params); 
 	}
-
-
-
 
 };
 
