@@ -15,12 +15,12 @@
 <!ENTITY twitterTimeout.accesskey "M">
 <!ENTITY twitter-pane.title "Twitter preferences">
 <!ENTITY friendfeed-pane.title "FriendFeed preferences">
-<!ENTITY friendfeedEnabled.accesskey "T">
-<!ENTITY friendfeedUsername.accesskey "U">
-<!ENTITY friendfeedPassword.accesskey "P">
-<!ENTITY friendfeedUpdatesEnabled.accesskey "S">
-<!ENTITY friendfeedTimeout.accesskey "M">
-<!ENTITY facebookEnabled.accesskey "S">
-<!ENTITY facebookUpdatesEnabled.accesskey "S">
-<!ENTITY facebookTimeout.accesskey "M">
+<!ENTITY friendfeedEnabled.accesskey "N">
+<!ENTITY friendfeedUsername.accesskey "R">
+<!ENTITY friendfeedPassword.accesskey "O">
+<!ENTITY friendfeedUpdatesEnabled.accesskey "D">
+<!ENTITY friendfeedTimeout.accesskey "E">
+<!ENTITY facebookEnabled.accesskey "A">
+<!ENTITY facebookUpdatesEnabled.accesskey "C">
+<!ENTITY facebookTimeout.accesskey "I">
 <!ENTITY remotekey.label "Remote Key">
