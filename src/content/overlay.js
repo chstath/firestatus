@@ -16,6 +16,7 @@
 
 var firestatus = {
 	TWITTER_URL: 'http://twitter.com',
+	TWITTER_URL_S: 'https://twitter.com',
 	FRIENDFEED_URL: 'http://friendfeed.com',
 	FACEBOOK_URL: 'http://facebook.com',
 	cons: null,
@@ -54,16 +55,6 @@ var firestatus = {
         			getService(Components.interfaces.nsIConsoleService);
 
 
-		if ("@mozilla.org/passwordmanager;1" in Components.classes) {
-		   // Password Manager exists so this is not Firefox 3 (could be Firefox 2,
-		   // Netscape, SeaMonkey, etc).
-		   // Password Manager code
-		}
-		else if ("@mozilla.org/login-manager;1" in Components.classes) {
-		   // Login Manager exists so this is Firefox 3
-		   // Login Manager code
-		}
-		
 		// Register to receive notifications of preference changes
 	    this.prefs = Components.classes["@mozilla.org/preferences-service;1"]
 	        .getService(Components.interfaces.nsIPrefService)
@@ -80,6 +71,27 @@ var firestatus = {
 	    this.lastTwitterTimestamp = this.prefs.getCharPref("lastTwitterTimestamp");
 		
 		if (this.twitterUpdatesEnabled) {
+			// If no Twitter credentials are set, try the login manager.
+			if (!this.twitterUsername || !this.twitterPassword) {
+				try {
+					// Get Login Manager 
+					var loginManager = Components.classes["@mozilla.org/login-manager;1"].getService(Components.interfaces.nsILoginManager);
+					
+					// Find users for the given parameters
+					var logins = loginManager.findLogins({}, this.TWITTER_URL_S, this.TWITTER_URL_S, null);
+					
+					// Pick the first entry from the returned array of nsILoginInfo objects.
+					if (logins.length > 0) {
+						this.cons.logStringMessage("Using the password manager stored credentials for Twitter.");
+						this.twitterUsername = logins[0].username;
+						this.twitterPassword = logins[0].password;
+					}
+				} 
+				catch (ex) {
+					this.cons.logStringMessage("Error while loading the Login Manager: " + ex);
+				}
+			}
+			
 			this.twitterUpdates();
 			this.twitterTimeoutId = window.setInterval(this.twitterUpdates,
 													   this.twitterTimeout*60*1000);
@@ -111,6 +123,7 @@ var firestatus = {
 			this.facebookTimeoutId = window.setInterval(this.facebookUpdates,
 														  this.facebookTimeout*60*1000);
 		}
+		
 	},
 	
 	onUnload: function() {
