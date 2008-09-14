@@ -94,19 +94,8 @@ var statusInput = {
 			statusText += " " + this.firestatus.getShrinkedUrl(encodeURI(url));
 	//	var status = encodeURIComponent(statusText); //Somehow the status update fails if the status is encoded
 	
-		var session = this.firestatus.facebookClient.getSession(); //The session can be stored for subsequent calls to facebook api
-		this.firestatus.cons.logStringMessage("Session key=" + session.session_key);
-		this.firestatus.cons.logStringMessage("Error code=" + session.error_code);
-		if (session.error_code == undefined) {
-			this.sendFacebook(session, statusText);
-		}
-		else alert("Facebook status will not be updated");
+		this.firestatus.facebookClient.updateStatus(statusText);
 	},
-
-	sendFacebook: function (session, statusText) {
-		this.firestatus.facebookClient.updateStatus(session.session_key, session.secret, statusText);
-	}
-
 };
 
 window.addEventListener("load", function(e) { statusInput.onLoad(e); }, false);
