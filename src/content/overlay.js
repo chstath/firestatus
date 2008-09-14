@@ -120,10 +120,8 @@ var firestatus = {
 	    this.facebookTimeout = this.prefs.getIntPref("facebookTimeout");
 		if (this.facebookUpdatesEnabled) {
 			this.facebookUpdates();
-			this.facebookTimeoutId = window.setInterval(this.facebookUpdates,
-														  this.facebookTimeout*60*1000);
+			this.facebookTimeoutId = window.setInterval(this.facebookUpdates, this.facebookTimeout*60*1000);
 		}
-		
 	},
 	
 	onUnload: function() {
@@ -336,12 +334,7 @@ var firestatus = {
 	},
 	
 	facebookUpdates: function() {
-		var session = facebookClient.getSession(); //The session can be stored for subsequent calls to facebook api
-		firestatus.cons.logStringMessage("Session key=" + session.session_key);
-		firestatus.cons.logStringMessage(session.error_code + "\n");
-		if (session.error_code == undefined) {
-			facebookClient.getNotifications(session.session_key, session.secret);
-		}
+		facebookClient.getNotifications();
 	},
 
 	displayNotification: function() {
