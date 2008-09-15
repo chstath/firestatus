@@ -50,7 +50,13 @@
 		    <label accesskey="&twitterUsername.accesskey;" control="textTwitterUsername">&username.label;</label><textbox id="textTwitterUsername" preference="twitterUsername"/>
 		    <label accesskey="&twitterPassword.accesskey;" control="textTwitterPassword">&password.label;</label><textbox id="textTwitterPassword" preference="twitterPassword" type="password"/>
 		    <label accesskey="&twitterTimeout.accesskey;" control="textTwitterTimeout">&timeout.label;</label><textbox id="textTwitterTimeout" preference="twitterTimeout"/>
-		    
+		    <label>Note: if no username and</label>
+			<label>password are provided,</label>
+			<label>FireStatus will search the</label>
+			<label>stored passwords for Twitter</label>
+			<label>credentials. This may cause</label>
+			<label>the master password dialog</label>
+			<label> to pop up.</label>
 	</groupbox>
 
 	<groupbox>
@@ -61,7 +67,9 @@
 		    <label accesskey="&friendfeedUsername.accesskey;" control="textFriendfeedUsername">&username.label;</label><textbox id="textFriendfeedUsername" preference="friendfeedUsername"/>
 		    <label accesskey="&friendfeedPassword.accesskey;" control="textFriendfeedPassword">&remotekey.label;</label><textbox id="textFriendfeedPassword" preference="friendfeedPassword" type="password"/>
 		    <label accesskey="&friendfeedTimeout.accesskey;" control="textFriendfeedTimeout">&timeout.label;</label><textbox id="textFriendfeedTimeout" preference="friendfeedTimeout"/>
-	    
+   		    <label>Note: your own Remote Key can</label>
+			<label>be found in the following page:</label>
+			<label href='http://friendfeed.com/remotekey' class='text-link'>http://friendfeed.com/remotekey</label>
 	</groupbox>
 
 	<groupbox>
