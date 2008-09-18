@@ -86,7 +86,7 @@ var statusInput = {
 		}
 	},
 
-	sendStatusUpdateFacebook: function (){
+	sendStatusUpdateFacebook: function() {
 		this.firestatus.cons.logStringMessage("Starting facebook update...")
 		var url = document.getElementById('statusTextUrl').value;
 		var statusText = document.getElementById('statusText').value;
@@ -96,6 +96,11 @@ var statusInput = {
 	
 		this.firestatus.facebookClient.updateStatus(statusText);
 	},
+	
+	updateCharCount: function() {
+		var statusText = document.getElementById('statusText').value;
+		document.getElementById('charcount').value = statusText.length;
+	}
 };
 
 window.addEventListener("load", function(e) { statusInput.onLoad(e); }, false);

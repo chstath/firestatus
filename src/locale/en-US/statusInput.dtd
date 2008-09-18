@@ -1,8 +1,7 @@
 <!ENTITY statusTitle "Status Message">
 <!ENTITY statusText "Text">
 <!ENTITY statusTextUrl "URL">
-<!ENTITY selectConsumers "Select services">
+<!ENTITY selectConsumers "Send to">
 <!ENTITY labelTwitter "Twitter">
-<!ENTITY labelLinkedIn "LinkedIn">
 <!ENTITY labelFacebook "Facebook">
 <!ENTITY labelFriendFeed "FriendFeed">

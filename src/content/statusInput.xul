@@ -17,7 +17,7 @@
 - -->
 
 <?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
-<?xml-stylesheet href="chrome://firestatus/content/statusInput.css" type="text/css"?>
+<?xml-stylesheet href="chrome://firestatus/skin/overlay.css" type="text/css"?>
 <!DOCTYPE dialog SYSTEM "chrome://firestatus/locale/statusInput.dtd">
 <dialog title="&statusTitle;" orient="vertical"
  buttons="accept, cancel" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
@@ -25,14 +25,15 @@
 	<script type="application/x-javascript" src="chrome://firestatus/content/statusInput.js"/>
     <groupbox align="center" orient="horizontal">
         <caption label="&statusText;"/>
-        <vbox>
-            <textbox id="statusText" maxlength="140" size="40"/>
-        </vbox>
+        <hbox align='center'>
+            <textbox id="statusText" maxlength="140" size="40" spellcheck="true" onkeyup="statusInput.updateCharCount()"/>
+            <label id="charcount" value="0"/>
+        </hbox>
     </groupbox>
-	    <groupbox align="center" orient="horizontal">
+    <groupbox align="center" orient="horizontal">
         <caption label="&statusTextUrl;"/>
         <vbox>
-            <textbox id="statusTextUrl" maxlength="140" size="40"/>
+            <textbox id="statusTextUrl" size="84"/>
         </vbox>
     </groupbox>
     <groupbox align="center" orient="horizontal">
