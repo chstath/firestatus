@@ -19,16 +19,16 @@
 <!DOCTYPE overlay SYSTEM "chrome://firestatus/locale/firestatus.dtd">
 <overlay id="firestatus-overlay"
          xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
-  <script src="overlay.js"/>
+  <script src="chrome://firestatus/content/overlay.js"/>
   <stringbundleset id="stringbundleset">
     <stringbundle id="firestatus-strings" src="chrome://firestatus/locale/firestatus.properties"/>
   </stringbundleset>
 
     <statusbar id="status-bar">
         <menupopup id="firestatus-popup">
-            <menuitem id="firestatus-update" label="&firestatus.update;" oncommand="openDialog('chrome://firestatus/content/statusInput.xul', 'statusInput', 'chrome,resizable=yes');"/>
-            <menuitem id="firestatus-prefs" label="&firestatus.prefs;" oncommand="openDialog('chrome://firestatus/content/options.xul', 'prefs', 'chrome,resizable=yes');"/>
-            <menuitem id="firestatus-about" label="&firestatus.about;" oncommand="openDialog('chrome://firestatus/content/about.xul', 'about', 'chrome,resizable=yes');"/>
+            <menuitem id="firestatus-update" label="&firestatus.update;" oncommand="firestatus.showStatusInput()"/>
+            <menuitem id="firestatus-prefs" label="&firestatus.prefs;" oncommand="openDialog('chrome://firestatus/content/options.xul', 'prefs', 'chrome,resizable=yes,centerscreen=yes');"/>
+            <menuitem id="firestatus-about" label="&firestatus.about;" oncommand="openDialog('chrome://firestatus/content/about.xul', 'about', 'chrome,resizable=yes,centerscreen=yes');"/>
         </menupopup>
 
         <statusbarpanel id="firestatus-panel" onclick="firestatus.onClick(event);" context="firestatus-popup">

@@ -23,17 +23,19 @@
  buttons="accept, cancel" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
  ondialogaccept="statusInput.sendStatusUpdate()" >
 	<script type="application/x-javascript" src="chrome://firestatus/content/statusInput.js"/>
+	<hbox>
     <groupbox align="center" orient="horizontal">
         <caption label="&statusText;"/>
         <hbox align='center'>
-            <textbox id="statusText" maxlength="140" size="40" spellcheck="true" onkeyup="statusInput.updateCharCount()"/>
+            <textbox id="statusText" size="84" spellcheck="true" onkeyup="statusInput.updateCharCount()"/>
             <label id="charcount" value="0"/>
         </hbox>
     </groupbox>
     <groupbox align="center" orient="horizontal">
         <caption label="&statusTextUrl;"/>
         <vbox>
-            <textbox id="statusTextUrl" size="84"/>
+            <checkbox id="sendUrl" checked="true" label="&sendUrl;" onclick="statusInput.toggleSendUrl()"/>
+            <checkbox id="shortenUrl" checked="true" label="&shortenUrl;"/>
         </vbox>
     </groupbox>
     <groupbox align="center" orient="horizontal">
@@ -47,4 +49,5 @@
         	<image id="friendfeed-icon"/>
         </hbox>
     </groupbox>
+    </hbox>
 </dialog>

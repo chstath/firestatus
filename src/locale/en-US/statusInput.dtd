@@ -1,6 +1,8 @@
 <!ENTITY statusTitle "Status Message">
 <!ENTITY statusText "Text">
 <!ENTITY statusTextUrl "URL">
+<!ENTITY sendUrl "Include current URL">
+<!ENTITY shortenUrl "Shorten URL">
 <!ENTITY selectConsumers "Send to">
 <!ENTITY labelTwitter "Twitter">
 <!ENTITY labelFacebook "Facebook">

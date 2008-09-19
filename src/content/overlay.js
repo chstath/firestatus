@@ -130,12 +130,19 @@ var firestatus = {
 	
 	onClick: function(event) {
 		if (event.button == 0 && !event.ctrlKey) {
-			window.openDialog('chrome://firestatus/content/statusInput.xul', 'statusInput', 'chrome,resizable=yes');
+			firestatus.showStatusInput();
 		} else if (event.button == 2 || event.ctrlKey) {
 			var panel = window.document.getElementById('firestatus-panel');
 			var popup = window.document.getElementById('firestatus-popup');
 			popup.openPopup(panel, 'after_start', 12, 4, true, false);
 		}
+	},
+	
+	showStatusInput: function() {
+		var left = window.screenX;
+		var top = window.screenY + window.outerHeight - 200;
+		var windowFeatures = 'screenX=' + left + ',screenY=' + top;
+		window.openDialog('chrome://firestatus/content/statusInput.xul', 'statusInput', windowFeatures);
 	},
 	
 	observe: function(subject, topic, data) {
@@ -388,7 +395,7 @@ var firestatus = {
 	
 	sendStatusUpdateTwitter: function (statusText, url) {
 		if (url)
-			statusText += " "+ firestatus.getShrinkedUrl(encodeURI(url));
+			statusText += " " + url;
 	    var status = encodeURIComponent(statusText);
 	    var req = new XMLHttpRequest ();   
 	    req.open("POST","http://twitter.com/statuses/update.json?source=firestatus&status="+status, true);
@@ -434,7 +441,7 @@ var firestatus = {
 	    var status = encodeURIComponent(statusText);
 	    var params = "title="+status;
 		if (url)
-			params += "&link="+ encodeURIComponent(firestatus.getShrinkedUrl(encodeURI(url)));
+			params += "&link=" + url;
 	    var req = new XMLHttpRequest();   
 		var POST_URL = firestatus.FRIENDFEED_URL + '/api/share';
 	    req.open("POST", POST_URL, true);

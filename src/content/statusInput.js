@@ -61,9 +61,6 @@ var statusInput = {
 			document.getElementById("selectedConsumerFacebook").checked = false;
 			this.firestatus.prefs.setBoolPref("lastFacebookChecked", false);
 		}
-		var urlText = document.getElementById("statusTextUrl");
-		urlText.value = window.opener.document.getElementById("urlbar").value;
-		urlText.select();
 	},
 	
 	onUnload: function() {
@@ -74,7 +71,9 @@ var statusInput = {
 	
 	sendStatusUpdate: function() {
 		var statusText = document.getElementById('statusText').value;
-		var url = document.getElementById('statusTextUrl').value;
+		var url = document.getElementById("sendUrl").checked ? window.opener.document.getElementById("urlbar").value : "";
+		if (url && document.getElementById("shortenUrl").checked)
+			url = this.firestatus.getShrinkedUrl(encodeURI(url));
 		if (this.firestatus.twitterEnabled && document.getElementById("selectedConsumerTwitter").checked) {
 			this.firestatus.sendStatusUpdateTwitter(statusText, url);
 		}
@@ -82,16 +81,14 @@ var statusInput = {
 			this.firestatus.sendStatusUpdateFriendfeed(statusText, url);
 		}
 		if (document.getElementById("selectedConsumerFacebook").checked) {
-			this.sendStatusUpdateFacebook();
+			this.sendStatusUpdateFacebook(statusText, url);
 		}
 	},
 
-	sendStatusUpdateFacebook: function() {
+	sendStatusUpdateFacebook: function(statusText, url) {
 		this.firestatus.cons.logStringMessage("Starting facebook update...")
-		var url = document.getElementById('statusTextUrl').value;
-		var statusText = document.getElementById('statusText').value;
 		if (url)
-			statusText += " " + this.firestatus.getShrinkedUrl(encodeURI(url));
+			statusText += " " + url;
 	//	var status = encodeURIComponent(statusText); //Somehow the status update fails if the status is encoded
 	
 		this.firestatus.facebookClient.updateStatus(statusText);
@@ -100,6 +97,10 @@ var statusInput = {
 	updateCharCount: function() {
 		var statusText = document.getElementById('statusText').value;
 		document.getElementById('charcount').value = statusText.length;
+	},
+	
+	toggleSendUrl: function() {
+		document.getElementById("shortenUrl").disabled = document.getElementById("sendUrl").checked;
 	}
 };
 
