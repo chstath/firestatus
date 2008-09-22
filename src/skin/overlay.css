@@ -17,16 +17,76 @@
 #statusText {
 	font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
 }
+
 #charcount {
 	font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
 	font-weight: bold;
 }
+
 #twitter-icon {
 	list-style-image: url("chrome://firestatus/content/twitter.png");
+	padding: 4px;
 }
+
 #friendfeed-icon {
 	list-style-image: url("chrome://firestatus/content/friendfeed.png");
+	padding: 4px;
 }
+
 #facebook-icon {
 	list-style-image: url("chrome://firestatus/content/facebook.png");
+	padding: 4px;
+}
+
+#sendDialog {
+  border-top: 1px solid #686868;
+  border-bottom: none;
+  min-width: 1px;
+  padding: 0 0 0 0;
+}
+
+#status-close {
+  -moz-appearance: none;
+  padding-right: 4px;
+  list-style-image: url("chrome://global/skin/icons/closetab.png");
+  min-width: 1px;
+  border: none;
+  background-image: none !important;
+  background-color: transparent !important;
+}
+
+#status-close:hover {
+  list-style-image: url("chrome://global/skin/icons/closetab-hover.png") !important;
+}
+
+#status-close > .toolbarbutton-text {
+  margin: 1px 6px !important;
+  display: none;  
+}
+
+#statusText {
+  border-top: 1px solid #686868;
+  border-bottom: none;
+  min-width: 1px;
+}
+
+#statusText {
+  -moz-appearance: none;
+  border: 3px solid;
+  -moz-border-top-colors: #5F5F5F #CFCFCF -moz-Field;
+  -moz-border-bottom-colors: #9F9F9F #EEE -moz-Field;
+  -moz-border-right-colors: #7F7F7F #EEE -moz-Field;
+  -moz-border-left-colors: #7F7F7F #EFEFEF -moz-Field;
+  -moz-border-radius: 11.5px;
+  -moz-background-clip: border !important;
+  padding: 0 8px;
+}
+
+#status-send {
+  -moz-appearance: none;
+  border: 1px solid #5F5F5F;
+  -moz-border-radius: 10px;
+  background: url("chrome://global/skin/icons/white-gray-gradient.gif") #A09E9D repeat-x top center;
+  margin: 0 4px 1px 4px;
+  padding: 0 3px;
 }
