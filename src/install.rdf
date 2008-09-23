@@ -13,11 +13,9 @@
                    em:creator="Panagiotis Astithas"
                    em:description="A status update utility for multiple social networks."
                    em:homepageURL="http://code.google.com/p/firestatus/"
-                   em:updateURL="http://code.google.com/p/firestatus/"
                    em:aboutURL="chrome://firestatus/content/about.xul"
                    em:optionsURL="chrome://firestatus/content/options.xul"
-                   em:iconURL="chrome://firestatus/skin/fs-icon-32.png"
-                   em:updateKey="MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC6fgbEjezo9Y8v/GzS0HZQs+WzCeDjolqjXosQYpWBoJm69qEUNtTrrpriMb9uhmZfR7PQjcsksv4+D7mvRbYeyvqAl9mwUvtggR2+evriiBnLuHmRLJW9wBsuBQaWOCUKqE50VluCsWFgDw3Ak1sMPhE2wDaqmpyLjneYIqqPEwIDAQAB">
+                   em:iconURL="chrome://firestatus/skin/fs-icon-32.png">
     <em:contributor>Christos Stathis</em:contributor>
     <em:contributor>Dionysios Synodinos</em:contributor>
     <em:targetApplication RDF:resource="rdf:#$uSYcA1"/>
