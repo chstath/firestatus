@@ -70,7 +70,7 @@ var firestatus = {
 	    this.lastTwitterId = this.prefs.getIntPref("lastTwitterId");
 	    this.lastTwitterTimestamp = this.prefs.getCharPref("lastTwitterTimestamp");
 		
-		if (this.twitterUpdatesEnabled) {
+		if (this.twitterUpdatesEnabled || this.twitterEnabled) {
 			// If no Twitter credentials are set, try the login manager.
 			if (!this.twitterUsername || !this.twitterPassword) {
 				try {
@@ -109,10 +109,6 @@ var firestatus = {
 			this.friendfeedTimeoutId = window.setInterval(this.friendfeedUpdates,
 														  this.friendfeedTimeout*60*1000);
 		}
-				// Load facebook code...
-		Cc['@mozilla.org/moz/jssubscript-loader;1']
-	   		.getService(Ci.mozIJSSubScriptLoader)
-	   		.loadSubScript('chrome://firestatus/content/facebookClient.js'); //Is there any other way to gain access to the facebookClient object ??
 		
 		this.facebookClient = facebookClient;
 	    this.facebookEnabled = this.prefs.getBoolPref("facebookEnabled");

@@ -20,6 +20,7 @@
 <overlay id="firestatus-overlay"
          xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
   <script src="chrome://firestatus/content/overlay.js"/>
+  <script src="chrome://firestatus/content/facebookClient.js"/>
   <stringbundleset id="stringbundleset">
     <stringbundle id="firestatus-strings" src="chrome://firestatus/locale/firestatus.properties"/>
   </stringbundleset>
