@@ -45,6 +45,7 @@ var firestatus = {
 	// An initial queue for ordering FF updates before putting them in updateQueue.
 	ffInitialQueue: [],
 	processingQueue: false,
+	statusInputWindow: null,
 
 	onLoad: function(){
 		// Initialization code
@@ -91,7 +92,9 @@ var firestatus = {
 					this.cons.logStringMessage("Error while loading the Login Manager: " + ex);
 				}
 			}
-			
+		}
+		
+		if (this.twitterUpdatesEnabled) {
 			this.twitterUpdates();
 			this.twitterTimeoutId = window.setInterval(this.twitterUpdates,
 													   this.twitterTimeout*60*1000);
@@ -135,10 +138,12 @@ var firestatus = {
 	},
 	
 	showStatusInput: function() {
+		if (firestatus.statusInputWindow && !firestatus.statusInputWindow.closed)
+			firestatus.statusInputWindow.close();
 		var left = window.screenX;
-		var top = window.screenY + window.outerHeight - 75;
+		var top = window.screenY + window.outerHeight - 71;
 		var windowFeatures = 'screenX=' + left + ',screenY=' + top + ',titlebar=no';
-		window.openDialog('chrome://firestatus/content/statusInput.xul', 'statusInput', windowFeatures);
+		firestatus.statusInputWindow = window.openDialog('chrome://firestatus/content/statusInput.xul', 'statusInput', windowFeatures);
 	},
 	
 	observe: function(subject, topic, data) {
