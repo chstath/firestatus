@@ -25,7 +25,7 @@
 	<script type="application/x-javascript" src="chrome://firestatus/content/statusInput.js"/>
 	<hbox align="center">
 		<button id="status-close" onclick="cancelDialog()" tooltiptext="Close popup"/>
-        <textbox id="statusText" size="65" spellcheck="true" onkeyup="statusInput.updateCharCount()"/>
+        <textbox id="statusText" size="60" spellcheck="true" onkeyup="statusInput.updateCharCount()"/>
         <label id="charcount" value="0"/>
         <vbox>
             <checkbox id="sendUrl" checked="true" label="&sendUrl;" onclick="statusInput.toggleSendUrl()"/>
