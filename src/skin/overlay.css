@@ -24,50 +24,38 @@
 }
 
 #twitter-icon {
-	list-style-image: url("chrome://firestatus/content/twitter.png");
+	list-style-image: url("chrome://firestatus/skin/twitter.png");
 	padding: 4px;
 }
 
 #friendfeed-icon {
-	list-style-image: url("chrome://firestatus/content/friendfeed.png");
+	list-style-image: url("chrome://firestatus/skin/friendfeed.png");
 	padding: 4px;
 }
 
 #facebook-icon {
-	list-style-image: url("chrome://firestatus/content/facebook.png");
+	list-style-image: url("chrome://firestatus/skin/facebook.png");
 	padding: 4px;
 }
 
 #sendDialog {
-  border-top: 1px solid #686868;
-  border-bottom: none;
+  border: none;
   min-width: 1px;
-  padding: 0 0 0 0;
+  padding: 0 0 4px 0;
 }
 
 #status-close {
   -moz-appearance: none;
   padding-right: 4px;
-  list-style-image: url("chrome://global/skin/icons/closetab.png");
-  min-width: 1px;
+  list-style-image: url("chrome://firestatus/skin/close.png");
   border: none;
   background-image: none !important;
   background-color: transparent !important;
+  min-width: 1px;
 }
 
 #status-close:hover {
-  list-style-image: url("chrome://global/skin/icons/closetab-hover.png") !important;
-}
-
-#status-close > .toolbarbutton-text {
-  margin: 1px 6px !important;
-  display: none;  
-}
-
-#statusText {
-  border-top: 1px solid #686868;
-  border-bottom: none;
-  min-width: 1px;
+  list-style-image: url("chrome://firestatus/skin/close-hover.png") !important;
 }
 
 #statusText {
@@ -83,10 +71,8 @@
 }
 
 #status-send {
-  -moz-appearance: none;
   border: 1px solid #5F5F5F;
   -moz-border-radius: 10px;
-  background: url("chrome://global/skin/icons/white-gray-gradient.gif") #A09E9D repeat-x top center;
   margin: 0 4px 1px 4px;
   padding: 0 3px;
 }

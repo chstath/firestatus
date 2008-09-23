@@ -21,7 +21,7 @@
 <!-- Original template by Jed Brown -->
 <groupbox align="center" orient="horizontal">
 <vbox>
-  <image src="chrome://firestatus/content/firestatus.png"/>
+  <image src="chrome://firestatus/skin/firestatus.png"/>
   <text value="&version; 1.0b1"/>
   <separator class="thin"/>
   <text value="&createdBy;" style="font-weight: bold;"/>

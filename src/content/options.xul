@@ -45,8 +45,8 @@
 	<groupbox>
 		<caption label="&twitterTab.label;"/>
         
-		    <checkbox id="twitterEnabled" preference="twitterEnabled" label="&enabled.label;" accesskey="&twitterEnabled.accesskey;" image="chrome://firestatus/content/twitter.png"/>
-		    <checkbox id="twitterUpdatesEnabled" preference="twitterUpdatesEnabled" label="&updatesEnabled.label;" accesskey="&twitterUpdatesEnabled.accesskey;" image="chrome://firestatus/content/twitter.png"/>
+		    <checkbox id="twitterEnabled" preference="twitterEnabled" label="&enabled.label;" accesskey="&twitterEnabled.accesskey;" image="chrome://firestatus/skin/twitter.png"/>
+		    <checkbox id="twitterUpdatesEnabled" preference="twitterUpdatesEnabled" label="&updatesEnabled.label;" accesskey="&twitterUpdatesEnabled.accesskey;" image="chrome://firestatus/skin/twitter.png"/>
 		    <label accesskey="&twitterUsername.accesskey;" control="textTwitterUsername">&username.label;</label><textbox id="textTwitterUsername" preference="twitterUsername"/>
 		    <label accesskey="&twitterPassword.accesskey;" control="textTwitterPassword">&password.label;</label><textbox id="textTwitterPassword" preference="twitterPassword" type="password"/>
 		    <label accesskey="&twitterTimeout.accesskey;" control="textTwitterTimeout">&timeout.label;</label><textbox id="textTwitterTimeout" preference="twitterTimeout"/>
@@ -62,8 +62,8 @@
 	<groupbox>
         <caption label="&friendfeedTab.label;"/>
         
-		    <checkbox id="friendfeedEnabled" preference="friendfeedEnabled" label="&enabled.label;" accesskey="&friendfeedEnabled.accesskey;" image="chrome://firestatus/content/friendfeed.png"/>
-		    <checkbox id="friendfeedUpdatesEnabled" preference="friendfeedUpdatesEnabled" label="&updatesEnabled.label;" accesskey="&friendfeedUpdatesEnabled.accesskey;" image="chrome://firestatus/content/friendfeed.png"/>
+		    <checkbox id="friendfeedEnabled" preference="friendfeedEnabled" label="&enabled.label;" accesskey="&friendfeedEnabled.accesskey;" image="chrome://firestatus/skin/friendfeed.png"/>
+		    <checkbox id="friendfeedUpdatesEnabled" preference="friendfeedUpdatesEnabled" label="&updatesEnabled.label;" accesskey="&friendfeedUpdatesEnabled.accesskey;" image="chrome://firestatus/skin/friendfeed.png"/>
 		    <label accesskey="&friendfeedUsername.accesskey;" control="textFriendfeedUsername">&username.label;</label><textbox id="textFriendfeedUsername" preference="friendfeedUsername"/>
 		    <label accesskey="&friendfeedPassword.accesskey;" control="textFriendfeedPassword">&remotekey.label;</label><textbox id="textFriendfeedPassword" preference="friendfeedPassword" type="password"/>
 		    <label accesskey="&friendfeedTimeout.accesskey;" control="textFriendfeedTimeout">&timeout.label;</label><textbox id="textFriendfeedTimeout" preference="friendfeedTimeout"/>
@@ -74,8 +74,8 @@
 
 	<groupbox>
         <caption label="&facebookTab.label;"/>
-	    <checkbox id="facebookEnabled" preference="facebookEnabled" label="&enabled.label;" accesskey="&facebookEnabled.accesskey;" image="chrome://firestatus/content/facebook.png"/>
-	    <checkbox id="facebookUpdatesEnabled" preference="facebookUpdatesEnabled" label="&updatesEnabled.label;" accesskey="&facebookUpdatesEnabled.accesskey;" image="chrome://firestatus/content/facebook.png"/>
+	    <checkbox id="facebookEnabled" preference="facebookEnabled" label="&enabled.label;" accesskey="&facebookEnabled.accesskey;" image="chrome://firestatus/skin/facebook.png"/>
+	    <checkbox id="facebookUpdatesEnabled" preference="facebookUpdatesEnabled" label="&updatesEnabled.label;" accesskey="&facebookUpdatesEnabled.accesskey;" image="chrome://firestatus/skin/facebook.png"/>
 	    <label accesskey="&facebookTimeout.accesskey;" control="textFacebookTimeout">&timeout.label;</label><textbox id="textFacebookTimeout" preference="facebookTimeout"/>
 	</groupbox>
 	</hbox>

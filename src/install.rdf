@@ -16,7 +16,7 @@
                    em:updateURL="http://code.google.com/p/firestatus/"
                    em:aboutURL="chrome://firestatus/content/about.xul"
                    em:optionsURL="chrome://firestatus/content/options.xul"
-                   em:iconURL="chrome://firestatus/content/fs-icon-32.png"
+                   em:iconURL="chrome://firestatus/skin/fs-icon-32.png"
                    em:updateKey="MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC6fgbEjezo9Y8v/GzS0HZQs+WzCeDjolqjXosQYpWBoJm69qEUNtTrrpriMb9uhmZfR7PQjcsksv4+D7mvRbYeyvqAl9mwUvtggR2+evriiBnLuHmRLJW9wBsuBQaWOCUKqE50VluCsWFgDw3Ak1sMPhE2wDaqmpyLjneYIqqPEwIDAQAB">
     <em:contributor>Christos Stathis</em:contributor>
     <em:contributor>Dionysios Synodinos</em:contributor>

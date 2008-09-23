@@ -61,6 +61,7 @@ var statusInput = {
 			document.getElementById("selectedConsumerFacebook").checked = false;
 			this.firestatus.prefs.setBoolPref("lastFacebookChecked", false);
 		}
+		document.getElementById("statusText").focus();
 	},
 	
 	onUnload: function() {

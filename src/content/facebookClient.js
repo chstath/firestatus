@@ -426,7 +426,7 @@ var facebookClient = {
 									notifications.pokes > 0 ||
 									notifications.shares > 0)
 										firestatus.updateQueue.push({title: "Facebook",
-																	 image: "chrome://firestatus/content/facebook.png",
+																	 image: "chrome://firestatus/skin/facebook.png",
 																	 text: "Messages: " + notifications.messages + " Pokes: " + notifications.pokes + " Shares: " + notifications.shares,
 																	 link: firestatus.FACEBOOK_URL
 																	 });

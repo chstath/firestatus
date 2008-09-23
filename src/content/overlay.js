@@ -140,7 +140,7 @@ var firestatus = {
 	
 	showStatusInput: function() {
 		var left = window.screenX;
-		var top = window.screenY + window.outerHeight - 67;
+		var top = window.screenY + window.outerHeight - 75;
 		var windowFeatures = 'screenX=' + left + ',screenY=' + top + ',titlebar=no';
 		window.openDialog('chrome://firestatus/content/statusInput.xul', 'statusInput', windowFeatures);
 	},
