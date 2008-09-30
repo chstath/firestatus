@@ -28,8 +28,8 @@
         <textbox id="statusText" size="60" spellcheck="true" onkeyup="statusInput.updateCharCount()"/>
         <label id="charcount" value="0"/>
         <vbox>
-            <checkbox id="sendUrl" checked="true" label="&sendUrl;" onclick="statusInput.toggleSendUrl()"/>
-            <checkbox id="shortenUrl" checked="true" label="&shortenUrl;"/>
+            <checkbox id="sendUrl" checked="false" label="&sendUrl;" onclick="statusInput.toggleSendUrl()"/>
+            <checkbox id="shortenUrl" disabled="true" checked="true" label="&shortenUrl;"/>
         </vbox>
         <groupbox>
         <hbox>
