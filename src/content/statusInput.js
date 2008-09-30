@@ -73,28 +73,24 @@ var statusInput = {
 	sendStatusUpdate: function() {
 		var statusText = document.getElementById('statusText').value;
 		var url = document.getElementById("sendUrl").checked ? window.opener.document.getElementById("urlbar").value : "";
+		var sendTwitter = this.firestatus.twitterEnabled && document.getElementById("selectedConsumerTwitter").checked;
+		var sendFriendfeed = this.firestatus.friendfeedEnabled && document.getElementById("selectedConsumerFriendfeed").checked;
+		var sendFacebook = this.firestatus.facebookEnabled && document.getElementById("selectedConsumerFacebook").checked;
 		if (url && document.getElementById("shortenUrl").checked)
-			url = this.firestatus.getShrinkedUrl(encodeURI(url));
-		if (this.firestatus.twitterEnabled && document.getElementById("selectedConsumerTwitter").checked) {
-			this.firestatus.sendStatusUpdateTwitter(statusText, url);
-		}
-		if (this.firestatus.friendfeedEnabled && document.getElementById("selectedConsumerFriendfeed").checked) {
-			this.firestatus.sendStatusUpdateFriendfeed(statusText, url);
-		}
-		if (document.getElementById("selectedConsumerFacebook").checked) {
-			this.sendStatusUpdateFacebook(statusText, url);
+			this.firestatus.getShrinkedUrl(encodeURI(url), statusText, sendTwitter, sendFriendfeed, sendFacebook);
+		else {
+			if (sendTwitter) {
+				this.firestatus.sendStatusUpdateTwitter(statusText, url);
+			}
+			if (sendFriendfeed) {
+				this.firestatus.sendStatusUpdateFriendfeed(statusText, url);
+			}
+			if (sendFacebook) {
+				this.firestatus.sendStatusUpdateFacebook(statusText, url);
+			}
 		}
 	},
 
-	sendStatusUpdateFacebook: function(statusText, url) {
-		this.firestatus.cons.logStringMessage("Starting facebook update...")
-		if (url)
-			statusText += " " + url;
-	//	var status = encodeURIComponent(statusText); //Somehow the status update fails if the status is encoded
-	
-		this.firestatus.facebookClient.updateStatus(statusText);
-	},
-	
 	updateCharCount: function() {
 		var statusText = document.getElementById('statusText').value;
 		document.getElementById('charcount').value = statusText.length;

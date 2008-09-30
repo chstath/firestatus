@@ -382,18 +382,65 @@ var firestatus = {
 		}
 	},
 	
-	getShrinkedUrl: function (url) {
+	getShrinkedUrl: function (url, statusText, sendTwitter, sendFriendfeed, sendFacebook) {
+		firestatus.cons.logStringMessage("Shortening url ...");
 		var tinyurl = "http://tinyurl.com/api-create.php?url=" + url;
 	    var req = new XMLHttpRequest();
-		req.open('GET', tinyurl, false); 
+		req.open('GET', tinyurl, true); 
+	    req.onreadystatechange = function () {
+			if (req.readyState == 4) {
+			     switch(req.status) {
+				 	case 200:
+						url = req.responseText;
+						if (sendTwitter) {
+							firestatus.sendStatusUpdateTwitter(statusText, url);
+						}
+						if (sendFriendfeed) {
+							firestatus.sendStatusUpdateFriendfeed(statusText, url);
+						}
+						if (sendFacebook) {
+							firestatus.sendStatusUpdateFacebook(statusText, url);
+						}
+						break;
+					case 400:
+						firestatus.cons.logStringMessage("Bad Request");
+						break;
+					case 401:
+						firestatus.cons.logStringMessage("Not Authorized");
+						break;
+					case 403:
+						firestatus.cons.logStringMessage("Forbidden");
+						break;
+					case 404:
+						firestatus.cons.logStringMessage("Not Found");
+						break;
+					case 500:
+						firestatus.cons.logStringMessage("Internal Server Error");
+						break;
+					case 502:
+						firestatus.cons.logStringMessage("Bad Gateway");
+						break;
+					case 503:
+						firestatus.cons.logStringMessage("Service Unavailable");
+						break;
+					default:
+						firestatus.cons.logStringMessage("Unknown tinyurl code: "+req.status);
+						firestatus.cons.logStringMessage("Tinyurl response: "+req.responseText);
+			     }
+			}
+	    };
 		req.send(null);
-		if (req.status == 200) {
-			return req.responseText;
-		} else {
-			return '';
-		}
 	},
 	
+	sendStatusUpdateFacebook: function(statusText, url) {
+		firestatus.cons.logStringMessage("Starting facebook update...")
+		if (url)
+			statusText += " " + url;
+	//	var status = encodeURIComponent(statusText); //Somehow the status update fails if the status is encoded
+	
+		firestatus.facebookClient.updateStatus(statusText);
+	},
+
 	sendStatusUpdateTwitter: function (statusText, url) {
 		if (url)
 			statusText += " " + url;
