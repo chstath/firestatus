@@ -24,7 +24,7 @@
  ondialogaccept="statusInput.sendStatusUpdate()">
 	<script type="application/x-javascript" src="chrome://firestatus/content/statusInput.js"/>
 	<hbox align="center">
-		<button id="status-close" onclick="cancelDialog()" tooltiptext="Close popup"/>
+		<button id="status-close" onclick="cancelDialog()" tooltiptext="&close;"/>
         <textbox id="statusText" size="60" spellcheck="true" onkeyup="statusInput.updateCharCount()"/>
         <label id="charcount" value="0"/>
         <vbox>
@@ -41,6 +41,6 @@
         	<image id="friendfeed-icon"/>
         </hbox>
         </groupbox>
-		<button id="status-send" label="Send" onclick="acceptDialog()" tooltiptext="Send status update"/>
+		<button id="status-send" label="&send;" onclick="acceptDialog()" tooltiptext="&sendTooltip;"/>
     </hbox>
 </dialog>

@@ -24,3 +24,12 @@
 <!ENTITY facebookUpdatesEnabled.accesskey "C">
 <!ENTITY facebookTimeout.accesskey "I">
 <!ENTITY remotekey.label "Remote Key">
+<!ENTITY friendfeed.note1 "Note: your own Remote Key can">
+<!ENTITY friendfeed.note2 "be found in the following page:">
+<!ENTITY twitter.note1 "Note: if no username and">
+<!ENTITY twitter.note2 "password are provided,">
+<!ENTITY twitter.note3 "FireStatus will search the">
+<!ENTITY twitter.note4 "stored passwords for Twitter">
+<!ENTITY twitter.note5 "credentials. This may cause">
+<!ENTITY twitter.note6 "the master password dialog">
+<!ENTITY twitter.note7 " to pop up.">
