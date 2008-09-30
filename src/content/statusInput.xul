@@ -25,7 +25,7 @@
 	<script type="application/x-javascript" src="chrome://firestatus/content/statusInput.js"/>
 	<hbox align="center">
 		<button id="status-close" onclick="cancelDialog()" tooltiptext="&close;"/>
-        <textbox id="statusText" size="60" spellcheck="true" onkeyup="statusInput.updateCharCount()"/>
+        <textbox id="statusText" size="80" spellcheck="true" onkeyup="statusInput.updateCharCount()"/>
         <label id="charcount" value="0"/>
         <vbox>
             <checkbox id="sendUrl" checked="false" label="&sendUrl;" onclick="statusInput.toggleSendUrl()"/>
@@ -33,12 +33,12 @@
         </vbox>
         <groupbox>
         <hbox>
-            <checkbox id="selectedConsumerTwitter" checked="true" label="&labelTwitter;"/>
-        	<image id="twitter-icon"/>
-            <checkbox id="selectedConsumerFacebook" checked="false" label="&labelFacebook;"/>
-        	<image id="facebook-icon"/>
-			<checkbox id="selectedConsumerFriendfeed" checked="false" label="&labelFriendFeed;"/>
-        	<image id="friendfeed-icon"/>
+            <checkbox id="selectedConsumerTwitter" checked="true" tooltiptext="&labelTwitter;"/>
+        	<image id="twitter-icon" tooltiptext="&labelTwitter;"/>
+            <checkbox id="selectedConsumerFacebook" checked="false" tooltiptext="&labelFacebook;"/>
+        	<image id="facebook-icon" tooltiptext="&labelFacebook;"/>
+			<checkbox id="selectedConsumerFriendfeed" checked="false" tooltiptext="&labelFriendFeed;"/>
+        	<image id="friendfeed-icon" tooltiptext="&labelFriendFeed;"/>
         </hbox>
         </groupbox>
 		<button id="status-send" label="&send;" onclick="acceptDialog()" tooltiptext="&sendTooltip;"/>
