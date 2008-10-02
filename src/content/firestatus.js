@@ -131,6 +131,8 @@ var firestatus = {
 		if (event.button == 0 && !event.ctrlKey) {
 			var fsContainer = window.document.getElementById('firestatusContainer');
 			fsContainer.setAttribute("collapsed", 'false');
+			var textField = window.document.getElementById('statusText');
+			textField.select();
 		} else if (event.button == 2 || event.ctrlKey) {
 			var panel = window.document.getElementById('firestatus-panel');
 			var popup = window.document.getElementById('firestatus-popup');
@@ -138,7 +140,7 @@ var firestatus = {
 		}
 	},
 	
-	closeFirestatus: function() {
+	hide: function() {
 		var fsContainer = window.document.getElementById('firestatusContainer');
 		fsContainer.setAttribute("collapsed", 'true');
 	},
