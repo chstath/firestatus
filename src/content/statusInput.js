@@ -87,6 +87,7 @@ var statusInput = {
 				firestatus.sendStatusUpdateFacebook(statusText, url);
 			}
 		}
+		firestatus.closeFirestatus();
 	},
 
 	updateCharCount: function() {
