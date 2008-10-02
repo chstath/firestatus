@@ -36,20 +36,20 @@
 			<toolbarbutton id="status-close" onclick="firestatus.hide()" tooltiptext="&firestatus.close;"/>
 	        <textbox id="statusText" size="80" spellcheck="true" onkeyup="statusInput.updateCharCount(event)"/>
 	        <label id="charcount" value="0"/>
-	        <vbox>
+	        <vbox id="urlGroup">
 	            <checkbox id="sendUrl" checked="false" label="&firestatus.sendUrl;" onclick="statusInput.toggleSendUrl()"/>
 	            <checkbox id="shortenUrl" disabled="true" checked="true" label="&firestatus.shortenUrl;"/>
 	        </vbox>
-	        <groupbox>
-	        <hbox>
-	            <checkbox id="selectedConsumerTwitter" checked="true" tooltiptext="&firestatus.labelTwitter;"/>
+        	<vbox>
 	            <image id="twitter-icon" tooltiptext="&firestatus.labelTwitter;"/>
-	            <checkbox id="selectedConsumerFacebook" checked="false" tooltiptext="&firestatus.labelFacebook;"/>
+	            <checkbox id="selectedConsumerTwitter" checked="true" tooltiptext="&firestatus.labelTwitter;"/>
+        	</vbox><vbox>
 	            <image id="facebook-icon" tooltiptext="&firestatus.labelFacebook;"/>
-		    <checkbox id="selectedConsumerFriendfeed" checked="false" tooltiptext="&firestatus.labelFriendFeed;"/>
+	            <checkbox id="selectedConsumerFacebook" checked="false" tooltiptext="&firestatus.labelFacebook;"/>
+        	</vbox><vbox>
 	            <image id="friendfeed-icon" tooltiptext="&firestatus.labelFriendFeed;"/>
-	        </hbox>
-	        </groupbox>
+		    	<checkbox id="selectedConsumerFriendfeed" checked="false" tooltiptext="&firestatus.labelFriendFeed;"/>
+        	</vbox>
 			<toolbarbutton id="status-send" label="&firestatus.send;" onclick="statusInput.sendStatusUpdate()" tooltiptext="&firestatus.sendTooltip;"/>
 	    </hbox>
 
