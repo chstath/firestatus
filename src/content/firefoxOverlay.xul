@@ -15,15 +15,47 @@
   - OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
   - -->
 
-<?xml-stylesheet href="chrome://firestatus/skin/overlay.css" type="text/css"?>
+<?xml-stylesheet href="chrome://firestatus/skin/firestatus.css" type="text/css"?>
 <!DOCTYPE overlay SYSTEM "chrome://firestatus/locale/firestatus.dtd">
 <overlay id="firestatus-overlay"
          xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
   <script src="chrome://firestatus/content/firestatus.js"/>
+  <script src="chrome://firestatus/content/statusInput.js"/>
   <script src="chrome://firestatus/content/facebookClient.js"/>
   <stringbundleset id="stringbundleset">
     <stringbundle id="firestatus-strings" src="chrome://firestatus/locale/firestatus.properties"/>
   </stringbundleset>
+
+  <vbox id="appcontent">
+    <splitter id="firestatusContentSplitter" collapsed="true"/>
+    <vbox id="firestatusContainer" collapsed="true" persist="height">
+
+      <hbox id="firestatusPanelBox">
+
+	    <hbox align="center">
+			<toolbarbutton id="status-close" onclick="firestatus.closeFirestatus()" tooltiptext="&firestatus.close;"/>
+	        <textbox id="statusText" size="80" spellcheck="true" onkeyup="statusInput.updateCharCount()"/>
+	        <label id="charcount" value="0"/>
+	        <vbox>
+	            <checkbox id="sendUrl" checked="false" label="&firestatus.sendUrl;" onclick="statusInput.toggleSendUrl()"/>
+	            <checkbox id="shortenUrl" disabled="true" checked="true" label="&firestatus.shortenUrl;"/>
+	        </vbox>
+	        <groupbox>
+	        <hbox>
+	            <checkbox id="selectedConsumerTwitter" checked="true" tooltiptext="&firestatus.labelTwitter;"/>
+	            <image id="twitter-icon" tooltiptext="&firestatus.labelTwitter;"/>
+	            <checkbox id="selectedConsumerFacebook" checked="false" tooltiptext="&firestatus.labelFacebook;"/>
+	            <image id="facebook-icon" tooltiptext="&firestatus.labelFacebook;"/>
+		    <checkbox id="selectedConsumerFriendfeed" checked="false" tooltiptext="&firestatus.labelFriendFeed;"/>
+	            <image id="friendfeed-icon" tooltiptext="&firestatus.labelFriendFeed;"/>
+	        </hbox>
+	        </groupbox>
+			<toolbarbutton id="status-send" label="&firestatus.send;" onclick="statusInput.sendStatusUpdate()" tooltiptext="&firestatus.sendTooltip;"/>
+	    </hbox>
+
+	  </hbox>
+	</vbox>
+  </vbox>
 
     <statusbar id="status-bar">
         <menupopup id="firestatus-popup">

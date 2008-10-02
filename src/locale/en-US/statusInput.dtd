@@ -1,9 +1,0 @@
-<!ENTITY statusTitle "Status Message">
-<!ENTITY close "Close popup">
-<!ENTITY sendUrl "Include URL">
-<!ENTITY shortenUrl "...shortened">
-<!ENTITY labelTwitter "Twitter">
-<!ENTITY labelFacebook "Facebook">
-<!ENTITY labelFriendFeed "FriendFeed">
-<!ENTITY send "Send">
-<!ENTITY sendTooltip "Send status update">

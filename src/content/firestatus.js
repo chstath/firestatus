@@ -129,7 +129,8 @@ var firestatus = {
 	
 	onClick: function(event) {
 		if (event.button == 0 && !event.ctrlKey) {
-			firestatus.showStatusInput();
+			var fsContainer = window.document.getElementById('firestatusContainer');
+			fsContainer.setAttribute("collapsed", 'false');
 		} else if (event.button == 2 || event.ctrlKey) {
 			var panel = window.document.getElementById('firestatus-panel');
 			var popup = window.document.getElementById('firestatus-popup');
@@ -137,13 +138,9 @@ var firestatus = {
 		}
 	},
 	
-	showStatusInput: function() {
-		if (firestatus.statusInputWindow && !firestatus.statusInputWindow.closed)
-			firestatus.statusInputWindow.close();
-		var left = window.screenX;
-		var top = window.screenY + window.outerHeight - 71;
-		var windowFeatures = 'screenX=' + left + ',screenY=' + top + ',titlebar=no';
-		firestatus.statusInputWindow = window.openDialog('chrome://firestatus/content/statusInput.xul', 'statusInput', windowFeatures);
+	closeFirestatus: function() {
+		var fsContainer = window.document.getElementById('firestatusContainer');
+		fsContainer.setAttribute("collapsed", 'true');
 	},
 	
 	observe: function(subject, topic, data) {
