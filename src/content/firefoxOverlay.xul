@@ -34,7 +34,7 @@
 
 	    <hbox align="center">
 			<toolbarbutton id="status-close" onclick="firestatus.hide()" tooltiptext="&firestatus.close;"/>
-	        <textbox id="statusText" size="80" spellcheck="true" onkeyup="statusInput.updateCharCount()"/>
+	        <textbox id="statusText" size="80" spellcheck="true" onkeyup="statusInput.updateCharCount(event)"/>
 	        <label id="charcount" value="0"/>
 	        <vbox>
 	            <checkbox id="sendUrl" checked="false" label="&firestatus.sendUrl;" onclick="statusInput.toggleSendUrl()"/>

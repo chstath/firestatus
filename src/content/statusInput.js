@@ -90,9 +90,17 @@ var statusInput = {
 		firestatus.hide();
 	},
 
-	updateCharCount: function() {
+	updateCharCount: function(event) {
 		var statusText = document.getElementById('statusText').value;
 		document.getElementById('charcount').value = statusText.length;
+		switch (event.keyCode) {
+			case 27:
+				firestatus.hide();
+				break;
+			case 13:
+				statusInput.sendStatusUpdate();
+				break;
+		}
 	},
 	
 	toggleSendUrl: function() {
