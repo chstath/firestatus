@@ -70,7 +70,7 @@ var statusInput = {
 	
 	sendStatusUpdate: function() {
 		var statusText = document.getElementById('statusText').value;
-		var url = document.getElementById("sendUrl").checked ? window.opener.document.getElementById("urlbar").value : "";
+		var url = document.getElementById("sendUrl").checked ? document.getElementById("urlbar").value : "";
 		var sendTwitter = firestatus.twitterEnabled && document.getElementById("selectedConsumerTwitter").checked;
 		var sendFriendfeed = firestatus.friendfeedEnabled && document.getElementById("selectedConsumerFriendfeed").checked;
 		var sendFacebook = firestatus.facebookEnabled && document.getElementById("selectedConsumerFacebook").checked;
