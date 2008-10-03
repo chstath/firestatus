@@ -40,13 +40,15 @@
 	            <checkbox id="sendUrl" checked="false" label="&firestatus.sendUrl;" onclick="statusInput.toggleSendUrl()"/>
 	            <checkbox id="shortenUrl" disabled="true" checked="true" label="&firestatus.shortenUrl;"/>
 	        </vbox>
-        	<vbox>
+        	<vbox align="start">
 	            <image id="twitter-icon" tooltiptext="&firestatus.labelTwitter;"/>
 	            <checkbox id="selectedConsumerTwitter" checked="true" tooltiptext="&firestatus.labelTwitter;"/>
-        	</vbox><vbox>
+        	</vbox>
+        	<vbox align="start">
 	            <image id="facebook-icon" tooltiptext="&firestatus.labelFacebook;"/>
 	            <checkbox id="selectedConsumerFacebook" checked="false" tooltiptext="&firestatus.labelFacebook;"/>
-        	</vbox><vbox>
+        	</vbox>
+        	<vbox align="start">
 	            <image id="friendfeed-icon" tooltiptext="&firestatus.labelFriendFeed;"/>
 		    	<checkbox id="selectedConsumerFriendfeed" checked="false" tooltiptext="&firestatus.labelFriendFeed;"/>
         	</vbox>
