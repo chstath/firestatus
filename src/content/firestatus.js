@@ -267,7 +267,6 @@ var firestatus = {
 														 link: firestatus.TWITTER_URL});
 						}
 						firestatus.lastTwitterId = status.id;
-						firestatus.cons.logStringMessage("t:"+t);
 						firestatus.lastTwitterTimestamp = t;
 						firestatus.prefs.setIntPref("lastTwitterId", status.id);
 						firestatus.prefs.setCharPref("lastTwitterTimestamp", t);
@@ -304,15 +303,10 @@ var firestatus = {
 						statuses.sort(function(a, b) {
 										return a.updated > b.updated? -1: a.updated < b.updated? 1: 0;
 									});
-						firestatus.cons.logStringMessage('lastFriendfeedId: ' +
-													firestatus.lastFriendfeedId);
 						for (var i = 0; i < statuses.length; i++) {
 							var status = statuses[i];
-							firestatus.cons.logStringMessage('New FF update: ' + status.id +
-															 ' text: ' + status.title);
 							if (status.id == firestatus.lastFriendfeedId) break;
 							var t = status.updated; // TODO: parse the RFC 3339 string
-							firestatus.cons.logStringMessage("FF t:"+t);
 							firestatus.ffInitialQueue.push({
 								id: status.id,
 								timestamp: t,
@@ -345,7 +339,6 @@ var firestatus = {
 	},
 
 	displayNotification: function() {
-		firestatus.cons.logStringMessage("pending notifications:"+firestatus.updateQueue.length);
 		var update = firestatus.updateQueue.shift();
 		if (update)
 	        try {
