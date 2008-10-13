@@ -450,9 +450,6 @@ var facebookClient = {
 								firestatus.cons.logStringMessage("Asking for new session key...");
 								facebookClient.getNewSessionAndNotifications();
 							}
-							else if (code != "") {
-								alert("Facebook status will not be updated");
-							}
 						}
 						break;
 					case 400:
