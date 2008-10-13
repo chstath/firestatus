@@ -33,3 +33,8 @@
 <!ENTITY twitter.note5 "credentials. This may cause">
 <!ENTITY twitter.note6 "the master password dialog">
 <!ENTITY twitter.note7 " to pop up.">
+<!ENTITY urlShortening.label "URL shortening">
+<!ENTITY tinyUrl.label "tinyURL">
+<!ENTITY urlborg.label "urlBorg">
+<!ENTITY tinyUrl.accesskey "T">
+<!ENTITY urlborg.accesskey "B">

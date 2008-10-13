@@ -39,6 +39,7 @@
       <preference id="facebookEnabled" name="extensions.firestatus.facebookEnabled" type="bool"/>
       <preference id="facebookUpdatesEnabled" name="extensions.firestatus.facebookUpdatesEnabled" type="bool"/>
       <preference id="facebookTimeout" name="extensions.firestatus.facebookTimeout" type="int"/>
+      <preference id="shortURLService" name="extensions.firestatus.shortURLService" type="string"/>
     </preferences>
 
 	<hbox>
@@ -77,6 +78,13 @@
 	    <checkbox id="facebookEnabled" preference="facebookEnabled" label="&enabled.label;" accesskey="&facebookEnabled.accesskey;" image="chrome://firestatus/skin/facebook.png"/>
 	    <checkbox id="facebookUpdatesEnabled" preference="facebookUpdatesEnabled" label="&updatesEnabled.label;" accesskey="&facebookUpdatesEnabled.accesskey;" image="chrome://firestatus/skin/facebook.png"/>
 	    <label accesskey="&facebookTimeout.accesskey;" control="textFacebookTimeout">&timeout.label;</label><textbox id="textFacebookTimeout" preference="facebookTimeout"/>
+	</groupbox>
+	<groupbox>
+        <caption label="&urlShortening.label;"/>
+        <radiogroup preference="shortURLService">
+	    	<radio id="tinyUrl" label="&tinyUrl.label;" accesskey="&tinyUrl.accesskey;" value="tinyUrl"/>
+	    	<radio id="urlborg" label="&urlborg.label;" accesskey="&urlborg.accesskey;" value="urlborg"/>
+	    </radiogroup>
 	</groupbox>
 	</hbox>
   </prefpane>

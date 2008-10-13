@@ -194,7 +194,10 @@ var facebookClient = {
 	
 	sendUpdate: function(params, status) {
 	    var req = new XMLHttpRequest();
-		req.open("GET", "http://api.facebook.com/restserver.php?"+params.join('&'), true);
+		req.open("POST", "http://api.facebook.com/restserver.php", true);
+		req.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+		req.setRequestHeader("Content-length", params.join('&').length);
+		req.setRequestHeader("Connection", "close");
 	    req.onreadystatechange = function () {
 			if (req.readyState == 4) {
 				dump(req.responseText + "\n");
@@ -255,7 +258,7 @@ var facebookClient = {
 			}
 		};
 		firestatus.cons.logStringMessage("Updating facebook status");
-		req.send(null);
+		req.send(params.join('&'));
 	},
 	
 	getNotifications: function() {

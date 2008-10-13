@@ -40,6 +40,7 @@ var firestatus = {
 	facebookUpdatesEnabled: false,
 	facebookTimeout: 6,
 	facebookTimeoutId: 0,
+	shortURLService: 0, //tinyUrl
 	// A FIFO queue that contains pending notifications.
 	updateQueue: [],
 	// An initial queue for ordering FF updates before putting them in updateQueue.
@@ -121,6 +122,9 @@ var firestatus = {
 			this.facebookUpdates();
 			this.facebookTimeoutId = window.setInterval(this.facebookUpdates, this.facebookTimeout*60*1000);
 		}
+		
+		this.shortURLService = this.prefs.getCharPref("shortURLService");
+		this.cons.logStringMessage("Short URL service selected: " + this.shortURLService);
 	},
 	
 	onUnload: function() {
@@ -215,7 +219,10 @@ var firestatus = {
 				} else
 					this.cancelUpdates("facebook");
 		    	break;
-		    	
+		    case "shortURLService":
+		    	this.shortURLService = this.prefs.getCharPref("shortURLService");
+				this.cons.logStringMessage("Short URL service selected: " + this.shortURLService);
+		    	break;
 		}
 	},
 	
@@ -376,7 +383,11 @@ var firestatus = {
 	
 	getShrinkedUrl: function (url, statusText, sendTwitter, sendFriendfeed, sendFacebook) {
 		firestatus.cons.logStringMessage("Shortening url ...");
-		var tinyurl = "http://tinyurl.com/api-create.php?url=" + url;
+		var tinyurl = null;
+		if (this.shortURLService == "tinyUrl")
+			tinyurl = "http://tinyurl.com/api-create.php?url=" + url;
+		else
+			tinyurl = "http://urlborg.com/api/77577-9314/create/" + url;
 	    var req = new XMLHttpRequest();
 		req.open('GET', tinyurl, true); 
 	    req.onreadystatechange = function () {

@@ -14,5 +14,6 @@ pref("extensions.firestatus.lastFriendfeedId", "");
 pref("extensions.firestatus.facebookEnabled", false);
 pref("extensions.firestatus.facebookUpdatesEnabled", false);
 pref("extensions.firestatus.facebookTimeout", 6);
+pref("extensions.firestatus.shortURLService", "tinyUrl");
 // See http://kb.mozillazine.org/Localize_extension_descriptions
 pref("extensions.firestatus@astithas.com.description", "chrome://firestatus/locale/firestatus.properties");
