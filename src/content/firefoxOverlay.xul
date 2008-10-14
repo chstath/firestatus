@@ -61,7 +61,7 @@
 
     <statusbar id="status-bar">
         <menupopup id="firestatus-popup">
-            <menuitem id="firestatus-update" label="&firestatus.update;" oncommand="firestatus.showStatusInput()"/>
+            <menuitem id="firestatus-update" label="&firestatus.update;" oncommand="firestatus.show()"/>
             <menuitem id="firestatus-prefs" label="&firestatus.prefs;" oncommand="openDialog('chrome://firestatus/content/options.xul', 'prefs', 'chrome,resizable=yes,centerscreen=yes');"/>
             <menuitem id="firestatus-about" label="&firestatus.about;" oncommand="openDialog('chrome://firestatus/content/about.xul', 'about', 'chrome,resizable=yes,centerscreen=yes');"/>
         </menupopup>

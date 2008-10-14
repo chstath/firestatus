@@ -133,15 +133,19 @@ var firestatus = {
 	
 	onClick: function(event) {
 		if (event.button == 0 && !event.ctrlKey) {
-			var fsContainer = window.document.getElementById('firestatusContainer');
-			fsContainer.setAttribute("collapsed", 'false');
-			var textField = window.document.getElementById('statusText');
-			textField.select();
+			firestatus.show();
 		} else if (event.button == 2 || event.ctrlKey) {
 			var panel = window.document.getElementById('firestatus-panel');
 			var popup = window.document.getElementById('firestatus-popup');
 			popup.openPopup(panel, 'after_start', 12, 4, true, false);
 		}
+	},
+	
+	show: function() {
+		var fsContainer = window.document.getElementById('firestatusContainer');
+		fsContainer.setAttribute("collapsed", 'false');
+		var textField = window.document.getElementById('statusText');
+		textField.select();
 	},
 	
 	hide: function() {
