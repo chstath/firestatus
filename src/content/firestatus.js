@@ -459,6 +459,7 @@ var firestatus = {
 			     switch(req.status) {
 				 	case 200:
 					 	firestatus.cons.logStringMessage("Twitter update sent.");
+						document.getElementById('statusText').value = '';
 						break;
 					case 400:
 						firestatus.cons.logStringMessage("Bad Request");
@@ -505,6 +506,7 @@ var firestatus = {
 			     switch(req.status) {
 				 	case 200:
 					 	firestatus.cons.logStringMessage("FriendFeed update sent.");
+						document.getElementById('statusText').value = '';
 						break;
 					case 400:
 						firestatus.cons.logStringMessage("FriendFeed response: Bad Request");

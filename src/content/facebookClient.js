@@ -213,6 +213,7 @@ var facebookClient = {
 						var code = result.error_code;
 						if (code == undefined) {
 					 		firestatus.cons.logStringMessage("Facebook update sent.");
+							document.getElementById('statusText').value = '';
 						}
 						else {
 							firestatus.cons.logStringMessage("Facebook returned code: " + code);
