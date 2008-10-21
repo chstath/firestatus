@@ -1,4 +1,6 @@
 <!ENTITY firestatus.update "Update your status...">
+<!ENTITY firestatus.clear "Clear pending notifications">
+<!ENTITY firestatus.pause "Pause">
 <!ENTITY firestatus.prefs "Preferences...">
 <!ENTITY firestatus.about "About...">
 <!ENTITY firestatus.iconTip "Click to post, right-click for menu">

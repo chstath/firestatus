@@ -46,6 +46,7 @@ var firestatus = {
 	// An initial queue for ordering FF updates before putting them in updateQueue.
 	ffInitialQueue: [],
 	processingQueue: false,
+	paused: false,
 	statusInputWindow: null,
 
 	onLoad: function(){
@@ -153,6 +154,14 @@ var firestatus = {
 		fsContainer.setAttribute("collapsed", 'true');
 	},
 	
+	clear: function() {
+		firestatus.updateQueue.length = 0;
+	},
+
+	pause: function() {
+		firestatus.paused = !firestatus.paused;
+	},
+
 	observe: function(subject, topic, data) {
 		if (topic != "nsPref:changed") {
 			return;
@@ -245,7 +254,7 @@ var firestatus = {
 	},
   
 	twitterUpdates: function() {
-		if (firestatus.processingQueue) return;
+		if (firestatus.processingQueue || firestatus.paused) return;
 		var milliseconds = new Number(firestatus.lastTwitterTimestamp);
 		var FRIENDS_URL = firestatus.TWITTER_URL + '/statuses/friends_timeline.json?since=' +
 						encodeURIComponent(new Date(milliseconds).toUTCString());
@@ -298,7 +307,7 @@ var firestatus = {
 	},
 	
 	friendfeedUpdates: function() {
-		if (firestatus.processingQueue) return;
+		if (firestatus.processingQueue || firestatus.paused) return;
 		var FRIENDS_URL = firestatus.FRIENDFEED_URL + '/api/feed/home';
 	    var req = new XMLHttpRequest();
 	    req.open('GET', FRIENDS_URL, true);
@@ -346,13 +355,15 @@ var firestatus = {
 	},
 	
 	facebookUpdates: function() {
+		if (firestatus.processingQueue || firestatus.paused) return;
 		facebookClient.getNotifications();
 	},
 
 	displayNotification: function() {
+		if (firestatus.paused) return;
 		var update = firestatus.updateQueue.shift();
 		if (update)
-	        try {
+			try {
 				if ("@mozilla.org/alerts-service;1" in Components.classes) {
 					var alertService = Components.classes["@mozilla.org/alerts-service;1"]
 										.getService(Components.interfaces.nsIAlertsService);
