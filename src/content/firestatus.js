@@ -12,7 +12,7 @@
  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
- * */
+ */
 
 var firestatus = {
 	TWITTER_URL: 'http://twitter.com',
@@ -96,12 +96,6 @@ var firestatus = {
 			}
 		}
 		
-		if (this.twitterUpdatesEnabled) {
-			this.twitterUpdates();
-			this.twitterTimeoutId = window.setInterval(this.twitterUpdates,
-													   this.twitterTimeout*60*1000);
-		}
-		
 	    this.friendfeedEnabled = this.prefs.getBoolPref("friendfeedEnabled");
 	    this.friendfeedUpdatesEnabled = this.prefs.getBoolPref("friendfeedUpdatesEnabled");
 	    this.friendfeedUsername = this.prefs.getCharPref("friendfeedUsername");
@@ -109,23 +103,14 @@ var firestatus = {
 	    this.friendfeedTimeout = this.prefs.getIntPref("friendfeedTimeout");
 	    this.lastFriendfeedId = this.prefs.getCharPref("lastFriendfeedId");
 		
-		if (this.friendfeedUpdatesEnabled) {
-			this.friendfeedUpdates();
-			this.friendfeedTimeoutId = window.setInterval(this.friendfeedUpdates,
-														  this.friendfeedTimeout*60*1000);
-		}
-		
 		this.facebookClient = facebookClient;
 	    this.facebookEnabled = this.prefs.getBoolPref("facebookEnabled");
 	    this.facebookUpdatesEnabled = this.prefs.getBoolPref("facebookUpdatesEnabled");
 	    this.facebookTimeout = this.prefs.getIntPref("facebookTimeout");
-		if (this.facebookUpdatesEnabled) {
-			this.facebookUpdates();
-			this.facebookTimeoutId = window.setInterval(this.facebookUpdates, this.facebookTimeout*60*1000);
-		}
 		
 		this.shortURLService = this.prefs.getCharPref("shortURLService");
 		this.cons.logStringMessage("Short URL service selected: " + this.shortURLService);
+		this.resume();
 	},
 	
 	onUnload: function() {
@@ -160,7 +145,34 @@ var firestatus = {
 
 	pause: function() {
 		firestatus.paused = !firestatus.paused;
+		if (firestatus.paused)
+		  firestatus.suspend();
+		else
+		  firestatus.resume();
 	},
+
+	suspend: function() {
+                firestatus.cancelUpdates('twitter');
+		firestatus.cancelUpdates('friendfeed');
+		firestatus.cancelUpdates('facebook');
+		firestatus.processingQueue = true;
+        },
+
+	resume: function() {
+		firestatus.processingQueue = false;
+                if (firestatus.twitterUpdatesEnabled) {
+		  firestatus.twitterUpdates();
+		  firestatus.twitterTimeoutId = window.setInterval(firestatus.twitterUpdates, firestatus.twitterTimeout*60*1000);
+		}
+		if (firestatus.friendfeedUpdatesEnabled) {
+		  firestatus.friendfeedUpdates();
+		  firestatus.friendfeedTimeoutId = window.setInterval(firestatus.friendfeedUpdates, firestatus.friendfeedTimeout*60*1000);
+		}
+		if (firestatus.facebookUpdatesEnabled) {
+		  firestatus.facebookUpdates();
+		  firestatus.facebookTimeoutId = window.setInterval(firestatus.facebookUpdates, firestatus.facebookTimeout*60*1000);
+		}
+        },
 
 	observe: function(subject, topic, data) {
 		if (topic != "nsPref:changed") {
@@ -254,7 +266,7 @@ var firestatus = {
 	},
   
 	twitterUpdates: function() {
-		if (firestatus.processingQueue || firestatus.paused) return;
+		if (firestatus.processingQueue) return;
 		var milliseconds = new Number(firestatus.lastTwitterTimestamp);
 		var FRIENDS_URL = firestatus.TWITTER_URL + '/statuses/friends_timeline.json?since=' +
 						encodeURIComponent(new Date(milliseconds).toUTCString());
@@ -307,7 +319,7 @@ var firestatus = {
 	},
 	
 	friendfeedUpdates: function() {
-		if (firestatus.processingQueue || firestatus.paused) return;
+		if (firestatus.processingQueue) return;
 		var FRIENDS_URL = firestatus.FRIENDFEED_URL + '/api/feed/home';
 	    var req = new XMLHttpRequest();
 	    req.open('GET', FRIENDS_URL, true);
@@ -355,7 +367,7 @@ var firestatus = {
 	},
 	
 	facebookUpdates: function() {
-		if (firestatus.processingQueue || firestatus.paused) return;
+		if (firestatus.processingQueue) return;
 		facebookClient.getNotifications();
 	},
 
