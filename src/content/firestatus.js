@@ -48,6 +48,7 @@ var firestatus = {
 	processingQueue: false,
 	paused: false,
 	statusInputWindow: null,
+	initialTimeoutId: 0,
 
 	onLoad: function(){
 		// Initialization code
@@ -110,7 +111,7 @@ var firestatus = {
 		
 		this.shortURLService = this.prefs.getCharPref("shortURLService");
 		this.cons.logStringMessage("Short URL service selected: " + this.shortURLService);
-		this.resume();
+		this.initialTimeoutId = window.setTimeout(this.resume, 7*1000);
 	},
 	
 	onUnload: function() {
@@ -152,6 +153,7 @@ var firestatus = {
 	},
 
 	suspend: function() {
+		window.clearTimeout(firestatus.initialTimeoutId);
                 firestatus.cancelUpdates('twitter');
 		firestatus.cancelUpdates('friendfeed');
 		firestatus.cancelUpdates('facebook');
