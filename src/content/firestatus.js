@@ -153,11 +153,14 @@ var firestatus = {
 	},
 
 	suspend: function() {
+		// Clear the initial timeout only the first time we are called.
 		window.clearTimeout(firestatus.initialTimeoutId);
-                firestatus.cancelUpdates('twitter');
-		firestatus.cancelUpdates('friendfeed');
-		firestatus.cancelUpdates('facebook');
-		firestatus.processingQueue = true;
+		return (firestatus.suspend = function() {
+		  firestatus.cancelUpdates('twitter');
+		  firestatus.cancelUpdates('friendfeed');
+		  firestatus.cancelUpdates('facebook');
+		  firestatus.processingQueue = true;
+		  })();
         },
 
 	resume: function() {
