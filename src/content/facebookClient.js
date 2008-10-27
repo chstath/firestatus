@@ -227,7 +227,7 @@ var facebookClient = {
 								facebookClient.getNewSessionAndUpdate(status);
 							}
 							else if (code != "") {
-								alert("Facebook status will not be updated");
+								alert("Facebook status will not be updated ("+code+")");
 							}
 						}
 						break;
