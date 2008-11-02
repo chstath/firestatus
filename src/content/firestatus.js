@@ -296,12 +296,20 @@ var firestatus = {
 							var t = Date.parse(status.created_at);
 							if (status.id <= firestatus.lastTwitterId)
 								continue;
+							var text = "";
+							try {
+							  text = decodeURI(status.text);
+							} catch (error) {
+							  firestatus.cons.logStringMessage("Error decoding twitter update: " +
+											   status.text);
+							  text = status.text;
+							}
 							firestatus.updateQueue.push({id: status.id,
-														 timestamp: t,
-														 image: status.user.profile_image_url,
-														 title: status.user.name,
-														 text: status.text,
-														 link: firestatus.TWITTER_URL});
+									timestamp: t,
+									image: status.user.profile_image_url,
+									title: status.user.name,
+									text: status.text,
+									link: firestatus.TWITTER_URL});
 						}
 						firestatus.lastTwitterId = status.id;
 						firestatus.lastTwitterTimestamp = t;
