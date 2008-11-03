@@ -222,7 +222,7 @@ var facebookClient = {
 								window.open("http://www.facebook.com/authorize.php?api_key=" + facebookClient.apiKey + "&v=1.0&ext_perm=status_update&popup=", "", "chrome, centerscreen,width=646,height=520,modal=yes,dialog=yes,close=yes");
 								facebookClient.sendUpdate(params);
 							}
-							else if (code == 102) {
+							else if (code == 102 || code == 450 || code == 452) {
 								firestatus.cons.logStringMessage("Asking for new session key...");
 								facebookClient.getNewSessionAndUpdate(status);
 							}
