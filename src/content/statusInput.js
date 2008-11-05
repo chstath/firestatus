@@ -18,6 +18,7 @@
 var statusInput = {
 	onLoad: function(event) {
 		if (firestatus.twitterEnabled) {
+			document.getElementById("selectedConsumerTwitter").disabled = false;
 			if (firestatus.prefs.prefHasUserValue("lastTwitterChecked")) {
 				document.getElementById("selectedConsumerTwitter").checked = firestatus.prefs.getBoolPref("lastTwitterChecked");
 			}
@@ -32,6 +33,7 @@ var statusInput = {
 			firestatus.prefs.setBoolPref("lastTwitterChecked", false);
 		}
 		if (firestatus.friendfeedEnabled) {
+			document.getElementById("selectedConsumerFriendfeed").disabled = false;
 			if (firestatus.prefs.prefHasUserValue("lastFriendfeedChecked")) {
 				document.getElementById("selectedConsumerFriendfeed").checked = firestatus.prefs.getBoolPref("lastFriendfeedChecked");
 			}
@@ -46,6 +48,7 @@ var statusInput = {
 			firestatus.prefs.setBoolPref("lastFriendfeedChecked", false);
 		}
 		if (firestatus.facebookEnabled) {
+			document.getElementById("selectedConsumerFacebook").disabled = false;
 			if (firestatus.prefs.prefHasUserValue("lastFacebookChecked")) {
 				document.getElementById("selectedConsumerFacebook").checked = firestatus.prefs.getBoolPref("lastFacebookChecked");
 			}

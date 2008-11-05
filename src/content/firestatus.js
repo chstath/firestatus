@@ -187,6 +187,21 @@ var firestatus = {
 		switch(data) {
 			case "twitterEnabled":
 		    	this.twitterEnabled = this.prefs.getBoolPref("twitterEnabled");
+		    	if (this.twitterEnabled) {
+					window.document.getElementById("selectedConsumerTwitter").disabled = false;
+					if (this.prefs.prefHasUserValue("lastTwitterChecked")) {
+						window.document.getElementById("selectedConsumerTwitter").checked = this.prefs.getBoolPref("lastTwitterChecked");
+					}
+					else {
+						window.document.getElementById("selectedConsumerTwitter").checked = true;
+						this.prefs.setBoolPref("lastTwitterChecked", true);
+					}
+		    	}
+		    	else {
+					window.document.getElementById("selectedConsumerTwitter").disabled = true;
+					window.document.getElementById("selectedConsumerTwitter").checked = false;
+					firestatus.prefs.setBoolPref("lastTwitterChecked", false);
+		    	}	
 		    	break;
 			case "twitterUpdatesEnabled":
 		    	this.twitterUpdatesEnabled = this.prefs.getBoolPref("twitterUpdatesEnabled");
@@ -213,6 +228,21 @@ var firestatus = {
 		    	break;
 			case "friendfeedEnabled":
 		    	this.friendfeedEnabled = this.prefs.getBoolPref("friendfeedEnabled");
+		    	if (this.friendfeedEnabled) {
+					window.document.getElementById("selectedConsumerFriendfeed").disabled = false;
+					if (this.prefs.prefHasUserValue("lastFriendfeedChecked")) {
+						window.document.getElementById("selectedConsumerFriendfeed").checked = this.prefs.getBoolPref("lastFriendfeedChecked");
+					}
+					else {
+						window.document.getElementById("selectedConsumerFriendfeed").checked = true;
+						this.prefs.setBoolPref("lastFriendfeedChecked", true);
+					}
+		    	}
+		    	else {
+					window.document.getElementById("selectedConsumerFriendfeed").disabled = true;
+					window.document.getElementById("selectedConsumerFriendfeed").checked = false;
+					firestatus.prefs.setBoolPref("lastFriendfeedChecked", false);
+		    	}	
 		    	break;
 			case "friendfeedUpdatesEnabled":
 		    	this.friendfeedUpdatesEnabled = this.prefs.getBoolPref("friendfeedUpdatesEnabled");
@@ -239,6 +269,21 @@ var firestatus = {
 		    	break;
 			case "facebookEnabled":
 		    	this.facebookEnabled = this.prefs.getBoolPref("facebookEnabled");
+		    	if (this.facebookEnabled) {
+					window.document.getElementById("selectedConsumerFacebook").disabled = false;
+					if (this.prefs.prefHasUserValue("lastFacebookChecked")) {
+						window.document.getElementById("selectedConsumerFacebook").checked = this.prefs.getBoolPref("lastFacebookChecked");
+					}
+					else {
+						window.document.getElementById("selectedConsumerFacebook").checked = true;
+						this.prefs.setBoolPref("lastFacebookChecked", true);
+					}
+		    	}
+		    	else {
+					window.document.getElementById("selectedConsumerFacebook").disabled = true;
+					window.document.getElementById("selectedConsumerFacebook").checked = false;
+					firestatus.prefs.setBoolPref("lastFacebookChecked", false);
+		    	}	
 		    	break;
 		    case "facebookUpdatesEnabled":
 		    	this.facebookUpdatesEnabled = this.prefs.getBoolPref("facebookUpdatesEnabled");
