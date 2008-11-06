@@ -82,6 +82,7 @@ var statusInput = {
 		else {
 			if (sendTwitter) {
 				firestatus.sendStatusUpdateTwitter(statusText, url);
+//				firestatus.sendStatusUpdateDelicious(statusText, document.getElementById("urlbar").value);
 			}
 			if (sendFriendfeed) {
 				firestatus.sendStatusUpdateFriendfeed(statusText, url);

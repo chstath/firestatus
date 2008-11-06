@@ -621,9 +621,53 @@ var firestatus = {
 	    req.setRequestHeader("Content-length", params.length);
 	    req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;");
 	    req.send(params); 
-	}
+	},
 
-};
+
+
+sendStatusUpdateDelicious: function (statusText, url) {
+    var status = encodeURIComponent(statusText);
+    var req = new XMLHttpRequest ();   
+    req.open("GET","https://api.del.icio.us/v1/posts/add?url=" + url + "&description=" + statusText + "&shared=no", true);
+    req.onreadystatechange = function () {
+		if (req.readyState == 4) {
+		     switch(req.status) {
+			 	case 200:
+				 	firestatus.cons.logStringMessage("Del.icio.us bookmark saved.");
+					document.getElementById('statusText').value = '';
+					break;
+				case 400:
+					firestatus.cons.logStringMessage("Bad Request");
+					break;
+				case 401:
+					firestatus.cons.logStringMessage("Not Authorized");
+					break;
+				case 403:
+					firestatus.cons.logStringMessage("Forbidden");
+					break;
+				case 404:
+					firestatus.cons.logStringMessage("Not Found");
+					break;
+				case 500:
+					firestatus.cons.logStringMessage("Internal Server Error");
+					break;
+				case 502:
+					firestatus.cons.logStringMessage("Bad Gateway");
+					break;
+				case 503:
+					firestatus.cons.logStringMessage("Service Unavailable");
+					break;
+				default:
+					firestatus.cons.logStringMessage("Unknown del.icio.us status: "+req.status);
+					firestatus.cons.logStringMessage("del.icio.us response: "+req.responseText);
+			 }
+		}
+	};
+    var auth = firestatus.twitterUsername + ":" + firestatus.twitterPassword;
+    req.setRequestHeader("Authorization", "Basic "+btoa(auth));
+    req.send(null); 
+}
+};	
 
 window.addEventListener("load", function(e) { firestatus.onLoad(e); }, false);
 window.addEventListener("unload", function(e) { firestatus.onUnload(e); }, false);
