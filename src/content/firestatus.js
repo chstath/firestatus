@@ -530,11 +530,14 @@ var firestatus = {
 	},
 
 	sendStatusUpdateTwitter: function (statusText, url) {
-		if (url)
-			statusText += " " + url;
+	    var params = "source=firestatus";
+	    if (url)
+	      statusText += " " + url;
 	    var status = encodeURIComponent(statusText);
+	    params += "&status="+status;
 	    var req = new XMLHttpRequest ();   
-	    req.open("POST","http://twitter.com/statuses/update.json?source=firestatus&status="+status, true);
+	    var POST_URL = firestatus.TWITTER_URL + '/statuses/update.json';
+	    req.open("POST", POST_URL, true);
 	    req.onreadystatechange = function () {
 			if (req.readyState == 4) {
 			     switch(req.status) {
@@ -543,44 +546,46 @@ var firestatus = {
 						document.getElementById('statusText').value = '';
 						break;
 					case 400:
-						firestatus.cons.logStringMessage("Bad Request");
+						firestatus.cons.logStringMessage("Twitter response: Bad Request");
 						break;
 					case 401:
-						firestatus.cons.logStringMessage("Not Authorized");
+						firestatus.cons.logStringMessage("Twitter response: Not Authorized");
 						break;
 					case 403:
-						firestatus.cons.logStringMessage("Forbidden");
+						firestatus.cons.logStringMessage("Twitter response: Forbidden");
 						break;
 					case 404:
-						firestatus.cons.logStringMessage("Not Found");
+						firestatus.cons.logStringMessage("Twitter response: Not Found");
 						break;
 					case 500:
-						firestatus.cons.logStringMessage("Internal Server Error");
+						firestatus.cons.logStringMessage("Twitter response: Internal Server Error");
 						break;
 					case 502:
-						firestatus.cons.logStringMessage("Bad Gateway");
+						firestatus.cons.logStringMessage("Twitter response: Bad Gateway");
 						break;
 					case 503:
-						firestatus.cons.logStringMessage("Service Unavailable");
+						firestatus.cons.logStringMessage("Twitter response: Service Unavailable");
 						break;
 					default:
-						firestatus.cons.logStringMessage("Unknown twitter status: "+req.status);
+						firestatus.cons.logStringMessage("Unknown Twitter status: "+req.status);
 						firestatus.cons.logStringMessage("Twitter response: "+req.responseText);
 				 }
 			}
 		};
 	    var auth = firestatus.twitterUsername + ":" + firestatus.twitterPassword;
 	    req.setRequestHeader("Authorization", "Basic "+btoa(auth));
-	    req.send(null); 
+	    req.setRequestHeader("Content-length", params.length);
+	    req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;");
+	    req.send(params); 
 	},
 
 	sendStatusUpdateFriendfeed: function(statusText, url) {
 	    var status = encodeURIComponent(statusText);
 	    var params = "title="+status;
-		if (url)
-			params += "&link=" + url;
+	    if (url)
+	      params += "&link=" + url;
 	    var req = new XMLHttpRequest();   
-		var POST_URL = firestatus.FRIENDFEED_URL + '/api/share';
+	    var POST_URL = firestatus.FRIENDFEED_URL + '/api/share';
 	    req.open("POST", POST_URL, true);
 	    req.onreadystatechange = function () {
 			if (req.readyState == 4) {
@@ -611,7 +616,7 @@ var firestatus = {
 						firestatus.cons.logStringMessage("FriendFeed response: Service Unavailable");
 						break;
 					default:
-						firestatus.cons.logStringMessage("Unknown friendfeed status: "+req.status);
+						firestatus.cons.logStringMessage("Unknown FriendFeed status: "+req.status);
 						firestatus.cons.logStringMessage("FriendFeed response: "+req.responseText);
 				 }
 			}
