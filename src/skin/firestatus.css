@@ -69,6 +69,11 @@
 	padding-left: 2px;
 }
 
+#delicious-icon {
+	list-style-image: url("chrome://firestatus/skin/delicious.png");
+	padding-left: 2px;
+}
+
 #status-close {
   -moz-appearance: none;
   list-style-image: url("chrome://firestatus/skin/close.png");

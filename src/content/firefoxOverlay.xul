@@ -52,6 +52,10 @@
 	            <image id="friendfeed-icon" tooltiptext="&firestatus.labelFriendFeed;"/>
 		    	<checkbox id="selectedConsumerFriendfeed" checked="false" tooltiptext="&firestatus.labelFriendFeed;"/>
         	</vbox>
+        	<vbox align="start">
+	            <image id="delicious-icon" tooltiptext="&firestatus.labelDelicious;"/>
+		    	<checkbox id="selectedConsumerDelicious" checked="false" tooltiptext="&firestatus.labelDelicious;"/>
+        	</vbox>
 			<toolbarbutton id="status-send" label="&firestatus.send;" onclick="statusInput.sendStatusUpdate()" tooltiptext="&firestatus.sendTooltip;"/>
 	    </hbox>
 
