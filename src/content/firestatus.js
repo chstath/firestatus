@@ -354,7 +354,8 @@ var firestatus = {
 									image: status.user.profile_image_url,
 									title: status.user.name,
 									text: status.text,
-									link: firestatus.TWITTER_URL});
+									link: firestatus.TWITTER_URL + '/' + status.user.screen_name +
+                                            '/status/' + status.id});
 						}
 						firestatus.lastTwitterId = status.id;
 						firestatus.lastTwitterTimestamp = t;
