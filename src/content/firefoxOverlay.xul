@@ -28,7 +28,7 @@
 
   <vbox id="appcontent">
     <splitter id="firestatusContentSplitter" collapsed="true"/>
-    <vbox id="firestatusContainer" collapsed="true" persist="height">
+    <vbox id="firestatusContainer" collapsed="true">
 
       <hbox id="firestatusPanelBox">
 
