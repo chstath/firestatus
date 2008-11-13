@@ -2,6 +2,7 @@
 <!ENTITY twitterTab.label "Twitter">
 <!ENTITY friendfeedTab.label "FriendFeed">
 <!ENTITY facebookTab.label "Facebook">
+<!ENTITY deliciousTab.label "del.icio.us">
 <!ENTITY enabled.label "Send updates">
 <!ENTITY enabled.label "Send updates">
 <!ENTITY twitterEnabled.accesskey "T">
@@ -38,3 +39,4 @@
 <!ENTITY urlborg.label "urlBorg">
 <!ENTITY tinyUrl.accesskey "T">
 <!ENTITY urlborg.accesskey "B">
+<!ENTITY shared.label "Shared bookmarks">

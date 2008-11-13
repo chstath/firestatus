@@ -11,5 +11,7 @@
 <!ENTITY firestatus.labelTwitter "Twitter">
 <!ENTITY firestatus.labelFacebook "Facebook">
 <!ENTITY firestatus.labelFriendFeed "FriendFeed">
+<!ENTITY firestatus.labelDelicious "del.icio.us">
 <!ENTITY firestatus.send "Send">
 <!ENTITY firestatus.sendTooltip "Send status update">
+<!ENTITY firestatus.labelTags "Tags">

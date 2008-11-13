@@ -19,6 +19,7 @@ var firestatus = {
 	TWITTER_URL_S: 'https://twitter.com',
 	FRIENDFEED_URL: 'http://friendfeed.com',
 	FACEBOOK_URL: 'http://facebook.com',
+	DELICIOUS_URL_S: 'https://api.del.icio.us',
 	cons: null,
 	prefs: null,
 	twitterEnabled: false,
@@ -41,6 +42,15 @@ var firestatus = {
 	facebookTimeout: 6,
 	facebookTimeoutId: 0,
 	shortURLService: 0, //tinyUrl
+	deliciousEnabled: false,
+	deliciousShared: true,
+	deliciousUpdatesEnabled: false,
+	deliciousUsername: "",
+	deliciousPassword: "",
+	deliciousTimeoutId: 0,
+	deliciousTimeout: 5,
+	lastDeliciousId: 0,
+	lastDeliciousTimestamp: "0",
 	// A FIFO queue that contains pending notifications.
 	updateQueue: [],
 	// An initial queue for ordering FF updates before putting them in updateQueue.
@@ -112,6 +122,42 @@ var firestatus = {
 		this.shortURLService = this.prefs.getCharPref("shortURLService");
 		this.cons.logStringMessage("Short URL service selected: " + this.shortURLService);
 		this.initialTimeoutId = window.setTimeout(this.resume, 7*1000);
+
+	    this.deliciousEnabled = this.prefs.getBoolPref("deliciousEnabled");
+	    this.deliciousShared = this.prefs.getBoolPref("deliciousShared");
+	    this.deliciousUpdatesEnabled = this.prefs.getBoolPref("deliciousUpdatesEnabled");
+	    this.deliciousUsername = this.prefs.getCharPref("deliciousUsername");
+	    this.deliciousPassword = this.prefs.getCharPref("deliciousPassword");
+	    this.deliciousTimeout = this.prefs.getIntPref("deliciousTimeout");
+	    if (this.deliciousEnabled && window.document.getElementById("selectedConsumerDelicious").checked)
+	    	window.document.getElementById("deliciousTags").hidden = false;
+	    else
+	    	window.document.getElementById("deliciousTags").hidden = true;
+//	    this.lastDeliciousId = this.prefs.getIntPref("lastDeliciousId");
+//	    this.lastDeliciousTimestamp = this.prefs.getCharPref("lastDeliciousTimestamp");
+		
+		if (this.deliciousUpdatesEnabled || this.deliciousEnabled) {
+			// If no delicious credentials are set, try the login manager.
+			if (!this.deliciousUsername || !this.deliciousPassword) {
+				try {
+					// Get Login Manager 
+					var loginManager = Components.classes["@mozilla.org/login-manager;1"].getService(Components.interfaces.nsILoginManager);
+					
+					// Find users for the given parameters
+					var logins = loginManager.findLogins({}, this.DELICIOUS_URL_S, this.DELICIOUS_URL_S, null);
+					
+					// Pick the first entry from the returned array of nsILoginInfo objects.
+					if (logins.length > 0) {
+						this.cons.logStringMessage("Using the password manager stored credentials for delicious.");
+						this.deliciousUsername = logins[0].username;
+						this.deliciousPassword = logins[0].password;
+					}
+				} 
+				catch (ex) {
+					this.cons.logStringMessage("Error while loading the Login Manager: " + ex);
+				}
+			}
+		}
 	},
 	
 	onUnload: function() {
@@ -159,13 +205,14 @@ var firestatus = {
 		  firestatus.cancelUpdates('twitter');
 		  firestatus.cancelUpdates('friendfeed');
 		  firestatus.cancelUpdates('facebook');
+		  firestatus.cancelUpdates('delicious');
 		  firestatus.processingQueue = true;
 		  })();
         },
 
 	resume: function() {
 		firestatus.processingQueue = false;
-                if (firestatus.twitterUpdatesEnabled) {
+        if (firestatus.twitterUpdatesEnabled) {
 		  firestatus.twitterUpdates();
 		  firestatus.twitterTimeoutId = window.setInterval(firestatus.twitterUpdates, firestatus.twitterTimeout*60*1000);
 		}
@@ -177,7 +224,11 @@ var firestatus = {
 		  firestatus.facebookUpdates();
 		  firestatus.facebookTimeoutId = window.setInterval(firestatus.facebookUpdates, firestatus.facebookTimeout*60*1000);
 		}
-        },
+        if (firestatus.deliciousUpdatesEnabled) {
+  		  firestatus.deliciousUpdates();
+  		  firestatus.deliciousTimeoutId = window.setInterval(firestatus.deliciousUpdates, firestatus.deliciousTimeout*60*1000);
+  		}
+   },
 
 	observe: function(subject, topic, data) {
 		if (topic != "nsPref:changed") {
@@ -294,6 +345,55 @@ var firestatus = {
 				} else
 					this.cancelUpdates("facebook");
 		    	break;
+			case "deliciousEnabled":
+		    	this.deliciousEnabled = this.prefs.getBoolPref("deliciousEnabled");
+		    	if (this.deliciousEnabled) {
+					window.document.getElementById("selectedConsumerDelicious").disabled = false;
+					if (this.prefs.prefHasUserValue("lastDeliciousChecked")) {
+						window.document.getElementById("selectedConsumerDelicious").checked = this.prefs.getBoolPref("lastDeliciousChecked");
+					}
+					else {
+						window.document.getElementById("selectedConsumerDelicious").checked = true;
+						this.prefs.setBoolPref("lastDeliciousChecked", true);
+					}
+					if (window.document.getElementById("selectedConsumerDelicious").checked)
+						window.document.getElementById("deliciousTags").hidden = false;
+					else
+						window.document.getElementById("deliciousTags").hidden = true;
+		    	}
+		    	else {
+					window.document.getElementById("selectedConsumerDelicious").disabled = true;
+					window.document.getElementById("selectedConsumerDelicious").checked = false;
+					firestatus.prefs.setBoolPref("lastDeliciousChecked", false);
+					window.document.getElementById("deliciousTags").hidden = true;
+		    	}	
+		    	break;
+			case "deliciousShared":
+				this.deliciousShared = this.prefs.getBoolPref("deliciousShared");
+				break;
+			case "deliciousUpdatesEnabled":
+		    	this.deliciousUpdatesEnabled = this.prefs.getBoolPref("deliciousUpdatesEnabled");
+				if (this.deliciousUpdatesEnabled) {
+					this.deliciousUpdates();
+			        this.deliciousTimeoutId = window.setInterval(this.deliciousUpdates,
+															   this.deliciousTimeout*60*1000);
+				} else
+					this.cancelUpdates("delicious");
+		    	break;
+			case "deliciousUsername":
+		    	this.deliciousUsername = this.prefs.getCharPref("deliciousUsername");
+		    	break;
+			case "deliciousPassword":
+		    	this.deliciousPassword = this.prefs.getCharPref("deliciousPassword");
+		    	break;
+			case "deliciousTimeout":
+		    	this.deliciousTimeout = this.prefs.getIntPref("deliciousTimeout");
+				if (this.deliciousUpdatesEnabled) {
+					this.cancelUpdates("delicious");
+			        this.deliciousTimeoutId = window.setInterval(this.deliciousUpdates,
+															   this.deliciousTimeout*60*1000);
+				}
+		    	break;
 		    case "shortURLService":
 		    	this.shortURLService = this.prefs.getCharPref("shortURLService");
 				this.cons.logStringMessage("Short URL service selected: " + this.shortURLService);
@@ -311,6 +411,9 @@ var firestatus = {
 				break;
 			case "facebook":
 				window.clearInterval(this.facebookTimeoutId);
+				break;
+			case "delicious":
+				window.clearInterval(this.deliciousTimeoutId);
 				break;
 		}
 	},
@@ -428,6 +531,9 @@ var firestatus = {
 	facebookUpdates: function() {
 		if (firestatus.processingQueue) return;
 		facebookClient.getNotifications();
+	},
+
+	deliciousUpdates: function() {
 	},
 
 	displayNotification: function() {
@@ -629,50 +735,63 @@ var firestatus = {
 	    req.send(params); 
 	},
 
-
-
-sendStatusUpdateDelicious: function (statusText, url) {
-    var status = encodeURIComponent(statusText);
-    var req = new XMLHttpRequest ();   
-    req.open("GET","https://api.del.icio.us/v1/posts/add?url=" + url + "&description=" + statusText + "&shared=no", true);
-    req.onreadystatechange = function () {
-		if (req.readyState == 4) {
-		     switch(req.status) {
-			 	case 200:
-				 	firestatus.cons.logStringMessage("Del.icio.us bookmark saved.");
-					document.getElementById('statusText').value = '';
-					break;
-				case 400:
-					firestatus.cons.logStringMessage("Bad Request");
-					break;
-				case 401:
-					firestatus.cons.logStringMessage("Not Authorized");
-					break;
-				case 403:
-					firestatus.cons.logStringMessage("Forbidden");
-					break;
-				case 404:
-					firestatus.cons.logStringMessage("Not Found");
-					break;
-				case 500:
-					firestatus.cons.logStringMessage("Internal Server Error");
-					break;
-				case 502:
-					firestatus.cons.logStringMessage("Bad Gateway");
-					break;
-				case 503:
-					firestatus.cons.logStringMessage("Service Unavailable");
-					break;
-				default:
-					firestatus.cons.logStringMessage("Unknown del.icio.us status: "+req.status);
-					firestatus.cons.logStringMessage("del.icio.us response: "+req.responseText);
-			 }
+	showTagsBox: function () {
+		if (!document.getElementById("selectedConsumerDelicious").disabled) {
+			if (document.getElementById("selectedConsumerDelicious").checked)
+				document.getElementById("deliciousTags").hidden = true;
+			else
+				document.getElementById("deliciousTags").hidden = false;
 		}
-	};
-    var auth = firestatus.twitterUsername + ":" + firestatus.twitterPassword;
-    req.setRequestHeader("Authorization", "Basic "+btoa(auth));
-    req.send(null); 
-}
+	},
+	
+	sendStatusUpdateDelicious: function (statusText, deliciousTags, url) {
+	    var status = encodeURIComponent(statusText);
+	    var shared = firestatus.prefs.getBoolPref("deliciousShared");
+	    var req = new XMLHttpRequest ();
+	    var params = "url=" + url + "&description=" + statusText + "&tags=" + deliciousTags + "&shared=" + (shared ? "yes" : "no");
+	    req.open("POST", firestatus.DELICIOUS_URL_S + "/v1/posts/add", true);
+	    req.onreadystatechange = function () {
+			if (req.readyState == 4) {
+			     switch(req.status) {
+				 	case 200:
+					 	firestatus.cons.logStringMessage("Del.icio.us bookmark saved.");
+						document.getElementById('statusText').value = '';
+						document.getElementById('deliciousTags').value = '';
+						break;
+					case 400:
+						firestatus.cons.logStringMessage("Bad Request");
+						break;
+					case 401:
+						firestatus.cons.logStringMessage("Not Authorized");
+						break;
+					case 403:
+						firestatus.cons.logStringMessage("Forbidden");
+						break;
+					case 404:
+						firestatus.cons.logStringMessage("Not Found");
+						break;
+					case 500:
+						firestatus.cons.logStringMessage("Internal Server Error");
+						break;
+					case 502:
+						firestatus.cons.logStringMessage("Bad Gateway");
+						break;
+					case 503:
+						firestatus.cons.logStringMessage("Service Unavailable");
+						break;
+					default:
+						firestatus.cons.logStringMessage("Unknown del.icio.us status: "+req.status);
+						firestatus.cons.logStringMessage("del.icio.us response: "+req.responseText);
+				 }
+			}
+		};
+	    var auth = firestatus.deliciousUsername + ":" + firestatus.deliciousPassword;
+	    firestatus.cons.logStringMessage(auth);
+	    req.setRequestHeader("Authorization", "Basic " + btoa(auth));
+	    req.setRequestHeader("Content-length", params.length);
+	    req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;");
+	    req.send(params); 
+	}
 };	
 
 window.addEventListener("load", function(e) { firestatus.onLoad(e); }, false);

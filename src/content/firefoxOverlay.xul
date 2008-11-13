@@ -34,7 +34,10 @@
 
 	    <hbox align="center">
 			<toolbarbutton id="status-close" onclick="firestatus.hide()" tooltiptext="&firestatus.close;"/>
-	        <textbox id="statusText" size="80" spellcheck="true" onkeyup="statusInput.updateCharCount(event)"/>
+			<vbox>
+	        	<textbox id="statusText" size="80" spellcheck="true" onkeyup="statusInput.updateCharCount(event)"/>
+	        	<textbox id="deliciousTags" size="80" spellcheck="true" hidden="true" tooltiptext="&firestatus.labelTags;"/>
+	        </vbox>
 	        <label id="charcount" value="0"/>
 	        <vbox id="urlGroup">
 	            <checkbox id="sendUrl" checked="false" label="&firestatus.sendUrl;" onclick="statusInput.toggleSendUrl()"/>
@@ -51,6 +54,10 @@
         	<vbox align="start">
 	            <image id="friendfeed-icon" tooltiptext="&firestatus.labelFriendFeed;"/>
 		    	<checkbox id="selectedConsumerFriendfeed" checked="false" tooltiptext="&firestatus.labelFriendFeed;"/>
+        	</vbox>
+        	<vbox align="start">
+	            <image id="delicious-icon" tooltiptext="&firestatus.labelDelicious;"/>
+		    	<checkbox id="selectedConsumerDelicious" checked="false" tooltiptext="&firestatus.labelDelicious;" onclick="firestatus.showTagsBox();"/>
         	</vbox>
 			<toolbarbutton id="status-send" label="&firestatus.send;" onclick="statusInput.sendStatusUpdate()" tooltiptext="&firestatus.sendTooltip;"/>
 	    </hbox>

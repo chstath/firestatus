@@ -32,6 +32,12 @@
   -moz-outline-radius: 11px;
 }
 
+#deliciousTags[focused="true"] {
+  outline: 2px solid #4A8BC7;
+  outline-offset: -2px;
+  -moz-outline-radius: 11px;
+}
+
 #charcount {
 	font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
 	font-weight: bold;
@@ -54,6 +60,10 @@
 	padding: 0;
 }
 
+#selectedConsumerDelicious {
+	padding: 0;
+}
+
 #twitter-icon {
 	list-style-image: url("chrome://firestatus/skin/twitter.png");
 	padding-left: 2px;
@@ -66,6 +76,11 @@
 
 #facebook-icon {
 	list-style-image: url("chrome://firestatus/skin/facebook.png");
+	padding-left: 2px;
+}
+
+#delicious-icon {
+	list-style-image: url("chrome://firestatus/skin/delicious.png");
 	padding-left: 2px;
 }
 
@@ -83,6 +98,18 @@
 }
 
 #statusText {
+  -moz-appearance: none;
+  border: 3px solid;
+  -moz-border-top-colors: #5F5F5F #CFCFCF -moz-Field;
+  -moz-border-bottom-colors: #9F9F9F #EEE -moz-Field;
+  -moz-border-right-colors: #7F7F7F #EEE -moz-Field;
+  -moz-border-left-colors: #7F7F7F #EFEFEF -moz-Field;
+  -moz-border-radius: 11.5px;
+  -moz-background-clip: border !important;
+  padding: 0 8px;
+}
+
+#deliciousTags {
   -moz-appearance: none;
   border: 3px solid;
   -moz-border-top-colors: #5F5F5F #CFCFCF -moz-Field;
