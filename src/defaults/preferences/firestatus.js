@@ -20,5 +20,6 @@ pref("extensions.firestatus.deliciousUsername", "");
 pref("extensions.firestatus.deliciousPassword", "");
 pref("extensions.firestatus.deliciousTimeout", 6);
 pref("extensions.firestatus.shortURLService", "tinyUrl");
+pref("extensions.firestatus.deliciousShared", true);
 // See http://kb.mozillazine.org/Localize_extension_descriptions
 pref("extensions.firestatus@astithas.com.description", "chrome://firestatus/locale/firestatus.properties");

@@ -71,11 +71,16 @@ var statusInput = {
 				document.getElementById("selectedConsumerDelicious").checked = true;
 				firestatus.prefs.setBoolPref("lastDeliciousChecked", true);
 			}
+			if (document.getElementById("selectedConsumerDelicious").checked)
+				document.getElementById("deliciousTags").hidden = false;
+			else
+				document.getElementById("deliciousTags").hidden = true;
 		}
 		else {
 			document.getElementById("selectedConsumerDelicious").disabled = true;
 			document.getElementById("selectedConsumerDelicious").checked = false;
 			firestatus.prefs.setBoolPref("lastDeliciousChecked", false);
+			document.getElementById("deliciousTags").hidden = true;
 		}
 		document.getElementById("statusText").focus();
 	},
@@ -89,6 +94,7 @@ var statusInput = {
 	
 	sendStatusUpdate: function() {
 		var statusText = document.getElementById('statusText').value;
+		var deliciousTags = document.getElementById('deliciousTags').value;
 		var url = document.getElementById("sendUrl").checked ? document.getElementById("urlbar").value : "";
 		var sendTwitter = firestatus.twitterEnabled && document.getElementById("selectedConsumerTwitter").checked;
 		var sendFriendfeed = firestatus.friendfeedEnabled && document.getElementById("selectedConsumerFriendfeed").checked;
@@ -107,7 +113,7 @@ var statusInput = {
 				firestatus.sendStatusUpdateFacebook(statusText, url);
 			}
 			if (sendDelicious) {
-				firestatus.sendStatusUpdateDelicious(statusText, document.getElementById("urlbar").value);
+				firestatus.sendStatusUpdateDelicious(statusText, deliciousTags, document.getElementById("urlbar").value);
 			}
 		}
 		firestatus.hide();

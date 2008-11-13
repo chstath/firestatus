@@ -43,6 +43,7 @@ var firestatus = {
 	facebookTimeoutId: 0,
 	shortURLService: 0, //tinyUrl
 	deliciousEnabled: false,
+	deliciousShared: true,
 	deliciousUpdatesEnabled: false,
 	deliciousUsername: "",
 	deliciousPassword: "",
@@ -123,10 +124,15 @@ var firestatus = {
 		this.initialTimeoutId = window.setTimeout(this.resume, 7*1000);
 
 	    this.deliciousEnabled = this.prefs.getBoolPref("deliciousEnabled");
+	    this.deliciousShared = this.prefs.getBoolPref("deliciousShared");
 	    this.deliciousUpdatesEnabled = this.prefs.getBoolPref("deliciousUpdatesEnabled");
 	    this.deliciousUsername = this.prefs.getCharPref("deliciousUsername");
 	    this.deliciousPassword = this.prefs.getCharPref("deliciousPassword");
 	    this.deliciousTimeout = this.prefs.getIntPref("deliciousTimeout");
+	    if (this.deliciousEnabled && window.document.getElementById("selectedConsumerDelicious").checked)
+	    	window.document.getElementById("deliciousTags").hidden = false;
+	    else
+	    	window.document.getElementById("deliciousTags").hidden = true;
 //	    this.lastDeliciousId = this.prefs.getIntPref("lastDeliciousId");
 //	    this.lastDeliciousTimestamp = this.prefs.getCharPref("lastDeliciousTimestamp");
 		
@@ -350,13 +356,21 @@ var firestatus = {
 						window.document.getElementById("selectedConsumerDelicious").checked = true;
 						this.prefs.setBoolPref("lastDeliciousChecked", true);
 					}
+					if (window.document.getElementById("selectedConsumerDelicious").checked)
+						window.document.getElementById("deliciousTags").hidden = false;
+					else
+						window.document.getElementById("deliciousTags").hidden = true;
 		    	}
 		    	else {
 					window.document.getElementById("selectedConsumerDelicious").disabled = true;
 					window.document.getElementById("selectedConsumerDelicious").checked = false;
 					firestatus.prefs.setBoolPref("lastDeliciousChecked", false);
+					window.document.getElementById("deliciousTags").hidden = true;
 		    	}	
 		    	break;
+			case "deliciousShared":
+				this.deliciousShared = this.prefs.getBoolPref("deliciousShared");
+				break;
 			case "deliciousUpdatesEnabled":
 		    	this.deliciousUpdatesEnabled = this.prefs.getBoolPref("deliciousUpdatesEnabled");
 				if (this.deliciousUpdatesEnabled) {
@@ -721,10 +735,20 @@ var firestatus = {
 	    req.send(params); 
 	},
 
-	sendStatusUpdateDelicious: function (statusText, url) {
+	showTagsBox: function () {
+		if (!document.getElementById("selectedConsumerDelicious").disabled) {
+			if (document.getElementById("selectedConsumerDelicious").checked)
+				document.getElementById("deliciousTags").hidden = true;
+			else
+				document.getElementById("deliciousTags").hidden = false;
+		}
+	},
+	
+	sendStatusUpdateDelicious: function (statusText, deliciousTags, url) {
 	    var status = encodeURIComponent(statusText);
+	    var shared = firestatus.prefs.getBoolPref("deliciousShared");
 	    var req = new XMLHttpRequest ();
-	    var params = "url=" + url + "&description=" + statusText + "&shared=no"
+	    var params = "url=" + url + "&description=" + statusText + "&tags=" + deliciousTags + "&shared=" + (shared ? "yes" : "no");
 	    req.open("POST", firestatus.DELICIOUS_URL_S + "/v1/posts/add", true);
 	    req.onreadystatechange = function () {
 			if (req.readyState == 4) {
@@ -732,6 +756,7 @@ var firestatus = {
 				 	case 200:
 					 	firestatus.cons.logStringMessage("Del.icio.us bookmark saved.");
 						document.getElementById('statusText').value = '';
+						document.getElementById('deliciousTags').value = '';
 						break;
 					case 400:
 						firestatus.cons.logStringMessage("Bad Request");

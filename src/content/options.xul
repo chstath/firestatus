@@ -40,6 +40,7 @@
       <preference id="facebookUpdatesEnabled" name="extensions.firestatus.facebookUpdatesEnabled" type="bool"/>
       <preference id="facebookTimeout" name="extensions.firestatus.facebookTimeout" type="int"/>
       <preference id="deliciousEnabled" name="extensions.firestatus.deliciousEnabled" type="bool"/>
+      <preference id="deliciousShared" name="extensions.firestatus.deliciousShared" type="bool"/>
       <preference id="deliciousUpdatesEnabled" name="extensions.firestatus.deliciousUpdatesEnabled" type="bool"/>
       <preference id="deliciousUsername" name="extensions.firestatus.deliciousUsername" type="string"/>
       <preference id="deliciousPassword" name="extensions.firestatus.deliciousPassword" type="string"/> <!-- note that this is only an ASCII string - use unichar for unicode strings -->
@@ -86,8 +87,9 @@
 	</groupbox>
 	<groupbox>
 		<caption label="&deliciousTab.label;"/>
-		    <checkbox id="deliciousEnabled" preference="deliciousEnabled" label="&enabled.label;" image="chrome://firestatus/skin/twitter.png"/>
-		    <checkbox id="deliciousUpdatesEnabled" preference="deliciousUpdatesEnabled" label="&updatesEnabled.label;" image="chrome://firestatus/skin/twitter.png"/>
+		    <checkbox id="deliciousEnabled" preference="deliciousEnabled" label="&enabled.label;" image="chrome://firestatus/skin/delicious.png"/>
+		    <checkbox id="deliciousShared" preference="deliciousShared" label="&shared.label;" image="chrome://firestatus/skin/delicious.png"/>
+		    <checkbox id="deliciousUpdatesEnabled" preference="deliciousUpdatesEnabled" label="&updatesEnabled.label;" image="chrome://firestatus/skin/delicious.png"/>
 		    <label control="textDeliciousUsername">&username.label;</label><textbox id="textDeliciousUsername" preference="deliciousUsername"/>
 		    <label control="textDeliciousPassword">&password.label;</label><textbox id="textDeliciousPassword" preference="deliciousPassword" type="password"/>
 		    <label control="textDeliciousTimeout">&timeout.label;</label><textbox id="textDeliciousTimeout" preference="deliciousTimeout"/>
