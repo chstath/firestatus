@@ -101,24 +101,13 @@ var statusInput = {
 		var sendFacebook = firestatus.facebookEnabled && document.getElementById("selectedConsumerFacebook").checked;
 		var sendDelicious = firestatus.deliciousEnabled && document.getElementById("selectedConsumerDelicious").checked;
 		if (url && document.getElementById("shortenUrl").checked)
-			firestatus.getShrinkedUrl(encodeURI(url), statusText, sendTwitter, sendFriendfeed, sendFacebook);
+			firestatus.getShrinkedUrl(encodeURI(url), statusText, sendTwitter, sendFriendfeed, sendFacebook, sendDelicious);
 		else {
-			if (sendTwitter) {
-				firestatus.sendStatusUpdateTwitter(statusText, url);
-			}
-			if (sendFriendfeed) {
-				firestatus.sendStatusUpdateFriendfeed(statusText, url);
-			}
-			if (sendFacebook) {
-				firestatus.sendStatusUpdateFacebook(statusText, url);
-			}
-			if (sendDelicious) {
-				firestatus.sendStatusUpdateDelicious(statusText, deliciousTags, document.getElementById("urlbar").value);
-			}
+			firestatus.actuallySendUpdate(statusText, url, sendTwitter, sendFriendfeed, sendFacebook, sendDelicious);
 		}
 		firestatus.hide();
 	},
-
+	
 	updateCharCount: function(event) {
 		var statusText = document.getElementById('statusText').value;
 		document.getElementById('charcount').value = statusText.length;

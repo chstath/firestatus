@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2008 Panagiotis Astithas
+ * Copyright (c) 2008 Panagiotis Astithas, Christos V. Stathis
  *
  * Permission to use, copy, modify, and distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -121,7 +121,6 @@ var firestatus = {
 		
 		this.shortURLService = this.prefs.getCharPref("shortURLService");
 		this.cons.logStringMessage("Short URL service selected: " + this.shortURLService);
-		this.initialTimeoutId = window.setTimeout(this.resume, 7*1000);
 
 	    this.deliciousEnabled = this.prefs.getBoolPref("deliciousEnabled");
 	    this.deliciousShared = this.prefs.getBoolPref("deliciousShared");
@@ -158,6 +157,7 @@ var firestatus = {
 				}
 			}
 		}
+		this.initialTimeoutId = window.setTimeout(this.resume, 7*1000);
 	},
 	
 	onUnload: function() {
@@ -534,6 +534,48 @@ var firestatus = {
 	},
 
 	deliciousUpdates: function() {
+		if (firestatus.processingQueue) return;
+		var FEED_URL = 'http://feeds.delicious.com/v2/json/network/' + firestatus.deliciousUsername;
+	    var req = new XMLHttpRequest();
+	    req.open('GET', FEED_URL, true);
+	    req.onreadystatechange = function (aEvt) {
+	      if (req.readyState == 4) {
+	             if(req.status == 200) {
+		            	var Ci = Components.interfaces;
+		            	var Cc = Components.classes;
+		            	var nativeJSON = Cc["@mozilla.org/dom/json;1"].createInstance(Ci.nsIJSON);
+	                    var jsonString = req.responseText;
+	                    firestatus.cons.logStringMessage(req.responseText);
+						var statuses = nativeJSON.decode(jsonString);
+//						alert(nativeJSON.decode(jsonString));
+						if (statuses.length == 0)
+							return;
+						for (var i = 0; i < statuses.length; i++) {
+							var status = statuses[i];
+							var t = Date.parse(status.dt);
+							var text = "";
+							try {
+							  text = decodeURI(status.d);
+							} catch (error) {
+							  firestatus.cons.logStringMessage("Error decoding delicious update: " +
+											   status.d);
+							  text = status.d;
+							}
+							firestatus.updateQueue.push({
+									timestamp: t,
+									text: status.d,
+									link: status.u
+							});
+						}
+						if (!firestatus.processingQueue) {
+							firestatus.processingQueue = true;
+							firestatus.displayNotification();
+						}
+	             } else
+	             	firestatus.cons.logStringMessage("Error loading delicious feed. req.status=" + req.status);
+	      }
+	    };
+	    req.send(null);
 	},
 
 	displayNotification: function() {
@@ -573,7 +615,7 @@ var firestatus = {
 		}
 	},
 	
-	getShrinkedUrl: function (url, statusText, sendTwitter, sendFriendfeed, sendFacebook) {
+	getShrinkedUrl: function (url, statusText, sendTwitter, sendFriendfeed, sendFacebook, sendDelicious) {
 		firestatus.cons.logStringMessage("Shortening url ...");
 		var tinyurl = null;
 		if (this.shortURLService == "tinyUrl")
@@ -587,15 +629,7 @@ var firestatus = {
 			     switch(req.status) {
 				 	case 200:
 						url = req.responseText;
-						if (sendTwitter) {
-							firestatus.sendStatusUpdateTwitter(statusText, url);
-						}
-						if (sendFriendfeed) {
-							firestatus.sendStatusUpdateFriendfeed(statusText, url);
-						}
-						if (sendFacebook) {
-							firestatus.sendStatusUpdateFacebook(statusText, url);
-						}
+						firestatus.actuallySendUpdate(statusText, url, sendTwitter, sendFriendfeed, sendFacebook, sendDelicious);
 						break;
 					case 400:
 						firestatus.cons.logStringMessage("Bad Request");
@@ -627,6 +661,21 @@ var firestatus = {
 		req.send(null);
 	},
 	
+	actuallySendUpdate: function(statusText, url, sendTwitter, sendFriendfeed, sendFacebook, sendDelicious) {
+		if (sendTwitter) {
+			firestatus.sendStatusUpdateTwitter(statusText, url);
+		}
+		if (sendFriendfeed) {
+			firestatus.sendStatusUpdateFriendfeed(statusText, url);
+		}
+		if (sendFacebook) {
+			firestatus.sendStatusUpdateFacebook(statusText, url);
+		}
+		if (sendDelicious) {
+			firestatus.sendStatusUpdateDelicious(statusText, deliciousTags, document.getElementById("urlbar").value);
+		}
+	},
+
 	sendStatusUpdateFacebook: function(statusText, url) {
 		firestatus.cons.logStringMessage("Starting facebook update...")
 		if (url)
