@@ -615,7 +615,7 @@ var firestatus = {
 		}
 	},
 	
-	getShrinkedUrl: function (url, statusText, sendTwitter, sendFriendfeed, sendFacebook, sendDelicious) {
+	getShrinkedUrl: function (url, statusText, deliciousTags, sendTwitter, sendFriendfeed, sendFacebook, sendDelicious) {
 		firestatus.cons.logStringMessage("Shortening url ...");
 		var tinyurl = null;
 		if (this.shortURLService == "tinyUrl")
@@ -629,7 +629,7 @@ var firestatus = {
 			     switch(req.status) {
 				 	case 200:
 						url = req.responseText;
-						firestatus.actuallySendUpdate(statusText, url, sendTwitter, sendFriendfeed, sendFacebook, sendDelicious);
+						firestatus.actuallySendUpdate(statusText, url, deliciousTags, sendTwitter, sendFriendfeed, sendFacebook, sendDelicious);
 						break;
 					case 400:
 						firestatus.cons.logStringMessage("Bad Request");
@@ -661,7 +661,7 @@ var firestatus = {
 		req.send(null);
 	},
 	
-	actuallySendUpdate: function(statusText, url, sendTwitter, sendFriendfeed, sendFacebook, sendDelicious) {
+	actuallySendUpdate: function(statusText, url, deliciousTags, sendTwitter, sendFriendfeed, sendFacebook, sendDelicious) {
 		if (sendTwitter) {
 			firestatus.sendStatusUpdateTwitter(statusText, url);
 		}

@@ -101,7 +101,7 @@ var statusInput = {
 		var sendFacebook = firestatus.facebookEnabled && document.getElementById("selectedConsumerFacebook").checked;
 		var sendDelicious = firestatus.deliciousEnabled && document.getElementById("selectedConsumerDelicious").checked;
 		if (url && document.getElementById("shortenUrl").checked)
-			firestatus.getShrinkedUrl(encodeURI(url), statusText, sendTwitter, sendFriendfeed, sendFacebook, sendDelicious);
+			firestatus.getShrinkedUrl(encodeURI(url), statusText, deliciousTags, sendTwitter, sendFriendfeed, sendFacebook, sendDelicious);
 		else {
 			firestatus.actuallySendUpdate(statusText, url, sendTwitter, sendFriendfeed, sendFacebook, sendDelicious);
 		}
