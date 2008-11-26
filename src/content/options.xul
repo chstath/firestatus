@@ -45,6 +45,7 @@
       <preference id="deliciousUsername" name="extensions.firestatus.deliciousUsername" type="string"/>
       <preference id="deliciousPassword" name="extensions.firestatus.deliciousPassword" type="string"/> <!-- note that this is only an ASCII string - use unichar for unicode strings -->
       <preference id="deliciousTimeout" name="extensions.firestatus.deliciousTimeout" type="int"/>
+      <preference id="lastDeliciousTimestamp" name="extensions.firestatus.lastDeliciousTimestamp" type="string"/>
       <preference id="shortURLService" name="extensions.firestatus.shortURLService" type="string"/>
     </preferences>
 

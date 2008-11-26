@@ -49,7 +49,6 @@ var firestatus = {
 	deliciousPassword: "",
 	deliciousTimeoutId: 0,
 	deliciousTimeout: 5,
-	lastDeliciousId: 0,
 	lastDeliciousTimestamp: "0",
 	// A FIFO queue that contains pending notifications.
 	updateQueue: [],
@@ -132,8 +131,7 @@ var firestatus = {
 	    	window.document.getElementById("deliciousTags").hidden = false;
 	    else
 	    	window.document.getElementById("deliciousTags").hidden = true;
-//	    this.lastDeliciousId = this.prefs.getIntPref("lastDeliciousId");
-//	    this.lastDeliciousTimestamp = this.prefs.getCharPref("lastDeliciousTimestamp");
+	    this.lastDeliciousTimestamp = this.prefs.getCharPref("lastDeliciousTimestamp");
 		
 		if (this.deliciousUpdatesEnabled || this.deliciousEnabled) {
 			// If no delicious credentials are set, try the login manager.
@@ -547,12 +545,14 @@ var firestatus = {
 	                    var jsonString = req.responseText;
 	                    firestatus.cons.logStringMessage(req.responseText);
 						var statuses = nativeJSON.decode(jsonString);
-//						alert(nativeJSON.decode(jsonString));
 						if (statuses.length == 0)
 							return;
+						statuses.reverse();
 						for (var i = 0; i < statuses.length; i++) {
 							var status = statuses[i];
-							var t = Date.parse(status.dt);
+							var t = status.dt;
+							if (t <= firestatus.lastDeliciousTimestamp)
+								continue;
 							var text = "";
 							try {
 							  text = decodeURI(status.d);
@@ -562,11 +562,13 @@ var firestatus = {
 							  text = status.d;
 							}
 							firestatus.updateQueue.push({
-									timestamp: t,
+									image: "chrome://firestatus/skin/delicious.png",									timestamp: t,
 									text: status.d,
 									link: status.u
 							});
 						}
+						firestatus.lastDeliciousTimestamp = t;
+						firestatus.prefs.setCharPref("lastDeliciousTimestamp", t);
 						if (!firestatus.processingQueue) {
 							firestatus.processingQueue = true;
 							firestatus.displayNotification();
