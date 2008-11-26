@@ -103,7 +103,7 @@ var statusInput = {
 		if (url && document.getElementById("shortenUrl").checked)
 			firestatus.getShrinkedUrl(encodeURI(url), statusText, deliciousTags, sendTwitter, sendFriendfeed, sendFacebook, sendDelicious);
 		else {
-			firestatus.actuallySendUpdate(statusText, url, sendTwitter, sendFriendfeed, sendFacebook, sendDelicious);
+			firestatus.actuallySendUpdate(statusText, url, deliciousTags, sendTwitter, sendFriendfeed, sendFacebook, sendDelicious);
 		}
 		firestatus.hide();
 	},

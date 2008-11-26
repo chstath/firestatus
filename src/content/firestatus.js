@@ -672,7 +672,9 @@ var firestatus = {
 			firestatus.sendStatusUpdateFacebook(statusText, url);
 		}
 		if (sendDelicious) {
-			firestatus.sendStatusUpdateDelicious(statusText, deliciousTags, document.getElementById("urlbar").value);
+			var title = document.title;
+			title = title.substr(0, title.lastIndexOf('-')-1);
+			firestatus.sendStatusUpdateDelicious(statusText, deliciousTags, document.getElementById("urlbar").value, title);
 		}
 	},
 
@@ -793,11 +795,13 @@ var firestatus = {
 		}
 	},
 	
-	sendStatusUpdateDelicious: function (statusText, deliciousTags, url) {
+	sendStatusUpdateDelicious: function (statusText, deliciousTags, url, title) {
 	    var status = encodeURIComponent(statusText);
+	    deliciousTags = encodeURIComponent(deliciousTags);
+	    title = encodeURIComponent(title);
 	    var shared = firestatus.prefs.getBoolPref("deliciousShared");
 	    var req = new XMLHttpRequest ();
-	    var params = "url=" + url + "&description=" + statusText + "&tags=" + deliciousTags + "&shared=" + (shared ? "yes" : "no");
+	    var params = "url=" + url + "&description=" + title + "&extended=" + status + "&tags=" + deliciousTags + "&shared=" + (shared ? "yes" : "no");
 	    req.open("POST", firestatus.DELICIOUS_URL_S + "/v1/posts/add", true);
 	    req.onreadystatechange = function () {
 			if (req.readyState == 4) {
