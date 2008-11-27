@@ -18,7 +18,7 @@ pref("extensions.firestatus.deliciousEnabled", false);
 pref("extensions.firestatus.deliciousUpdatesEnabled", false);
 pref("extensions.firestatus.deliciousUsername", "");
 pref("extensions.firestatus.deliciousPassword", "");
-pref("extensions.firestatus.deliciousTimeout", 6);
+pref("extensions.firestatus.deliciousTimeout", 60);
 pref("extensions.firestatus.lastDeliciousTimestamp", "0");
 pref("extensions.firestatus.shortURLService", "tinyUrl");
 pref("extensions.firestatus.deliciousShared", true);
