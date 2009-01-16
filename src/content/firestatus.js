@@ -164,7 +164,10 @@ var firestatus = {
 	
 	onClick: function(event) {
 		if (event.button == 0 && !event.ctrlKey) {
-			firestatus.show();
+			if (window.document.getElementById('firestatusContainer').getAttribute("collapsed") === "true")
+				firestatus.show();
+			else
+				firestatus.hide();
 		} else if (event.button == 2 || event.ctrlKey) {
 			var panel = window.document.getElementById('firestatus-panel');
 			var popup = window.document.getElementById('firestatus-popup');
