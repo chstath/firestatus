@@ -501,6 +501,7 @@ var firestatus = {
 						for (var i = 0; i < statuses.length; i++) {
 							var status = statuses[i];
 							if (status.id == firestatus.lastFriendfeedId) break;
+							if (status.hidden) break;
 							var t = status.updated; // TODO: parse the RFC 3339 string
 							firestatus.ffInitialQueue.push({
 								id: status.id,
