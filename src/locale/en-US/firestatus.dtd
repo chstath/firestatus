@@ -4,7 +4,6 @@
 <!ENTITY firestatus.prefs "Preferences...">
 <!ENTITY firestatus.about "About...">
 <!ENTITY firestatus.iconTip "Click to post, right-click for menu">
-<!ENTITY firestatus.statusTitle "Status Message">
 <!ENTITY firestatus.close "Close popup">
 <!ENTITY firestatus.sendUrl "Include URL">
 <!ENTITY firestatus.shortenUrl "...shortened">
