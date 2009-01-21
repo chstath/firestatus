@@ -1,3 +1,5 @@
+/* -*- mode: JavaScript; c-basic-offset: 4; tab-width: 4; indent-tabs-mode: nil -*- */
+/* ex: set tabstop=4 expandtab: */
 /*
  * Copyright (c) 2008 Dionysios Synodinos
  * Copyright (c) 2008 Christos V. Stathis

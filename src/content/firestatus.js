@@ -1,3 +1,5 @@
+/* -*- mode: JavaScript; c-basic-offset: 4; tab-width: 4; indent-tabs-mode: nil -*- */
+/* ex: set tabstop=4 expandtab: */
 /*
  * Copyright (c) 2008 Panagiotis Astithas, Christos V. Stathis
  *
@@ -566,7 +568,8 @@ var firestatus = {
 							  text = status.d;
 							}
 							firestatus.updateQueue.push({
-									image: "chrome://firestatus/skin/delicious.png",									timestamp: t,
+									image: "chrome://firestatus/skin/delicious.png",
+									timestamp: t,
 									text: status.d,
 									link: status.u
 							});
