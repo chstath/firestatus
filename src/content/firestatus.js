@@ -16,6 +16,8 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
+Components.utils.import("resource://firestatus/queue.js");
+
 var firestatus = {
 	TWITTER_URL: 'http://twitter.com',
 	TWITTER_URL_S: 'https://twitter.com',
@@ -30,15 +32,12 @@ var firestatus = {
 	twitterPassword: "",
 	twitterTimeoutId: 0,
 	twitterTimeout: 5,
-	lastTwitterId: 0,
-	lastTwitterTimestamp: "0",
 	friendfeedEnabled: false,
 	friendfeedUpdatesEnabled: false,
 	friendfeedUsername: "",
 	friendfeedPassword: "",
 	friendfeedTimeoutId: 0,
 	friendfeedTimeout: 4,
-	lastFriendfeedId: 0,
 	facebookEnabled: false,
 	facebookUpdatesEnabled: false,
 	facebookTimeout: 6,
@@ -51,12 +50,8 @@ var firestatus = {
 	deliciousPassword: "",
 	deliciousTimeoutId: 0,
 	deliciousTimeout: 5,
-	lastDeliciousTimestamp: "0",
-	// A FIFO queue that contains pending notifications.
-	updateQueue: [],
 	// An initial queue for ordering FF updates before putting them in updateQueue.
 	ffInitialQueue: [],
-	processingQueue: false,
 	paused: false,
 	statusInputWindow: null,
 	initialTimeoutId: 0,
@@ -82,8 +77,8 @@ var firestatus = {
 	    this.twitterUsername = this.prefs.getCharPref("twitterUsername");
 	    this.twitterPassword = this.prefs.getCharPref("twitterPassword");
 	    this.twitterTimeout = this.prefs.getIntPref("twitterTimeout");
-	    this.lastTwitterId = this.prefs.getIntPref("lastTwitterId");
-	    this.lastTwitterTimestamp = this.prefs.getCharPref("lastTwitterTimestamp");
+	    queue.lastTwitterId = this.prefs.getIntPref("lastTwitterId");
+	    queue.lastTwitterTimestamp = this.prefs.getCharPref("lastTwitterTimestamp");
 		
 		if (this.twitterUpdatesEnabled || this.twitterEnabled) {
 			// If no Twitter credentials are set, try the login manager.
@@ -113,7 +108,7 @@ var firestatus = {
 	    this.friendfeedUsername = this.prefs.getCharPref("friendfeedUsername");
 	    this.friendfeedPassword = this.prefs.getCharPref("friendfeedPassword");
 	    this.friendfeedTimeout = this.prefs.getIntPref("friendfeedTimeout");
-	    this.lastFriendfeedId = this.prefs.getCharPref("lastFriendfeedId");
+	    queue.lastFriendfeedId = this.prefs.getCharPref("lastFriendfeedId");
 		
 		this.facebookClient = facebookClient;
 	    this.facebookEnabled = this.prefs.getBoolPref("facebookEnabled");
@@ -133,7 +128,7 @@ var firestatus = {
 	    	window.document.getElementById("deliciousTags").hidden = false;
 	    else
 	    	window.document.getElementById("deliciousTags").hidden = true;
-	    this.lastDeliciousTimestamp = this.prefs.getCharPref("lastDeliciousTimestamp");
+	    queue.lastDeliciousTimestamp = this.prefs.getCharPref("lastDeliciousTimestamp");
 		
 		if (this.deliciousUpdatesEnabled || this.deliciousEnabled) {
 			// If no delicious credentials are set, try the login manager.
@@ -190,7 +185,7 @@ var firestatus = {
 	},
 	
 	clear: function() {
-		firestatus.updateQueue.length = 0;
+		queue.updateQueue.length = 0;
 	},
 
 	pause: function() {
@@ -209,12 +204,12 @@ var firestatus = {
 		  firestatus.cancelUpdates('friendfeed');
 		  firestatus.cancelUpdates('facebook');
 		  firestatus.cancelUpdates('delicious');
-		  firestatus.processingQueue = true;
+		  queue.processingQueue = true;
 		  })();
         },
 
 	resume: function() {
-		firestatus.processingQueue = false;
+		queue.processingQueue = false;
         if (firestatus.twitterUpdatesEnabled) {
 		  firestatus.twitterUpdates();
 		  firestatus.twitterTimeoutId = window.setInterval(firestatus.twitterUpdates, firestatus.twitterTimeout*60*1000);
@@ -422,8 +417,8 @@ var firestatus = {
 	},
   
 	twitterUpdates: function() {
-		if (firestatus.processingQueue) return;
-		var milliseconds = new Number(firestatus.lastTwitterTimestamp);
+		if (queue.processingQueue) return;
+		var milliseconds = new Number(queue.lastTwitterTimestamp);
 		var FRIENDS_URL = firestatus.TWITTER_URL + '/statuses/friends_timeline.json?since=' +
 						encodeURIComponent(new Date(milliseconds).toUTCString());
 	    var req = new XMLHttpRequest();
@@ -445,7 +440,7 @@ var firestatus = {
 						for (var i = 0; i < statuses.length; i++) {
 							var status = statuses[i];
 							var t = Date.parse(status.created_at);
-							if (status.id <= firestatus.lastTwitterId)
+							if (status.id <= queue.lastTwitterId)
 								continue;
 							var text = "";
 							try {
@@ -455,7 +450,7 @@ var firestatus = {
 											   status.text);
 							  text = status.text;
 							}
-							firestatus.updateQueue.push({id: status.id,
+							queue.updateQueue.push({id: status.id,
 									timestamp: t,
 									image: status.user.profile_image_url,
 									title: status.user.name,
@@ -463,12 +458,12 @@ var firestatus = {
 									link: firestatus.TWITTER_URL + '/' + status.user.screen_name +
                                             '/status/' + status.id});
 						}
-						firestatus.lastTwitterId = status.id;
-						firestatus.lastTwitterTimestamp = t;
+						queue.lastTwitterId = status.id;
+						queue.lastTwitterTimestamp = t;
 						firestatus.prefs.setIntPref("lastTwitterId", status.id);
 						firestatus.prefs.setCharPref("lastTwitterTimestamp", t);
-						if (!firestatus.processingQueue) {
-							firestatus.processingQueue = true;
+						if (!queue.processingQueue) {
+							queue.processingQueue = true;
 							firestatus.displayNotification();
 						}
 	             } else if(req.status == 304)
@@ -484,7 +479,7 @@ var firestatus = {
 	},
 	
 	friendfeedUpdates: function() {
-		if (firestatus.processingQueue) return;
+		if (queue.processingQueue) return;
 		var FRIENDS_URL = firestatus.FRIENDFEED_URL + '/api/feed/home';
 	    var req = new XMLHttpRequest();
 	    req.open('GET', FRIENDS_URL, true);
@@ -502,7 +497,7 @@ var firestatus = {
 									});
 						for (var i = 0; i < statuses.length; i++) {
 							var status = statuses[i];
-							if (status.id == firestatus.lastFriendfeedId) break;
+							if (status.id == queue.lastFriendfeedId) break;
 							if (status.hidden) break;
 							var t = status.updated; // TODO: parse the RFC 3339 string
 							firestatus.ffInitialQueue.push({
@@ -514,13 +509,13 @@ var firestatus = {
 								link: status.link || firestatus.FRIENDFEED_URL
 							});
 						}
-						firestatus.updateQueue = firestatus.updateQueue.concat(
+						queue.updateQueue = queue.updateQueue.concat(
 												firestatus.ffInitialQueue.reverse());
 						firestatus.ffInitialQueue = [];
-						firestatus.lastFriendfeedId = statuses[0].id;
+						queue.lastFriendfeedId = statuses[0].id;
 						firestatus.prefs.setCharPref("lastFriendfeedId", statuses[0].id);
-						if (!firestatus.processingQueue) {
-							firestatus.processingQueue = true;
+						if (!queue.processingQueue) {
+							queue.processingQueue = true;
 							firestatus.displayNotification();
 						}
 	             } else
@@ -533,12 +528,12 @@ var firestatus = {
 	},
 	
 	facebookUpdates: function() {
-		if (firestatus.processingQueue) return;
+		if (queue.processingQueue) return;
 		facebookClient.getNotifications();
 	},
 
 	deliciousUpdates: function() {
-		if (firestatus.processingQueue) return;
+		if (queue.processingQueue) return;
 		var FEED_URL = 'http://feeds.delicious.com/v2/json/network/' + firestatus.deliciousUsername;
 	    var req = new XMLHttpRequest();
 	    req.open('GET', FEED_URL, true);
@@ -557,7 +552,7 @@ var firestatus = {
 						for (var i = 0; i < statuses.length; i++) {
 							var status = statuses[i];
 							var t = status.dt;
-							if (t <= firestatus.lastDeliciousTimestamp)
+							if (t <= queue.lastDeliciousTimestamp)
 								continue;
 							var text = "";
 							try {
@@ -567,17 +562,17 @@ var firestatus = {
 											   status.d);
 							  text = status.d;
 							}
-							firestatus.updateQueue.push({
+							queue.updateQueue.push({
 									image: "chrome://firestatus/skin/delicious.png",
 									timestamp: t,
 									text: status.d,
 									link: status.u
 							});
 						}
-						firestatus.lastDeliciousTimestamp = t;
+						queue.lastDeliciousTimestamp = t;
 						firestatus.prefs.setCharPref("lastDeliciousTimestamp", t);
-						if (!firestatus.processingQueue) {
-							firestatus.processingQueue = true;
+						if (!queue.processingQueue) {
+							queue.processingQueue = true;
 							firestatus.displayNotification();
 						}
 	             } else
@@ -589,7 +584,7 @@ var firestatus = {
 
 	displayNotification: function() {
 		if (firestatus.paused) return;
-		var update = firestatus.updateQueue.shift();
+		var update = queue.updateQueue.shift();
 		if (update)
 			try {
 				if ("@mozilla.org/alerts-service;1" in Components.classes) {
@@ -608,7 +603,7 @@ var firestatus = {
 	                firestatus.cons.logStringMessage("alertsService failure: " + e);
 	        }
 		else
-			firestatus.processingQueue = false;
+			queue.processingQueue = false;
 	},
 	
 	notificationHandler: {

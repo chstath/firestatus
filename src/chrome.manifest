@@ -2,4 +2,5 @@ content	firestatus	content/
 locale	firestatus	en-US	locale/en-US/
 locale	firestatus	el-GR	locale/el-GR/
 skin	firestatus	classic/1.0	skin/
+resource firestatus     modules/
 overlay	chrome://browser/content/browser.xul	chrome://firestatus/content/firefoxOverlay.xul

@@ -431,14 +431,14 @@ var facebookClient = {
 							if (notifications.messages > 0 || 
 									notifications.pokes > 0 ||
 									notifications.shares > 0)
-										firestatus.updateQueue.push({title: "Facebook",
+										queue.updateQueue.push({title: "Facebook",
 																	 image: "chrome://firestatus/skin/facebook.png",
 																	 text: "Messages: " + notifications.messages + " Pokes: " + notifications.pokes + " Shares: " + notifications.shares,
 																	 link: firestatus.FACEBOOK_URL
 																	 });
-								firestatus.cons.logStringMessage("pending notifications:"+firestatus.updateQueue.length);
-								if (!firestatus.processingQueue) {
-									firestatus.processingQueue = true;
+								firestatus.cons.logStringMessage("pending notifications:"+queue.updateQueue.length);
+								if (!queue.processingQueue) {
+									queue.processingQueue = true;
 									firestatus.displayNotification();
 								}
 						}
