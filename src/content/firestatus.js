@@ -503,7 +503,8 @@ var firestatus = {
 							firestatus.ffInitialQueue.push({
 								id: status.id,
 								timestamp: t,
-								image: status.service.iconUrl,
+                                image: firestatus.FRIENDFEED_URL + '/' + status.user.nickname +
+                                        '/picture?size=large',
 								title: status.user.name,
 								text: status.title,
 								link: status.link || firestatus.FRIENDFEED_URL
