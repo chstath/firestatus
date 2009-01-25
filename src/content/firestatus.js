@@ -52,7 +52,6 @@ var firestatus = {
 	deliciousTimeout: 5,
 	// An initial queue for ordering FF updates before putting them in updateQueue.
 	ffInitialQueue: [],
-	paused: false,
 	statusInputWindow: null,
 	initialTimeoutId: 0,
 
@@ -189,8 +188,8 @@ var firestatus = {
 	},
 
 	pause: function() {
-		firestatus.paused = !firestatus.paused;
-		if (firestatus.paused)
+		queue.paused = !queue.paused;
+		if (queue.paused)
 		  firestatus.suspend();
 		else
 		  firestatus.resume();
@@ -464,7 +463,7 @@ var firestatus = {
 						firestatus.prefs.setCharPref("lastTwitterTimestamp", t);
 						if (!queue.processingQueue) {
 							queue.processingQueue = true;
-							firestatus.displayNotification();
+							queue.displayNotification();
 						}
 	             } else if(req.status == 304)
 				 	return;
@@ -517,7 +516,7 @@ var firestatus = {
 						firestatus.prefs.setCharPref("lastFriendfeedId", statuses[0].id);
 						if (!queue.processingQueue) {
 							queue.processingQueue = true;
-							firestatus.displayNotification();
+							queue.displayNotification();
 						}
 	             } else
 	             	firestatus.cons.logStringMessage("Error loading FF page. req.status="+req.status);
@@ -574,7 +573,7 @@ var firestatus = {
 						firestatus.prefs.setCharPref("lastDeliciousTimestamp", t);
 						if (!queue.processingQueue) {
 							queue.processingQueue = true;
-							firestatus.displayNotification();
+							queue.displayNotification();
 						}
 	             } else
 	             	firestatus.cons.logStringMessage("Error loading delicious feed. req.status=" + req.status);
@@ -583,43 +582,6 @@ var firestatus = {
 	    req.send(null);
 	},
 
-	displayNotification: function() {
-		if (firestatus.paused) return;
-		var update = queue.updateQueue.shift();
-		if (update)
-			try {
-				if ("@mozilla.org/alerts-service;1" in Components.classes) {
-					var alertService = Components.classes["@mozilla.org/alerts-service;1"]
-										.getService(Components.interfaces.nsIAlertsService);
-					if (alertService) {
-						alertService.showAlertNotification(update.image, update.title, update.text,
-												 true, update.link, firestatus.notificationHandler);
-					}
-					else {
-						firestatus.cons.logStringMessage("alertsService failure: " +
-														"could not getService nsIAlertsService");
-					}
-				}
-	        } catch(e) {
-	                firestatus.cons.logStringMessage("alertsService failure: " + e);
-	        }
-		else
-			queue.processingQueue = false;
-	},
-	
-	notificationHandler: {
-		observe: function(subject, topic, data) {
-			var wm = Components.classes["@mozilla.org/appshell/window-mediator;1"]
-                   .getService(Components.interfaces.nsIWindowMediator);
-			var browser = wm.getMostRecentWindow("navigator:browser").getBrowser();
-
-			if (topic == 'alertclickcallback' && data != null)
-				browser.selectedTab = browser.addTab(data);
-			else if (topic == 'alertfinished')
-				firestatus.displayNotification();
-		}
-	},
-	
 	getShrinkedUrl: function (url, statusText, deliciousTags, sendTwitter, sendFriendfeed, sendFacebook, sendDelicious) {
 		firestatus.cons.logStringMessage("Shortening url ...");
 		var tinyurl = null;
@@ -854,5 +816,3 @@ var firestatus = {
 
 window.addEventListener("load", function(e) { firestatus.onLoad(e); }, false);
 window.addEventListener("unload", function(e) { firestatus.onUnload(e); }, false);
-
-

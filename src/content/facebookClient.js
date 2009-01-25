@@ -439,7 +439,7 @@ var facebookClient = {
 								firestatus.cons.logStringMessage("pending notifications:"+queue.updateQueue.length);
 								if (!queue.processingQueue) {
 									queue.processingQueue = true;
-									firestatus.displayNotification();
+									queue.displayNotification();
 								}
 						}
 						else {
