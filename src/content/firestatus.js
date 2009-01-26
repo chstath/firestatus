@@ -204,10 +204,12 @@ var firestatus = {
 		  firestatus.cancelUpdates('facebook');
 		  firestatus.cancelUpdates('delicious');
 		  queue.processingQueue = true;
+          document.getElementById('firestatus-icon').src = 'chrome://firestatus/skin/fs-icon-bw-16.png';
 		  })();
         },
 
 	resume: function() {
+        document.getElementById('firestatus-icon').src = 'chrome://firestatus/skin/fs-icon-16.png';
 		queue.processingQueue = false;
         if (firestatus.twitterUpdatesEnabled) {
 		  firestatus.twitterUpdates();
