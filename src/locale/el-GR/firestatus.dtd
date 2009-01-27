@@ -1,6 +1,7 @@
 <!ENTITY firestatus.update "Αποστολή ενημέρωσης...">
 <!ENTITY firestatus.clear "Καθαρισμός ληφθέντων ενημερώσεων">
 <!ENTITY firestatus.pause "Παύση">
+<!ENTITY firestatus.resume "Συνέχεια">
 <!ENTITY firestatus.prefs "Επιλογές...">
 <!ENTITY firestatus.about "Περί...">
 <!ENTITY firestatus.iconTip "Kλικ για αποστολή, δεξί κλικ για μενού">

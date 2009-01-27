@@ -199,17 +199,36 @@ var firestatus = {
 		// Clear the initial timeout only the first time we are called.
 		window.clearTimeout(firestatus.initialTimeoutId);
 		return (firestatus.suspend = function() {
-		  firestatus.cancelUpdates('twitter');
-		  firestatus.cancelUpdates('friendfeed');
-		  firestatus.cancelUpdates('facebook');
-		  firestatus.cancelUpdates('delicious');
-		  queue.processingQueue = true;
-          document.getElementById('firestatus-icon').src = 'chrome://firestatus/skin/fs-icon-bw-16.png';
-		  })();
-        },
+                firestatus.cancelUpdates('twitter');
+                firestatus.cancelUpdates('friendfeed');
+                firestatus.cancelUpdates('facebook');
+                firestatus.cancelUpdates('delicious');
+                queue.processingQueue = true;
+                // Change the icon and menu label in every open browser window.
+                var strbundle = document.getElementById("firestatus-strings");
+                var wm = Components.classes["@mozilla.org/appshell/window-mediator;1"]
+                    .getService(Components.interfaces.nsIWindowMediator);
+                var enumerator = wm.getEnumerator("navigator:browser");
+                while(enumerator.hasMoreElements()) {
+                    var win = enumerator.getNext();
+                    win.document.getElementById('firestatus-icon').src = 'chrome://firestatus/skin/fs-icon-bw-16.png';
+                    win.document.getElementById('firestatus-pause').label = strbundle.getString("extensions.firestatus.resume");
+                }
+        })();
+        
+    },
 
 	resume: function() {
-        document.getElementById('firestatus-icon').src = 'chrome://firestatus/skin/fs-icon-16.png';
+        // Change the icon and menu label in every open browser window.
+        var strbundle = document.getElementById("firestatus-strings");
+        var wm = Components.classes["@mozilla.org/appshell/window-mediator;1"]
+            .getService(Components.interfaces.nsIWindowMediator);
+        var enumerator = wm.getEnumerator("navigator:browser");
+        while(enumerator.hasMoreElements()) {
+            var win = enumerator.getNext();
+            win.document.getElementById('firestatus-icon').src = 'chrome://firestatus/skin/fs-icon-16.png';
+            win.document.getElementById('firestatus-pause').label = strbundle.getString("extensions.firestatus.pause");
+        }
 		queue.processingQueue = false;
         if (firestatus.twitterUpdatesEnabled) {
 		  firestatus.twitterUpdates();
