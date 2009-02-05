@@ -520,12 +520,14 @@ var firestatus = {
 							if (status.id == queue.lastFriendfeedId) break;
 							if (status.hidden) break;
 							var t = status.updated; // TODO: parse the RFC 3339 string
+                            var title = status.room? status.room.name: status.user.name;
+                            var nickname = status.room? 'rooms/' + status.room.nickname: status.user.nickname;
 							firestatus.ffInitialQueue.push({
 								id: status.id,
 								timestamp: t,
-                                image: firestatus.FRIENDFEED_URL + '/' + status.user.nickname +
+                                image: firestatus.FRIENDFEED_URL + '/' + nickname +
                                         '/picture?size=large',
-								title: status.user.name,
+								title: title,
 								text: status.title,
 								link: status.link || firestatus.FRIENDFEED_URL
 							});
