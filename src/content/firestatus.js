@@ -611,14 +611,21 @@ var firestatus = {
 		if (this.shortURLService == "tinyUrl")
 			tinyurl = "http://tinyurl.com/api-create.php?url=" + url;
 		else
-			tinyurl = "http://urlborg.com/api/77577-9314/create/" + url;
+			tinyurl = "http://urlborg.com/api/77577-9314/url/create_or_reuse.json/" + url;
 	    var req = new XMLHttpRequest();
 		req.open('GET', tinyurl, true); 
 	    req.onreadystatechange = function () {
 			if (req.readyState == 4) {
 			     switch(req.status) {
 				 	case 200:
-						url = req.responseText;
+				 		if (firestatus.shortURLService != "tinyUrl") {
+			            	var nativeJSON = Cc["@mozilla.org/dom/json;1"].createInstance(Ci.nsIJSON);
+		                    var jsonString = req.responseText;
+							url = nativeJSON.decode(jsonString).s_url;
+				 		}
+				 		else {
+				 			url = req.responseText;
+				 		}
 						firestatus.actuallySendUpdate(statusText, url, deliciousTags, sendTwitter, sendFriendfeed, sendFacebook, sendDelicious);
 						break;
 					case 400:
