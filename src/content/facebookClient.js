@@ -56,9 +56,8 @@ var facebookClient = {
 				    	var Ci = Components.interfaces;
 				    	var Cc = Components.classes;
 				    	var nativeJSON = Cc["@mozilla.org/dom/json;1"].createInstance(Ci.nsIJSON);
-				        var jsonString = "(" + req.responseText + ")";
-//						var authToken = nativeJSON.decode(jsonString);
-						var authToken = eval("(" + req.responseText + ")");
+				        var jsonString = "{\"authToken\":" + req.responseText + "}";
+						var authToken = nativeJSON.decode(jsonString).authToken;
 						firestatus.cons.logStringMessage("authToken retrieved: " + authToken);
 						if (authToken != undefined) {
 							//After getting the auth token we MUST send the user to the login page. If he is
@@ -210,14 +209,14 @@ var facebookClient = {
 				    	var Cc = Components.classes;
 				    	var nativeJSON = Cc["@mozilla.org/dom/json;1"].createInstance(Ci.nsIJSON);
 				        var jsonString = req.responseText;
-						//var result = nativeJSON.decode(jsonString);
-						var result = eval("(" + jsonString + ")");
-						var code = result.error_code;
-						if (code == undefined) {
+				 		firestatus.cons.logStringMessage(jsonString);
+				 		if (jsonString == "true") {
 					 		firestatus.cons.logStringMessage("Facebook update sent.");
 							document.getElementById('statusText').value = '';
 						}
 						else {
+							var result = nativeJSON.decode(jsonString);
+							var code = result.error_code;
 							firestatus.cons.logStringMessage("Facebook returned code: " + code);
 							if (code == 250) {
 								firestatus.cons.logStringMessage("Requesting authorization...");
@@ -301,9 +300,8 @@ var facebookClient = {
 				    	var Ci = Components.interfaces;
 				    	var Cc = Components.classes;
 				    	var nativeJSON = Cc["@mozilla.org/dom/json;1"].createInstance(Ci.nsIJSON);
-				        var jsonString = "(" + req.responseText + ")";
-//						var authToken = nativeJSON.decode(jsonString);
-						var authToken = eval("(" + req.responseText + ")");
+				        var jsonString = "{\"authToken\":" + req.responseText + "}";
+						var authToken = nativeJSON.decode(jsonString).authToken;
 						firestatus.cons.logStringMessage("authToken retrieved: " + authToken);
 						if (authToken != undefined) {
 							//After getting the auth token we MUST send the user to the login page. If he is
