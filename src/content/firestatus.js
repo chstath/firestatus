@@ -177,7 +177,8 @@ var firestatus = {
 		var textField = window.document.getElementById('statusText');
 		var title = document.title;
 		title = title.substr(0, title.lastIndexOf('-')-1);
-		textField.value = title;
+		if (textField.value == "")
+			textField.value = title;
 		textField.select();
 	},
 	
