@@ -175,6 +175,9 @@ var firestatus = {
 		var fsContainer = window.document.getElementById('firestatusContainer');
 		fsContainer.setAttribute("collapsed", 'false');
 		var textField = window.document.getElementById('statusText');
+		var title = document.title;
+		title = title.substr(0, title.lastIndexOf('-')-1);
+		textField.value = title;
 		textField.select();
 	},
 	
