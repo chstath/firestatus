@@ -64,6 +64,10 @@
 	padding: 0;
 }
 
+#selectedConsumerIdentica {
+	padding: 0;
+}
+
 #twitter-icon {
 	list-style-image: url("chrome://firestatus/skin/twitter.png");
 	padding-left: 2px;
@@ -81,6 +85,11 @@
 
 #delicious-icon {
 	list-style-image: url("chrome://firestatus/skin/delicious.png");
+	padding-left: 2px;
+}
+
+#identica-icon {
+	list-style-image: url("chrome://firestatus/skin/identica.png");
 	padding-left: 2px;
 }
 

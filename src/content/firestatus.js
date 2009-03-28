@@ -24,6 +24,7 @@ var firestatus = {
 	FRIENDFEED_URL: 'http://friendfeed.com',
 	FACEBOOK_URL: 'http://facebook.com',
 	DELICIOUS_URL_S: 'https://api.del.icio.us',
+	IDENTICA_URL: 'http://identi.ca',
 	cons: null,
 	prefs: null,
 	twitterEnabled: false,
@@ -50,6 +51,12 @@ var firestatus = {
 	deliciousPassword: "",
 	deliciousTimeoutId: 0,
 	deliciousTimeout: 5,
+	identicaEnabled: false,
+	identicaUpdatesEnabled: false,
+	identicaUsername: "",
+	identicaPassword: "",
+	identicaTimeoutId: 0,
+	identicaTimeout: 7,
 	// An initial queue for ordering FF updates before putting them in updateQueue.
 	ffInitialQueue: [],
 	statusInputWindow: null,
@@ -151,6 +158,38 @@ var firestatus = {
 				}
 			}
 		}
+
+	    this.identicaEnabled = this.prefs.getBoolPref("identicaEnabled");
+	    this.identicaUpdatesEnabled = this.prefs.getBoolPref("identicaUpdatesEnabled");
+	    this.identicaUsername = this.prefs.getCharPref("identicaUsername");
+	    this.identicaPassword = this.prefs.getCharPref("identicaPassword");
+	    this.identicaTimeout = this.prefs.getIntPref("identicaTimeout");
+	    queue.lastIdenticaId = this.prefs.getIntPref("lastIdenticaId");
+	    queue.lastIdenticaTimestamp = this.prefs.getCharPref("lastIdenticaTimestamp");
+		
+		if (this.identicaUpdatesEnabled || this.identicaEnabled) {
+			// If no Identi.ca credentials are set, try the login manager.
+			if (!this.identicaUsername || !this.identicaPassword) {
+				try {
+					// Get Login Manager 
+					var loginManager = Components.classes["@mozilla.org/login-manager;1"].getService(Components.interfaces.nsILoginManager);
+					
+					// Find users for the given parameters
+					var logins = loginManager.findLogins({}, this.IDENTICA_URL, this.IDENTICA_URL, null);
+					
+					// Pick the first entry from the returned array of nsILoginInfo objects.
+					if (logins.length > 0) {
+						this.cons.logStringMessage("Using the password manager stored credentials for Identi.ca.");
+						this.identicaUsername = logins[0].username;
+						this.identicaPassword = logins[0].password;
+					}
+				} 
+				catch (ex) {
+					this.cons.logStringMessage("Error while loading the Login Manager: " + ex);
+				}
+			}
+		}
+		
 		this.initialTimeoutId = window.setTimeout(this.resume, 7*1000);
 	},
 	
@@ -207,6 +246,7 @@ var firestatus = {
                 firestatus.cancelUpdates('friendfeed');
                 firestatus.cancelUpdates('facebook');
                 firestatus.cancelUpdates('delicious');
+                firestatus.cancelUpdates('identica');
                 queue.processingQueue = true;
                 // Change the icon and menu label in every open browser window.
                 var strbundle = document.getElementById("firestatus-strings");
@@ -250,6 +290,10 @@ var firestatus = {
   		  firestatus.deliciousUpdates();
   		  firestatus.deliciousTimeoutId = window.setInterval(firestatus.deliciousUpdates, firestatus.deliciousTimeout*60*1000);
   		}
+        if (firestatus.identicaUpdatesEnabled) {
+		  firestatus.identicaUpdates();
+		  firestatus.identicaTimeoutId = window.setInterval(firestatus.identicaUpdates, firestatus.identicaTimeout*60*1000);
+		}
    },
 
 	observe: function(subject, topic, data) {
@@ -420,6 +464,47 @@ var firestatus = {
 		    	this.shortURLService = this.prefs.getCharPref("shortURLService");
 				this.cons.logStringMessage("Short URL service selected: " + this.shortURLService);
 		    	break;
+			case "identicaEnabled":
+		    	this.identicaEnabled = this.prefs.getBoolPref("identicaEnabled");
+		    	if (this.identicaEnabled) {
+					window.document.getElementById("selectedConsumerIdentica").disabled = false;
+					if (this.prefs.prefHasUserValue("lastIdenticaChecked")) {
+						window.document.getElementById("selectedConsumerIdentica").checked = this.prefs.getBoolPref("lastIdenticaChecked");
+					}
+					else {
+						window.document.getElementById("selectedConsumerIdentica").checked = true;
+						this.prefs.setBoolPref("lastIdenticaChecked", true);
+					}
+		    	}
+		    	else {
+					window.document.getElementById("selectedConsumerIdentica").disabled = true;
+					window.document.getElementById("selectedConsumerIdentica").checked = false;
+					firestatus.prefs.setBoolPref("lastIdenticaChecked", false);
+		    	}	
+		    	break;
+			case "identicaUpdatesEnabled":
+		    	this.identicaUpdatesEnabled = this.prefs.getBoolPref("identicaUpdatesEnabled");
+				if (this.identicaUpdatesEnabled) {
+					this.identicaUpdates();
+			        this.identicaTimeoutId = window.setInterval(this.identicaUpdates,
+															   this.identicaTimeout*60*1000);
+				} else
+					this.cancelUpdates("identica");
+		    	break;
+			case "identicaUsername":
+		    	this.identicaUsername = this.prefs.getCharPref("identicaUsername");
+		    	break;
+			case "identicaPassword":
+		    	this.identicaPassword = this.prefs.getCharPref("identicaPassword");
+		    	break;
+			case "identicaTimeout":
+		    	this.identicaTimeout = this.prefs.getIntPref("identicaTimeout");
+				if (this.identicaUpdatesEnabled) {
+					this.cancelUpdates("identica");
+			        this.identicaTimeoutId = window.setInterval(this.identicaUpdates,
+															   this.identicaTimeout*60*1000);
+				}
+		    	break;
 		}
 	},
 	
@@ -436,6 +521,9 @@ var firestatus = {
 				break;
 			case "delicious":
 				window.clearInterval(this.deliciousTimeoutId);
+				break;
+			case "identica":
+				window.clearInterval(this.identicaTimeoutId);
 				break;
 		}
 	},
@@ -609,7 +697,68 @@ var firestatus = {
 	    req.send(null);
 	},
 
-	getShrinkedUrl: function (url, statusText, deliciousTags, sendTwitter, sendFriendfeed, sendFacebook, sendDelicious) {
+	identicaUpdates: function() {
+		if (queue.processingQueue) return;
+		var milliseconds = new Number(queue.lastIdenticaTimestamp);
+		var FRIENDS_URL = firestatus.IDENTICA_URL + '/api/statuses/friends_timeline.json?since=' +
+						encodeURIComponent(new Date(milliseconds).toUTCString());
+	    var req = new XMLHttpRequest();
+	    req.open('GET', FRIENDS_URL, true);
+	    req.onreadystatechange = function (aEvt) {
+	      if (req.readyState == 4) {
+	             if(req.status == 200) {
+		            	var Ci = Components.interfaces;
+		            	var Cc = Components.classes;
+		            	var nativeJSON = Cc["@mozilla.org/dom/json;1"].createInstance(Ci.nsIJSON);
+	                    var jsonString = req.responseText;
+						var statuses = nativeJSON.decode(jsonString);
+						if (statuses.length == 0)
+							return;
+						// Sort the status updates, oldest first.
+						statuses.sort(function(a, b) {
+										return a.id - b.id;
+									});
+						for (var i = 0; i < statuses.length; i++) {
+							var status = statuses[i];
+							var t = Date.parse(status.created_at);
+							if (status.id <= queue.lastIdenticaId)
+								continue;
+							var text = "";
+							try {
+							  text = decodeURI(status.text);
+							} catch (error) {
+							  firestatus.cons.logStringMessage("Error decoding Identi.ca update: " +
+											   status.text);
+							  text = status.text;
+							}
+							queue.updateQueue.push({id: status.id,
+									timestamp: t,
+									image: status.user.profile_image_url,
+									title: status.user.name,
+									text: status.text,
+									link: firestatus.IDENTICA_URL + '/notice/' + status.id});
+						}
+						queue.lastIdenticaId = status.id;
+						queue.lastIdenticaTimestamp = t;
+						firestatus.prefs.setIntPref("lastIdenticaId", status.id);
+						firestatus.prefs.setCharPref("lastIdenticaTimestamp", t);
+						if (!queue.processingQueue) {
+							queue.processingQueue = true;
+							queue.displayNotification();
+						}
+	             } else if(req.status == 304)
+				 	return;
+				 else
+	             	firestatus.cons.logStringMessage("Error loading Identi.ca page. " +
+													 "req.status="+req.status);
+	      }
+	    };
+	    var auth = firestatus.identicaUsername+":"+firestatus.identicaPassword;
+	    req.setRequestHeader("Authorization", "Basic "+btoa(auth));
+	    req.send(null);
+	},
+	
+	getShrinkedUrl: function (url, statusText, deliciousTags, sendTwitter, sendFriendfeed, sendFacebook, sendDelicious, sendIdentica) {
 		firestatus.cons.logStringMessage("Shortening url ...");
 		var tinyurl = null;
 		if (this.shortURLService == "tinyUrl")
@@ -630,7 +779,7 @@ var firestatus = {
 				 		else {
 				 			url = req.responseText;
 				 		}
-						firestatus.actuallySendUpdate(statusText, url, deliciousTags, sendTwitter, sendFriendfeed, sendFacebook, sendDelicious);
+                    firestatus.actuallySendUpdate(statusText, url, deliciousTags, sendTwitter, sendFriendfeed, sendFacebook, sendDelicious, sendIdentica);
 						break;
 					case 400:
 						firestatus.cons.logStringMessage("Bad Request");
@@ -662,7 +811,7 @@ var firestatus = {
 		req.send(null);
 	},
 	
-	actuallySendUpdate: function(statusText, url, deliciousTags, sendTwitter, sendFriendfeed, sendFacebook, sendDelicious) {
+	actuallySendUpdate: function(statusText, url, deliciousTags, sendTwitter, sendFriendfeed, sendFacebook, sendDelicious, sendIdentica) {
 		if (sendTwitter) {
 			firestatus.sendStatusUpdateTwitter(statusText, url);
 		}
@@ -676,6 +825,9 @@ var firestatus = {
 			var title = document.title;
 			title = title.substr(0, title.lastIndexOf('-')-1);
 			firestatus.sendStatusUpdateDelicious(statusText, deliciousTags, document.getElementById("urlbar").value, title);
+		}
+		if (sendIdentica) {
+			firestatus.sendStatusUpdateIdentica(statusText, url);
 		}
 	},
 
@@ -842,6 +994,56 @@ var firestatus = {
 	    var auth = firestatus.deliciousUsername + ":" + firestatus.deliciousPassword;
 	    firestatus.cons.logStringMessage(auth);
 	    req.setRequestHeader("Authorization", "Basic " + btoa(auth));
+	    req.setRequestHeader("Content-length", params.length);
+	    req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;");
+	    req.send(params); 
+	},
+
+	sendStatusUpdateIdentica: function (statusText, url) {
+	    var params = "source=firestatus";
+	    if (url)
+	      statusText += " " + url;
+	    var status = encodeURIComponent(statusText);
+	    params += "&status="+status;
+	    var req = new XMLHttpRequest ();   
+	    var POST_URL = firestatus.IDENTICA_URL + '/api/statuses/update.json';
+	    req.open("POST", POST_URL, true);
+	    req.onreadystatechange = function () {
+			if (req.readyState == 4) {
+			     switch(req.status) {
+				 	case 200:
+					 	firestatus.cons.logStringMessage("Identi.ca update sent.");
+						document.getElementById('statusText').value = '';
+						break;
+					case 400:
+						firestatus.cons.logStringMessage("Identica response: Bad Request");
+						break;
+					case 401:
+						firestatus.cons.logStringMessage("Identi.ca response: Not Authorized");
+						break;
+					case 403:
+						firestatus.cons.logStringMessage("Identi.ca response: Forbidden");
+						break;
+					case 404:
+						firestatus.cons.logStringMessage("Identi.ca response: Not Found");
+						break;
+					case 500:
+						firestatus.cons.logStringMessage("Identi.ca response: Internal Server Error");
+						break;
+					case 502:
+						firestatus.cons.logStringMessage("Identi.ca response: Bad Gateway");
+						break;
+					case 503:
+						firestatus.cons.logStringMessage("Identi.ca response: Service Unavailable");
+						break;
+					default:
+						firestatus.cons.logStringMessage("Unknown Identi.ca status: "+req.status);
+						firestatus.cons.logStringMessage("Identi.ca response: "+req.responseText);
+				 }
+			}
+		};
+	    var auth = firestatus.identicaUsername + ":" + firestatus.identicaPassword;
+	    req.setRequestHeader("Authorization", "Basic "+btoa(auth));
 	    req.setRequestHeader("Content-length", params.length);
 	    req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;");
 	    req.send(params); 

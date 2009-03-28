@@ -3,17 +3,24 @@
 <!ENTITY friendfeedTab.label "FriendFeed">
 <!ENTITY facebookTab.label "Facebook">
 <!ENTITY deliciousTab.label "del.icio.us">
+<!ENTITY identicaTab.label "Identi.ca">
 <!ENTITY enabled.label "Send updates">
 <!ENTITY twitterEnabled.accesskey "T">
+<!ENTITY identicaEnabled.accesskey "T">
 <!ENTITY username.label "Username">
 <!ENTITY twitterUsername.accesskey "U">
+<!ENTITY identicaUsername.accesskey "U">
 <!ENTITY password.label "Password">
 <!ENTITY twitterPassword.accesskey "P">
+<!ENTITY identicaPassword.accesskey "P">
 <!ENTITY updatesEnabled.label "Receive updates">
 <!ENTITY twitterUpdatesEnabled.accesskey "S">
+<!ENTITY identicaUpdatesEnabled.accesskey "S">
 <!ENTITY timeout.label "Minutes between updates">
 <!ENTITY twitterTimeout.accesskey "M">
 <!ENTITY twitter-pane.title "Twitter preferences">
+<!ENTITY identicaTimeout.accesskey "M">
+<!ENTITY identica-pane.title "Identi.ca preferences">
 <!ENTITY friendfeed-pane.title "FriendFeed preferences">
 <!ENTITY friendfeedEnabled.accesskey "N">
 <!ENTITY friendfeedUsername.accesskey "R">
@@ -33,6 +40,13 @@
 <!ENTITY twitter.note5 "credentials. This may cause">
 <!ENTITY twitter.note6 "the master password dialog">
 <!ENTITY twitter.note7 " to pop up.">
+<!ENTITY identica.note1 "Note: if no username and">
+<!ENTITY identica.note2 "password are provided,">
+<!ENTITY identica.note3 "FireStatus will search the">
+<!ENTITY identica.note4 "stored passwords for Identi.ca">
+<!ENTITY identica.note5 "credentials. This may cause">
+<!ENTITY identica.note6 "the master password dialog">
+<!ENTITY identica.note7 " to pop up.">
 <!ENTITY urlShortening.label "URL shortening">
 <!ENTITY tinyUrl.label "tinyURL">
 <!ENTITY urlborg.label "urlBorg">

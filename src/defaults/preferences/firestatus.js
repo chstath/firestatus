@@ -20,6 +20,13 @@ pref("extensions.firestatus.deliciousUsername", "");
 pref("extensions.firestatus.deliciousPassword", "");
 pref("extensions.firestatus.deliciousTimeout", 65);
 pref("extensions.firestatus.lastDeliciousTimestamp", "0");
+pref("extensions.firestatus.identicaEnabled", false);
+pref("extensions.firestatus.identicaUpdatesEnabled", false);
+pref("extensions.firestatus.identicaUsername", "");
+pref("extensions.firestatus.identicaPassword", "");
+pref("extensions.firestatus.identicaTimeout", 7);
+pref("extensions.firestatus.lastIdenticaId", 0);
+pref("extensions.firestatus.lastIdenticaTimestamp", "0");
 pref("extensions.firestatus.shortURLService", "tinyUrl");
 pref("extensions.firestatus.deliciousShared", true);
 // See http://kb.mozillazine.org/Localize_extension_descriptions

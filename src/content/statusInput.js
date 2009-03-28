@@ -84,6 +84,21 @@ var statusInput = {
 			firestatus.prefs.setBoolPref("lastDeliciousChecked", false);
 			document.getElementById("deliciousTags").hidden = true;
 		}
+		if (firestatus.identicaEnabled) {
+			document.getElementById("selectedConsumerIdentica").disabled = false;
+			if (firestatus.prefs.prefHasUserValue("lastIdenticaChecked")) {
+				document.getElementById("selectedConsumerIdentica").checked = firestatus.prefs.getBoolPref("lastIdenticaChecked");
+			}
+			else {
+				document.getElementById("selectedConsumerIdentica").checked = true;
+				firestatus.prefs.setBoolPref("lastIdenticaChecked", true);
+			}
+		}
+		else {
+			document.getElementById("selectedConsumerIdentica").disabled = true;
+			document.getElementById("selectedConsumerIdentica").checked = false;
+			firestatus.prefs.setBoolPref("lastIdenticaChecked", false);
+		}
 		document.getElementById("statusText").focus();
 	},
 	
@@ -92,6 +107,7 @@ var statusInput = {
 		firestatus.prefs.setBoolPref("lastFriendfeedChecked", document.getElementById("selectedConsumerFriendfeed").checked);
 		firestatus.prefs.setBoolPref("lastFacebookChecked", document.getElementById("selectedConsumerFacebook").checked);
 		firestatus.prefs.setBoolPref("lastDeliciousChecked", document.getElementById("selectedConsumerDelicious").checked);
+		firestatus.prefs.setBoolPref("lastIdenticaChecked", document.getElementById("selectedConsumerIdenticar").checked);
 	},
 	
 	sendStatusUpdate: function() {
@@ -102,10 +118,11 @@ var statusInput = {
 		var sendFriendfeed = firestatus.friendfeedEnabled && document.getElementById("selectedConsumerFriendfeed").checked;
 		var sendFacebook = firestatus.facebookEnabled && document.getElementById("selectedConsumerFacebook").checked;
 		var sendDelicious = firestatus.deliciousEnabled && document.getElementById("selectedConsumerDelicious").checked;
+		var sendIdentica = firestatus.identicaEnabled && document.getElementById("selectedConsumerIdentica").checked;
 		if (url && document.getElementById("shortenUrl").checked)
-			firestatus.getShrinkedUrl(encodeURI(url), statusText, deliciousTags, sendTwitter, sendFriendfeed, sendFacebook, sendDelicious);
+			firestatus.getShrinkedUrl(encodeURI(url), statusText, deliciousTags, sendTwitter, sendFriendfeed, sendFacebook, sendDelicious, sendIdentica);
 		else {
-			firestatus.actuallySendUpdate(statusText, url, deliciousTags, sendTwitter, sendFriendfeed, sendFacebook, sendDelicious);
+			firestatus.actuallySendUpdate(statusText, url, deliciousTags, sendTwitter, sendFriendfeed, sendFacebook, sendDelicious, sendIdentica);
 		}
 		firestatus.hide();
 	},

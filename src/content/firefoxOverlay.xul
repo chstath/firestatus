@@ -59,6 +59,10 @@
 	            <image id="delicious-icon" tooltiptext="&firestatus.labelDelicious;"/>
 		    	<checkbox id="selectedConsumerDelicious" checked="false" tooltiptext="&firestatus.labelDelicious;" onclick="firestatus.showTagsBox();"/>
         	</vbox>
+        	<vbox align="start">
+	            <image id="identica-icon" tooltiptext="&firestatus.labelIdentica;"/>
+		    	<checkbox id="selectedConsumerIdentica" checked="false" tooltiptext="&firestatus.labelIdentica;"/>
+        	</vbox>
 			<toolbarbutton id="status-send" label="&firestatus.send;" onclick="statusInput.sendStatusUpdate()" tooltiptext="&firestatus.sendTooltip;"/>
 	    </hbox>
 

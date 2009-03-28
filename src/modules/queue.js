@@ -25,6 +25,8 @@ var queue = {
     lastTwitterTimestamp: "0",
     lastFriendfeedId: 0,
     lastDeliciousTimestamp: "0",
+    lastIdenticaId: 0,
+    lastIdenticaTimestamp: "0",
     processingQueue: false,
     paused: false,
 
