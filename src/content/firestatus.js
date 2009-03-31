@@ -833,11 +833,8 @@ var firestatus = {
 
 	sendStatusUpdateFacebook: function(statusText, url) {
 		firestatus.cons.logStringMessage("Starting facebook update...")
-		if (url)
-			statusText += " " + url;
-	//	var status = encodeURIComponent(statusText); //Somehow the status update fails if the status is encoded
-	
-		firestatus.facebookClient.updateStatus(statusText);
+		//	var status = encodeURIComponent(statusText); //Somehow the status update fails if the status is encoded
+		firestatus.facebookClient.updateStatus(statusText, url);
 	},
 
 	sendStatusUpdateTwitter: function (statusText, url) {

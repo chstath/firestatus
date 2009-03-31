@@ -37,7 +37,7 @@ var facebookClient = {
         return hex_md5(str);
 	},
 
-	getNewSessionAndUpdate: function(status) {
+	getNewSessionAndUpdate: function(status, url) {
 		var params = [];
 	    params.push('method=facebook.auth.createToken');
 	    params.push('api_key=' + this.apiKey);
@@ -88,7 +88,11 @@ var facebookClient = {
 											firestatus.cons.logStringMessage("Session key: " + session.session_key);
 											facebookClient.firestatus.prefs.setCharPref("fbSessionKey", session.session_key);
 											facebookClient.firestatus.prefs.setCharPref("fbSecret", session.secret);
-											facebookClient.finallyUpdateStatus(session, status);
+											facebookClient.firestatus.prefs.setCharPref("fbUid", session.uid);
+											if (url)
+												facebookClient.finallySendLink(session, status, url);
+											else
+												facebookClient.finallyUpdateStatus(session, status);
 											break;
 										case 400:
 											firestatus.cons.logStringMessage("Bad Request");
@@ -150,33 +154,27 @@ var facebookClient = {
 		req.send(null);
 	},
 	
-	getStoredSession: function() {
+	updateStatus: function(status, url) {
 		if (this.firestatus.prefs.prefHasUserValue("fbSessionKey") && 
-			this.firestatus.prefs.prefHasUserValue("fbSecret")) {
+			this.firestatus.prefs.prefHasUserValue("fbSecret") &&
+			this.firestatus.prefs.prefHasUserValue("fbUid")) {
 			var session_key = this.firestatus.prefs.getCharPref("fbSessionKey");
 			var secret = this.firestatus.prefs.getCharPref("fbSecret");
+			var uid = this.firestatus.prefs.getCharPref("fbUid");
 			firestatus.cons.logStringMessage("Session key exists: " + session_key);
 			firestatus.cons.logStringMessage("Secret exists: " + secret);
-			return {session_key:session_key, secret:secret};
-		}
-	},
-	
-	updateStatus: function(status) {
-		if (this.firestatus.prefs.prefHasUserValue("fbSessionKey") && 
-			this.firestatus.prefs.prefHasUserValue("fbSecret")) {
-			var session_key = this.firestatus.prefs.getCharPref("fbSessionKey");
-			var secret = this.firestatus.prefs.getCharPref("fbSecret");
-			firestatus.cons.logStringMessage("Session key exists: " + session_key);
-			firestatus.cons.logStringMessage("Secret exists: " + secret);
-			if (session_key != undefined && secret != undefined) {
+			if (session_key != undefined && secret != undefined && uid != undefined) {
 				firestatus.cons.logStringMessage("Using existing key...\n");
-				var session = {session_key:session_key, secret:secret};
-				facebookClient.finallyUpdateStatus(session, status);
+				var session = {session_key:session_key, secret:secret, uid:uid};
+				if (url)
+					facebookClient.finallySendLink(session, status, url);
+				else
+					facebookClient.finallyUpdateStatus(session, status);
 				return;
 			}
 		}
 		firestatus.cons.logStringMessage("Key does not exist.");
-		facebookClient.getNewSessionAndUpdate(status);
+		facebookClient.getNewSessionAndUpdate(status, url);
 	},
 
 	finallyUpdateStatus : function(session, status) {
@@ -193,6 +191,21 @@ var facebookClient = {
 	    facebookClient.sendUpdate(params, status);
 	},
 	
+	finallySendLink : function(session, status, url) {
+		var params = [];
+	    params.push('method=links.post');
+	    params.push('api_key=' + this.apiKey);
+	    params.push('v=1.0');
+		params.push('session_key=' + session.session_key);
+		params.push('call_id=' + new Date().getTime());
+	    params.push('format=JSON');
+	    params.push('uid=' + session.uid);
+		params.push('url=' + url);
+		params.push('comment=' + status);
+	    params.push('sig=' + this.generateSig(params, session.secret));
+	    facebookClient.sendLink(params, status, url);
+	},
+
 	sendUpdate: function(params, status) {
 	    var req = new XMLHttpRequest();
 		req.open("POST", "http://api.facebook.com/restserver.php", true);
@@ -263,11 +276,85 @@ var facebookClient = {
 		req.send(params.join('&'));
 	},
 	
+	sendLink: function(params, status, url) {
+	    var req = new XMLHttpRequest();
+		req.open("POST", "http://api.facebook.com/restserver.php", true);
+		req.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+		req.setRequestHeader("Content-length", params.join('&').length);
+		req.setRequestHeader("Connection", "close");
+	    req.onreadystatechange = function () {
+			if (req.readyState == 4) {
+				dump(req.responseText + "\n");
+				dump(req.status + "\n");
+			     switch(req.status) {
+				 	case 200:
+				    	var Ci = Components.interfaces;
+				    	var Cc = Components.classes;
+				    	var nativeJSON = Cc["@mozilla.org/dom/json;1"].createInstance(Ci.nsIJSON);
+				    	var jsonString = req.responseText;
+				    	if (jsonString.substr(0, 1) != "{")
+				    		jsonString = "{\"link_id\":" + jsonString + "}";
+				 		firestatus.cons.logStringMessage(jsonString);
+						var result = nativeJSON.decode(jsonString);
+				 		if (result.link_id) {
+					 		firestatus.cons.logStringMessage("Facebook update sent.");
+							document.getElementById('statusText').value = '';
+						}
+						else {
+							var code = result.error_code;
+							firestatus.cons.logStringMessage("Facebook returned code: " + code);
+							if (code == 282) {
+								firestatus.cons.logStringMessage("Requesting share_item extended permission...");
+								window.open("http://www.facebook.com/authorize.php?api_key=" + facebookClient.apiKey + "&v=1.0&ext_perm=share_item&popup=", "", "chrome, centerscreen,width=646,height=520,modal=yes,close=yes");
+								facebookClient.sendLink(params, status, url);
+							}
+							else if (code == 102 || code == 450 || code == 452) {
+								firestatus.cons.logStringMessage("Asking for new session key...");
+								facebookClient.getNewSessionAndUpdate(status, url);
+							}
+							else if (code != "") {
+								alert("Facebook status will not be updated ("+code+")");
+							}
+						}
+						break;
+					case 400:
+						firestatus.cons.logStringMessage("Bad Request");
+						break;
+					case 401:
+						firestatus.cons.logStringMessage("Not Authorized");
+						break;
+					case 403:
+						firestatus.cons.logStringMessage("Forbidden");
+						break;
+					case 404:
+						firestatus.cons.logStringMessage("Not Found");
+						break;
+					case 500:
+						firestatus.cons.logStringMessage("Internal Server Error");
+						break;
+					case 502:
+						firestatus.cons.logStringMessage("Bad Gateway");
+						break;
+					case 503:
+						firestatus.cons.logStringMessage("Service Unavailable");
+						break;
+					default:
+						firestatus.cons.logStringMessage("Unknown facebook code: "+req.status);
+						firestatus.cons.logStringMessage("Facebook response: "+req.responseText);
+				 }
+			}
+		};
+		firestatus.cons.logStringMessage("Updating facebook status");
+		req.send(params.join('&'));
+	},
+
 	getNotifications: function() {
 		if (this.firestatus.prefs.prefHasUserValue("fbSessionKey") && 
-				this.firestatus.prefs.prefHasUserValue("fbSecret")) {
+				this.firestatus.prefs.prefHasUserValue("fbSecret") &&
+				this.firestatus.prefs.prefHasUserValue("fbUid")) {
 				var session_key = this.firestatus.prefs.getCharPref("fbSessionKey");
 				var secret = this.firestatus.prefs.getCharPref("fbSecret");
+				var uid = this.firestatus.prefs.getCharPref("fbUid");
 				firestatus.cons.logStringMessage("Session key exists: " + session_key);
 				firestatus.cons.logStringMessage("Secret exists: " + secret);
 				if (session_key != undefined && secret != undefined) {
@@ -332,6 +419,7 @@ var facebookClient = {
 											firestatus.cons.logStringMessage("Session key: " + session.session_key);
 											facebookClient.firestatus.prefs.setCharPref("fbSessionKey", session.session_key);
 											facebookClient.firestatus.prefs.setCharPref("fbSecret", session.secret);
+											facebookClient.firestatus.prefs.setCharPref("fbUid", session.uid);
 											facebookClient.finallyGetNotifications(session);
 											break;
 										case 400:
