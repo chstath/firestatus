@@ -573,15 +573,15 @@ var facebookClient = {
 							if (notifications.messages > 0 || 
 									notifications.pokes > 0 ||
 									notifications.shares > 0)
-										queue.updateQueue.push({title: "Facebook",
+										firestatus.queue.updateQueue.push({title: "Facebook",
 																	 image: "chrome://firestatus/skin/facebook.png",
 																	 text: "Messages: " + notifications.messages + " Pokes: " + notifications.pokes + " Shares: " + notifications.shares,
 																	 link: firestatus.FACEBOOK_URL
 																	 });
-								firestatus.cons.logStringMessage("pending notifications:"+queue.updateQueue.length);
-								if (!queue.processingQueue) {
-									queue.processingQueue = true;
-									queue.displayNotification();
+								firestatus.cons.logStringMessage("pending notifications:"+firestatus.queue.updateQueue.length);
+								if (!firestatus.queue.processingQueue) {
+									firestatus.queue.processingQueue = true;
+									firestatus.queue.displayNotification();
 								}
 						}
 						else {

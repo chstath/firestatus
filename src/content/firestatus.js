@@ -16,8 +16,6 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-Components.utils.import("resource://firestatus/queue.js");
-
 var firestatus = {
 	TWITTER_URL: 'http://twitter.com',
 	TWITTER_URL_S: 'https://twitter.com',
@@ -83,8 +81,8 @@ var firestatus = {
 	    this.twitterUsername = this.prefs.getCharPref("twitterUsername");
 	    this.twitterPassword = this.prefs.getCharPref("twitterPassword");
 	    this.twitterTimeout = this.prefs.getIntPref("twitterTimeout");
-	    queue.lastTwitterId = this.prefs.getIntPref("lastTwitterId");
-	    queue.lastTwitterTimestamp = this.prefs.getCharPref("lastTwitterTimestamp");
+	    this.queue.lastTwitterId = this.prefs.getIntPref("lastTwitterId");
+	    this.queue.lastTwitterTimestamp = this.prefs.getCharPref("lastTwitterTimestamp");
 		
 		if (this.twitterUpdatesEnabled || this.twitterEnabled) {
 			// If no Twitter credentials are set, try the login manager.
@@ -114,7 +112,7 @@ var firestatus = {
 	    this.friendfeedUsername = this.prefs.getCharPref("friendfeedUsername");
 	    this.friendfeedPassword = this.prefs.getCharPref("friendfeedPassword");
 	    this.friendfeedTimeout = this.prefs.getIntPref("friendfeedTimeout");
-	    queue.lastFriendfeedId = this.prefs.getCharPref("lastFriendfeedId");
+	    this.queue.lastFriendfeedId = this.prefs.getCharPref("lastFriendfeedId");
 		
 		this.facebookClient = facebookClient;
 	    this.facebookEnabled = this.prefs.getBoolPref("facebookEnabled");
@@ -134,7 +132,7 @@ var firestatus = {
 	    	window.document.getElementById("deliciousTags").hidden = false;
 	    else
 	    	window.document.getElementById("deliciousTags").hidden = true;
-	    queue.lastDeliciousTimestamp = this.prefs.getCharPref("lastDeliciousTimestamp");
+	    this.queue.lastDeliciousTimestamp = this.prefs.getCharPref("lastDeliciousTimestamp");
 		
 		if (this.deliciousUpdatesEnabled || this.deliciousEnabled) {
 			// If no delicious credentials are set, try the login manager.
@@ -164,8 +162,8 @@ var firestatus = {
 	    this.identicaUsername = this.prefs.getCharPref("identicaUsername");
 	    this.identicaPassword = this.prefs.getCharPref("identicaPassword");
 	    this.identicaTimeout = this.prefs.getIntPref("identicaTimeout");
-	    queue.lastIdenticaId = this.prefs.getIntPref("lastIdenticaId");
-	    queue.lastIdenticaTimestamp = this.prefs.getCharPref("lastIdenticaTimestamp");
+	    this.queue.lastIdenticaId = this.prefs.getIntPref("lastIdenticaId");
+	    this.queue.lastIdenticaTimestamp = this.prefs.getCharPref("lastIdenticaTimestamp");
 		
 		if (this.identicaUpdatesEnabled || this.identicaEnabled) {
 			// If no Identi.ca credentials are set, try the login manager.
@@ -227,12 +225,12 @@ var firestatus = {
 	},
 	
 	clear: function() {
-		queue.updateQueue.length = 0;
+		firestatus.queue.updateQueue.length = 0;
 	},
 
 	pause: function() {
-		queue.paused = !queue.paused;
-		if (queue.paused)
+		firestatus.queue.paused = !firestatus.queue.paused;
+		if (firestatus.queue.paused)
 		  firestatus.suspend();
 		else
 		  firestatus.resume();
@@ -247,7 +245,7 @@ var firestatus = {
                 firestatus.cancelUpdates('facebook');
                 firestatus.cancelUpdates('delicious');
                 firestatus.cancelUpdates('identica');
-                queue.processingQueue = true;
+                firestatus.queue.processingQueue = true;
                 // Change the icon and menu label in every open browser window.
                 var strbundle = document.getElementById("firestatus-strings");
                 var wm = Components.classes["@mozilla.org/appshell/window-mediator;1"]
@@ -273,7 +271,7 @@ var firestatus = {
             win.document.getElementById('firestatus-icon').src = 'chrome://firestatus/skin/fs-icon-16.png';
             win.document.getElementById('firestatus-pause').label = strbundle.getString("extensions.firestatus.pause");
         }
-		queue.processingQueue = false;
+		firestatus.queue.processingQueue = false;
         if (firestatus.twitterUpdatesEnabled) {
 		  firestatus.twitterUpdates();
 		  firestatus.twitterTimeoutId = window.setInterval(firestatus.twitterUpdates, firestatus.twitterTimeout*60*1000);
@@ -529,8 +527,8 @@ var firestatus = {
 	},
   
 	twitterUpdates: function() {
-		if (queue.processingQueue) return;
-		var milliseconds = new Number(queue.lastTwitterTimestamp);
+		if (firestatus.queue.processingQueue) return;
+		var milliseconds = new Number(firestatus.queue.lastTwitterTimestamp);
 		var FRIENDS_URL = firestatus.TWITTER_URL + '/statuses/friends_timeline.json?since=' +
 						encodeURIComponent(new Date(milliseconds).toUTCString());
 	    var req = new XMLHttpRequest();
@@ -552,7 +550,7 @@ var firestatus = {
 						for (var i = 0; i < statuses.length; i++) {
 							var status = statuses[i];
 							var t = Date.parse(status.created_at);
-							if (status.id <= queue.lastTwitterId)
+							if (status.id <= firestatus.queue.lastTwitterId)
 								continue;
 							var text = "";
 							try {
@@ -562,7 +560,7 @@ var firestatus = {
 											   status.text);
 							  text = status.text;
 							}
-							queue.updateQueue.push({id: status.id,
+							firestatus.queue.updateQueue.push({id: status.id,
 									timestamp: t,
 									image: status.user.profile_image_url,
 									title: status.user.name,
@@ -570,13 +568,13 @@ var firestatus = {
 									link: firestatus.TWITTER_URL + '/' + status.user.screen_name +
                                             '/status/' + status.id});
 						}
-						queue.lastTwitterId = status.id;
-						queue.lastTwitterTimestamp = t;
+						firestatus.queue.lastTwitterId = status.id;
+						firestatus.queue.lastTwitterTimestamp = t;
 						firestatus.prefs.setIntPref("lastTwitterId", status.id);
 						firestatus.prefs.setCharPref("lastTwitterTimestamp", t);
-						if (!queue.processingQueue) {
-							queue.processingQueue = true;
-							queue.displayNotification();
+						if (!firestatus.queue.processingQueue) {
+							firestatus.queue.processingQueue = true;
+							firestatus.queue.displayNotification();
 						}
 	             } else if(req.status == 304)
 				 	return;
@@ -591,7 +589,7 @@ var firestatus = {
 	},
 	
 	friendfeedUpdates: function() {
-		if (queue.processingQueue) return;
+		if (firestatus.queue.processingQueue) return;
 		var FRIENDS_URL = firestatus.FRIENDFEED_URL + '/api/feed/home';
 	    var req = new XMLHttpRequest();
 	    req.open('GET', FRIENDS_URL, true);
@@ -609,7 +607,7 @@ var firestatus = {
 									});
 						for (var i = 0; i < statuses.length; i++) {
 							var status = statuses[i];
-							if (status.id == queue.lastFriendfeedId) break;
+							if (status.id == firestatus.queue.lastFriendfeedId) break;
 							if (status.hidden) break;
 							var t = status.updated; // TODO: parse the RFC 3339 string
                             var title = status.room? status.room.name: status.user.name;
@@ -624,14 +622,14 @@ var firestatus = {
 								link: status.link || firestatus.FRIENDFEED_URL
 							});
 						}
-						queue.updateQueue = queue.updateQueue.concat(
+						firestatus.queue.updateQueue = firestatus.queue.updateQueue.concat(
 												firestatus.ffInitialQueue.reverse());
 						firestatus.ffInitialQueue = [];
-						queue.lastFriendfeedId = statuses[0].id;
+						firestatus.queue.lastFriendfeedId = statuses[0].id;
 						firestatus.prefs.setCharPref("lastFriendfeedId", statuses[0].id);
-						if (!queue.processingQueue) {
-							queue.processingQueue = true;
-							queue.displayNotification();
+						if (!firestatus.queue.processingQueue) {
+							firestatus.queue.processingQueue = true;
+							firestatus.queue.displayNotification();
 						}
 	             } else
 	             	firestatus.cons.logStringMessage("Error loading FF page. req.status="+req.status);
@@ -643,12 +641,12 @@ var firestatus = {
 	},
 	
 	facebookUpdates: function() {
-		if (queue.processingQueue) return;
+		if (firestatus.queue.processingQueue) return;
 		facebookClient.getNotifications();
 	},
 
 	deliciousUpdates: function() {
-		if (queue.processingQueue) return;
+		if (firestatus.queue.processingQueue) return;
 		var FEED_URL = 'http://feeds.delicious.com/v2/json/network/' + firestatus.deliciousUsername;
 	    var req = new XMLHttpRequest();
 	    req.open('GET', FEED_URL, true);
@@ -667,7 +665,7 @@ var firestatus = {
 						for (var i = 0; i < statuses.length; i++) {
 							var status = statuses[i];
 							var t = status.dt;
-							if (t <= queue.lastDeliciousTimestamp)
+							if (t <= firestatus.queue.lastDeliciousTimestamp)
 								continue;
 							var text = "";
 							try {
@@ -677,18 +675,18 @@ var firestatus = {
 											   status.d);
 							  text = status.d;
 							}
-							queue.updateQueue.push({
+							firestatus.queue.updateQueue.push({
 									image: "chrome://firestatus/skin/delicious.png",
 									timestamp: t,
 									text: status.d,
 									link: status.u
 							});
 						}
-						queue.lastDeliciousTimestamp = t;
+						firestatus.queue.lastDeliciousTimestamp = t;
 						firestatus.prefs.setCharPref("lastDeliciousTimestamp", t);
-						if (!queue.processingQueue) {
-							queue.processingQueue = true;
-							queue.displayNotification();
+						if (!firestatus.queue.processingQueue) {
+							firestatus.queue.processingQueue = true;
+							firestatus.queue.displayNotification();
 						}
 	             } else
 	             	firestatus.cons.logStringMessage("Error loading delicious feed. req.status=" + req.status);
@@ -698,8 +696,8 @@ var firestatus = {
 	},
 
 	identicaUpdates: function() {
-		if (queue.processingQueue) return;
-		var milliseconds = new Number(queue.lastIdenticaTimestamp);
+		if (firestatus.queue.processingQueue) return;
+		var milliseconds = new Number(firestatus.queue.lastIdenticaTimestamp);
 		var FRIENDS_URL = firestatus.IDENTICA_URL + '/api/statuses/friends_timeline.json?since=' +
 						encodeURIComponent(new Date(milliseconds).toUTCString());
 	    var req = new XMLHttpRequest();
@@ -721,7 +719,7 @@ var firestatus = {
 						for (var i = 0; i < statuses.length; i++) {
 							var status = statuses[i];
 							var t = Date.parse(status.created_at);
-							if (status.id <= queue.lastIdenticaId)
+							if (status.id <= firestatus.queue.lastIdenticaId)
 								continue;
 							var text = "";
 							try {
@@ -731,20 +729,20 @@ var firestatus = {
 											   status.text);
 							  text = status.text;
 							}
-							queue.updateQueue.push({id: status.id,
+							firestatus.queue.updateQueue.push({id: status.id,
 									timestamp: t,
 									image: status.user.profile_image_url,
 									title: status.user.name,
 									text: status.text,
 									link: firestatus.IDENTICA_URL + '/notice/' + status.id});
 						}
-						queue.lastIdenticaId = status.id;
-						queue.lastIdenticaTimestamp = t;
+						firestatus.queue.lastIdenticaId = status.id;
+						firestatus.queue.lastIdenticaTimestamp = t;
 						firestatus.prefs.setIntPref("lastIdenticaId", status.id);
 						firestatus.prefs.setCharPref("lastIdenticaTimestamp", t);
-						if (!queue.processingQueue) {
-							queue.processingQueue = true;
-							queue.displayNotification();
+						if (!firestatus.queue.processingQueue) {
+							firestatus.queue.processingQueue = true;
+							firestatus.queue.displayNotification();
 						}
 	             } else if(req.status == 304)
 				 	return;
@@ -1046,6 +1044,8 @@ var firestatus = {
 	    req.send(params); 
 	}
 };	
+
+Components.utils.import("resource://firestatus/queue.js", firestatus);
 
 window.addEventListener("load", function(e) { firestatus.onLoad(e); }, false);
 window.addEventListener("unload", function(e) { firestatus.onUnload(e); }, false);
