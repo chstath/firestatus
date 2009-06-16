@@ -177,17 +177,59 @@ var facebookClient = {
 		facebookClient.getNewSessionAndUpdate(status, url);
 	},
 
+	/**
+	 * Code for UTF-8 encoding was found here
+	 * http://www.webtoolkit.info/javascript-utf8.html
+	 */
+	convert2UTF8 : function(input) {
+	    var utftext = "";
+	    if (typeof input != "string")
+	        return input;
+	    for (var n = 0; n < input.length; n++) {
+			var c = input.charCodeAt(n);
+			 
+			if (c < 128) {
+				utftext += String.fromCharCode(c);
+			}
+			else if((c > 127) && (c < 2048)) {
+				utftext += String.fromCharCode((c >> 6) | 192);
+				utftext += String.fromCharCode((c & 63) | 128);
+			}
+			else {
+				utftext += String.fromCharCode((c >> 12) | 224);
+				utftext += String.fromCharCode(((c >> 6) & 63) | 128);
+				utftext += String.fromCharCode((c & 63) | 128);
+			}
+	    }
+	    return utftext;
+	},
+
 	finallyUpdateStatus : function(session, status) {
 		var params = [];
 	    params.push('method=users.setStatus');
 	    params.push('api_key=' + this.apiKey);
 	    params.push('v=1.0');
 		params.push('session_key=' + session.session_key);
-		params.push('call_id=' + new Date().getTime());
+		var callId = new Date().getTime();
+		params.push('call_id=' + callId);
 	    params.push('format=JSON');
 	    params.push('status_includes_verb=1');
+	    //Use utb8 encoding for calculating the signature....
+	    var utf8Status = facebookClient.convert2UTF8(status);
+		params.push('status=' + utf8Status);
+		var sig = this.generateSig(params, session.secret);
+
+	    params = [];
+	    params.push('method=users.setStatus');
+	    params.push('api_key=' + this.apiKey);
+	    params.push('v=1.0');
+		params.push('session_key=' + session.session_key);
+		params.push('call_id=' + callId);
+	    params.push('format=JSON');
+	    params.push('status_includes_verb=1');
+	    //... but send the original status
 		params.push('status=' + status);
-	    params.push('sig=' + this.generateSig(params, session.secret));
+	    params.push('sig=' + sig);
 	    facebookClient.sendUpdate(params, status);
 	},
 	
@@ -197,12 +239,26 @@ var facebookClient = {
 	    params.push('api_key=' + this.apiKey);
 	    params.push('v=1.0');
 		params.push('session_key=' + session.session_key);
-		params.push('call_id=' + new Date().getTime());
+		var callId = new Date().getTime();
+		params.push('call_id=' + callId);
+	    params.push('format=JSON');
+	    params.push('uid=' + session.uid);
+		params.push('url=' + url);
+	    var utf8Status = facebookClient.convert2UTF8(status);
+		params.push('comment=' + utf8Status);
+	    var sig = this.generateSig(params, session.secret);
+
+	    params = [];
+	    params.push('method=links.post');
+	    params.push('api_key=' + this.apiKey);
+	    params.push('v=1.0');
+		params.push('session_key=' + session.session_key);
+		params.push('call_id=' + callId);
 	    params.push('format=JSON');
 	    params.push('uid=' + session.uid);
 		params.push('url=' + url);
 		params.push('comment=' + status);
-	    params.push('sig=' + this.generateSig(params, session.secret));
+	    params.push('sig=' + sig);
 	    facebookClient.sendLink(params, status, url);
 	},
 
