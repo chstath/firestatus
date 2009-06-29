@@ -25,16 +25,16 @@ var facebookClient = {
 		var Cc = Components.classes;
 		var Ci = Components.interfaces;
 		// Load MD5 code...
-		var md5 = Cc['@mozilla.org/moz/jssubscript-loader;1']
+		Cc['@mozilla.org/moz/jssubscript-loader;1']
     		.getService(Ci.mozIJSSubScriptLoader)
-    		.loadSubScript('chrome://firestatus/content/md5.js');
+        .loadSubScript('chrome://firestatus/content/md5.js', firestatus);
         var str = '';
         params.sort();
         for (var i = 0; i < params.length; i++) {
             str += params[i];
         }
         str += secret;
-        return md5.hex_md5(str);
+        return firestatus.hex_md5(str);
 	},
 
 	getNewSessionAndUpdate: function(status, url) {
