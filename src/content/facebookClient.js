@@ -25,7 +25,7 @@ var facebookClient = {
 		var Cc = Components.classes;
 		var Ci = Components.interfaces;
 		// Load MD5 code...
-		Cc['@mozilla.org/moz/jssubscript-loader;1']
+		var md5 = Cc['@mozilla.org/moz/jssubscript-loader;1']
     		.getService(Ci.mozIJSSubScriptLoader)
     		.loadSubScript('chrome://firestatus/content/md5.js');
         var str = '';
@@ -34,7 +34,7 @@ var facebookClient = {
             str += params[i];
         }
         str += secret;
-        return hex_md5(str);
+        return md5.hex_md5(str);
 	},
 
 	getNewSessionAndUpdate: function(status, url) {
