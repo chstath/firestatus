@@ -63,6 +63,8 @@ var firestatus = {
 	onLoad: function(){
 		// Initialization code
 		this.initialized = true;
+        if (!this.queue.window)
+            this.queue.window = window;
 		this.strings = document.getElementById("firestatus-strings");
 		
 	    this.cons = Components.classes["@mozilla.org/consoleservice;1"].
@@ -188,7 +190,7 @@ var firestatus = {
 			}
 		}
 		
-		this.initialTimeoutId = window.setTimeout(this.resume, 7*1000);
+		this.initialTimeoutId = this.queue.window.setTimeout(this.resume, 7*1000);
 	},
 	
 	onUnload: function() {
@@ -616,7 +618,7 @@ var firestatus = {
 								id: status.id,
 								timestamp: t,
                                 image: firestatus.FRIENDFEED_URL + '/' + nickname +
-                                        '/picture?size=large',
+                                        '/picture?size=medium',
 								title: title,
 								text: status.title,
 								link: status.link || firestatus.FRIENDFEED_URL
