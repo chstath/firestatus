@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<?xml-stylesheet href="chrome://global/skin/" type="text/css" ?>
+<?xml-stylesheet href="chrome://browser/skin/browser.css" type="text/css" ?>
+<!DOCTYPE page SYSTEM "chrome://firestatus/locale/firestatus.dtd">
+
+<page id="sbFirestatus" title="&firestatus.title;"
+         xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul" >
+    <iframe id="history-log" src="chrome://firestatus/content/sidebarContent.html"/>
+</page>

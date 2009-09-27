@@ -19,12 +19,34 @@
 <!DOCTYPE overlay SYSTEM "chrome://firestatus/locale/firestatus.dtd">
 <overlay id="firestatus-overlay"
          xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+  <script src="chrome://firestatus/content/jquery-1.3.2.js"/>
   <script src="chrome://firestatus/content/firestatus.js"/>
   <script src="chrome://firestatus/content/statusInput.js"/>
   <script src="chrome://firestatus/content/facebookClient.js"/>
   <stringbundleset id="stringbundleset">
     <stringbundle id="firestatus-strings" src="chrome://firestatus/locale/firestatus.properties"/>
   </stringbundleset>
+
+  <menupopup id="viewSidebarMenu">
+    <menuitem key="key_openFirestatusHistory" observes="viewFirestatusHistory"  />
+  </menupopup>
+  
+  <keyset id="mainKeyset">
+    <key id="key_openFirestatusHistory" command="viewFirestatusHistoryr"
+         key="&firestatus.history.commandkey;" 
+         modifiers="&firestatus.history.modifierskey;" />
+  </keyset>
+  
+  <broadcasterset id="mainBroadcasterSet"> 
+    <broadcaster id="viewFirestatusHistory" 
+                 label="&firestatus.title;"
+                 autoCheck="false"
+                 type="checkbox"
+                 group="sidebar"
+                 sidebarurl="chrome://firestatus/content/sidebar.xul"
+                 sidebartitle="&firestatus.title;"
+                 oncommand="toggleSidebar('viewFirestatusHistory');" />
+  </broadcasterset>
 
   <vbox id="appcontent">
     <splitter id="firestatusContentSplitter" collapsed="true"/>
@@ -73,6 +95,7 @@
     <statusbar id="status-bar">
         <menupopup id="firestatus-popup">
             <menuitem id="firestatus-update" label="&firestatus.update;" oncommand="firestatus.show()"/>
+            <menuitem id="firestatus-history" label="&firestatus.history;" oncommand="firestatus.showHistory()"/>
             <menuitem id="firestatus-pause" label="&firestatus.pause;" oncommand="firestatus.pause()"/>
             <menuitem id="firestatus-clear" label="&firestatus.clear;" oncommand="firestatus.clear()"/>
             <menuitem id="firestatus-prefs" label="&firestatus.prefs;" oncommand="openDialog('chrome://firestatus/content/options.xul', 'prefs', 'chrome,resizable=yes,centerscreen=yes');"/>

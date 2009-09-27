@@ -209,19 +209,16 @@ var firestatus = {
 	},
 	
 	show: function() {
-		var fsContainer = window.document.getElementById('firestatusContainer');
-		fsContainer.setAttribute("collapsed", 'false');
-		var textField = window.document.getElementById('statusText');
+		$('#firestatusContainer').attr('collapsed', 'false');
 		var title = document.title;
 		title = title.substr(0, title.lastIndexOf('-')-1);
-		if (textField.value == "")
-			textField.value = title;
-		textField.select();
+		if ($('#statusText').val() == "")
+			$('#statusText').val(title);
+		$('#statusText').select();
 	},
 	
 	hide: function() {
-		var fsContainer = window.document.getElementById('firestatusContainer');
-		fsContainer.setAttribute("collapsed", 'true');
+		$('#firestatusContainer').attr('collapsed', 'true');
 	},
 	
 	clear: function() {
@@ -238,7 +235,7 @@ var firestatus = {
 
 	suspend: function() {
 		// Clear the initial timeout only the first time we are called.
-		window.clearTimeout(firestatus.initialTimeoutId);
+		clearTimeout(firestatus.initialTimeoutId);
 		return (firestatus.suspend = function() {
                 firestatus.cancelUpdates('twitter');
                 firestatus.cancelUpdates('friendfeed');
@@ -253,8 +250,8 @@ var firestatus = {
                 var enumerator = wm.getEnumerator("navigator:browser");
                 while(enumerator.hasMoreElements()) {
                     var win = enumerator.getNext();
-                    win.document.getElementById('firestatus-icon').src = 'chrome://firestatus/skin/fs-icon-bw-16.png';
-                    win.document.getElementById('firestatus-pause').label = strbundle.getString("extensions.firestatus.resume");
+                    $('#firestatus-icon', win.document).attr('src', 'chrome://firestatus/skin/fs-icon-bw-16.png');
+                    $('#firestatus-pause', win.document).attr('label', strbundle.getString("extensions.firestatus.resume"));
                 }
         })();
         
@@ -268,29 +265,29 @@ var firestatus = {
         var enumerator = wm.getEnumerator("navigator:browser");
         while(enumerator.hasMoreElements()) {
             var win = enumerator.getNext();
-            win.document.getElementById('firestatus-icon').src = 'chrome://firestatus/skin/fs-icon-16.png';
-            win.document.getElementById('firestatus-pause').label = strbundle.getString("extensions.firestatus.pause");
+            $('#firestatus-icon', win.document).attr('src', 'chrome://firestatus/skin/fs-icon-16.png');
+            $('#firestatus-pause', win.document).attr('label', strbundle.getString("extensions.firestatus.pause"));
         }
 		firestatus.queue.processingQueue = false;
         if (firestatus.twitterUpdatesEnabled) {
 		  firestatus.twitterUpdates();
-		  firestatus.twitterTimeoutId = window.setInterval(firestatus.twitterUpdates, firestatus.twitterTimeout*60*1000);
+		  firestatus.twitterTimeoutId = setInterval(firestatus.twitterUpdates, firestatus.twitterTimeout*60*1000);
 		}
 		if (firestatus.friendfeedUpdatesEnabled) {
 		  firestatus.friendfeedUpdates();
-		  firestatus.friendfeedTimeoutId = window.setInterval(firestatus.friendfeedUpdates, firestatus.friendfeedTimeout*60*1000);
+		  firestatus.friendfeedTimeoutId = setInterval(firestatus.friendfeedUpdates, firestatus.friendfeedTimeout*60*1000);
 		}
 		if (firestatus.facebookUpdatesEnabled) {
 		  firestatus.facebookUpdates();
-		  firestatus.facebookTimeoutId = window.setInterval(firestatus.facebookUpdates, firestatus.facebookTimeout*60*1000);
+		  firestatus.facebookTimeoutId = setInterval(firestatus.facebookUpdates, firestatus.facebookTimeout*60*1000);
 		}
         if (firestatus.deliciousUpdatesEnabled) {
   		  firestatus.deliciousUpdates();
-  		  firestatus.deliciousTimeoutId = window.setInterval(firestatus.deliciousUpdates, firestatus.deliciousTimeout*60*1000);
+  		  firestatus.deliciousTimeoutId = setInterval(firestatus.deliciousUpdates, firestatus.deliciousTimeout*60*1000);
   		}
         if (firestatus.identicaUpdatesEnabled) {
 		  firestatus.identicaUpdates();
-		  firestatus.identicaTimeoutId = window.setInterval(firestatus.identicaUpdates, firestatus.identicaTimeout*60*1000);
+		  firestatus.identicaTimeoutId = setInterval(firestatus.identicaUpdates, firestatus.identicaTimeout*60*1000);
 		}
    },
 
@@ -509,19 +506,19 @@ var firestatus = {
 	cancelUpdates: function(service) {
 		switch(service) {
 			case "twitter":
-				window.clearInterval(this.twitterTimeoutId);
+				clearInterval(this.twitterTimeoutId);
 				break;
 			case "friendfeed":
-				window.clearInterval(this.friendfeedTimeoutId);
+				clearInterval(this.friendfeedTimeoutId);
 				break;
 			case "facebook":
-				window.clearInterval(this.facebookTimeoutId);
+				clearInterval(this.facebookTimeoutId);
 				break;
 			case "delicious":
-				window.clearInterval(this.deliciousTimeoutId);
+				clearInterval(this.deliciousTimeoutId);
 				break;
 			case "identica":
-				window.clearInterval(this.identicaTimeoutId);
+				clearInterval(this.identicaTimeoutId);
 				break;
 		}
 	},
@@ -560,13 +557,16 @@ var firestatus = {
 											   status.text);
 							  text = status.text;
 							}
-							firestatus.queue.updateQueue.push({id: status.id,
-									timestamp: t,
-									image: status.user.profile_image_url,
-									title: status.user.name,
-									text: status.text,
-									link: firestatus.TWITTER_URL + '/' + status.user.screen_name +
-                                            '/status/' + status.id});
+                            var update = {id: status.id,
+								timestamp: t,
+								image: status.user.profile_image_url,
+								title: status.user.name,
+								text: status.text,
+								link: firestatus.TWITTER_URL + '/' + status.user.screen_name +
+                                '/status/' + status.id
+                            };
+							firestatus.queue.updateQueue.push(update);
+                            firestatus.queue.history.unshift(update);
 						}
 						firestatus.queue.lastTwitterId = status.id;
 						firestatus.queue.lastTwitterTimestamp = t;
@@ -612,7 +612,7 @@ var firestatus = {
 							var t = status.updated; // TODO: parse the RFC 3339 string
                             var title = status.room? status.room.name: status.user.name;
                             var nickname = status.room? 'rooms/' + status.room.nickname: status.user.nickname;
-							firestatus.ffInitialQueue.push({
+                            var update = {
 								id: status.id,
 								timestamp: t,
                                 image: firestatus.FRIENDFEED_URL + '/' + nickname +
@@ -620,10 +620,12 @@ var firestatus = {
 								title: title,
 								text: status.title,
 								link: status.link || firestatus.FRIENDFEED_URL
-							});
+							};
+							firestatus.ffInitialQueue.push(update);
 						}
-						firestatus.queue.updateQueue = firestatus.queue.updateQueue.concat(
-												firestatus.ffInitialQueue.reverse());
+                        var reversed = firestatus.ffInitialQueue.reverse();
+						firestatus.queue.updateQueue = firestatus.queue.updateQueue.concat(reversed);
+                        firestatus.queue.history = firestatus.queue.history.concat(reversed);
 						firestatus.ffInitialQueue = [];
 						firestatus.queue.lastFriendfeedId = statuses[0].id;
 						firestatus.prefs.setCharPref("lastFriendfeedId", statuses[0].id);
@@ -675,12 +677,14 @@ var firestatus = {
 											   status.d);
 							  text = status.d;
 							}
-							firestatus.queue.updateQueue.push({
-									image: "chrome://firestatus/skin/delicious.png",
-									timestamp: t,
-									text: status.d,
-									link: status.u
-							});
+                            var update = {
+								image: "chrome://firestatus/skin/delicious.png",
+								timestamp: t,
+								text: status.d,
+								link: status.u
+							};
+							firestatus.queue.updateQueue.push(update);
+                            firestatus.queue.history.unshift(update);
 						}
 						firestatus.queue.lastDeliciousTimestamp = t;
 						firestatus.prefs.setCharPref("lastDeliciousTimestamp", t);
@@ -729,12 +733,15 @@ var firestatus = {
 											   status.text);
 							  text = status.text;
 							}
-							firestatus.queue.updateQueue.push({id: status.id,
-									timestamp: t,
-									image: status.user.profile_image_url,
-									title: status.user.name,
-									text: status.text,
-									link: firestatus.IDENTICA_URL + '/notice/' + status.id});
+                            var update = {id: status.id,
+								timestamp: t,
+								image: status.user.profile_image_url,
+								title: status.user.name,
+								text: status.text,
+                                link: firestatus.IDENTICA_URL + '/notice/' + status.id
+                            };
+							firestatus.queue.updateQueue.push(update);
+                            firestatus.queue.history.unshift(update);
 						}
 						firestatus.queue.lastIdenticaId = status.id;
 						firestatus.queue.lastIdenticaTimestamp = t;
@@ -1042,7 +1049,28 @@ var firestatus = {
 	    req.setRequestHeader("Content-length", params.length);
 	    req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;");
 	    req.send(params); 
-	}
+	},
+
+    showHistory: function () {
+        toggleSidebar('viewFirestatusHistory');
+        var sidebarWindow = document.getElementById("sidebar").contentWindow;
+        if (sidebarWindow.location.href == "chrome://firestatus/content/sidebar.xul") {
+            // Sidebar is open.
+            var sidebarDocument = document.getElementById("sidebar").contentDocument;
+            var iframe = sidebarDocument.getElementById("history-log");
+            firestatus.cons.logStringMessage(iframe.contentDocument.innerHTML);
+            //$("ol", iframe.contentDocument).empty();
+            firestatus.queue.history.forEach(function (entry) {
+                $("ol", iframe.contentDocument).append('<li>lala</li>');
+                /*$("ol", iframe.contentDocument).append('<li><span class="avatar"><a href="' +
+                    'http://twitter.com/' + entry.user.screen_name+'"><img height="48" width="48" src="' +
+                    entry.user.profile_image_url + '" alt="'+entry.user.name+'"/></a></span>' +
+                    '<span class="main"><strong><a title="'+entry.user.name+'" href="http://twitter.com/'+
+                    entry.user.screen_name+'">'+entry.user.screen_name+'</a> </strong><span>'+entry.text+
+                    '</span></span></li>');*/
+            });
+        }
+    }
 };	
 
 Components.utils.import("resource://firestatus/queue.js", firestatus);

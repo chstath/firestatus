@@ -1,4 +1,5 @@
 <!ENTITY firestatus.update "Update your status...">
+<!ENTITY firestatus.history "History">
 <!ENTITY firestatus.clear "Clear pending notifications">
 <!ENTITY firestatus.pause "Pause">
 <!ENTITY firestatus.resume "Resume">
@@ -16,3 +17,6 @@
 <!ENTITY firestatus.send "Send">
 <!ENTITY firestatus.sendTooltip "Send status update">
 <!ENTITY firestatus.labelTags "Tags">
+<!ENTITY firestatus.title "FireStatus">
+<!ENTITY firestatus.history.commandkey "F">
+<!ENTITY firestatus.history.modifierskey "shift accel">
