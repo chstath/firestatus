@@ -228,7 +228,7 @@ var facebookClient = {
 	    params.push('format=JSON');
 	    params.push('status_includes_verb=1');
 	    //... but send the original status
-		params.push('status=' + status);
+		params.push('status=' + encodeURIComponent(status));
 	    params.push('sig=' + sig);
 	    facebookClient.sendUpdate(params, status);
 	},
@@ -257,7 +257,7 @@ var facebookClient = {
 	    params.push('format=JSON');
 	    params.push('uid=' + session.uid);
 		params.push('url=' + url);
-		params.push('comment=' + status);
+		params.push('comment=' + encodeURIComponent(status));
 	    params.push('sig=' + sig);
 	    facebookClient.sendLink(params, status, url);
 	},
@@ -626,5 +626,46 @@ var facebookClient = {
 		};
 		firestatus.cons.logStringMessage("Getting facebook notifications");
 		req.send(null);
-	}
+	},
+	
+	rssParser: {
+    loadFeed: function(url) {
+      var GetFeed = url;
+      var req = new XMLHttpRequest();
+      req.open("POST", escape(url), true);
+      req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+      req.onreadystatechange = function() {
+        if (req.readyState == 4 && request.status == 200) {
+          if (req.responseText) {
+            processFeed(request.responseText, parseData);
+          }
+        }
+      }
+      req.send(null);
+    },
+    
+    processFeed: function(response, callback) {
+      var parser = new DOMParser();
+      var doc = parser.parseFromString(response, "text/xml");
+      callback(doc.documentElement);
+    },
+    
+    parseData: function(data) {
+      var items = data.getElementsByTagName('item');
+      var output = '<ul>';
+      for (var i = 0; i < items.length; ++i) {
+        var title = valueFromTagName(items[i], 'title');
+        var link = valueFromTagName(items[i], 'link');
+        output += '<li><strong><a href ="' + link + '">' + title + '</strong> ' + '</li>';
+      }
+      output += '</ul>';
+      var RSSOutput = document.getElementById('RSSOutput');
+      RSSOutput.innerHTML = output;
+    },
+
+    valueFromTagName: function(item, tagname) {
+      var val = item.getElementsByTagName(tagname);
+      return val[0].firstChild.nodeValue;
+    }
+  }
 }
