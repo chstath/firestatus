@@ -118,6 +118,7 @@ var firestatus = {
 	    this.facebookEnabled = this.prefs.getBoolPref("facebookEnabled");
 	    this.facebookUpdatesEnabled = this.prefs.getBoolPref("facebookUpdatesEnabled");
 	    this.facebookTimeout = this.prefs.getIntPref("facebookTimeout");
+	    this.queue.lastFacebookTimestamp = this.prefs.getCharPref("lastFacebookTimestamp");
 		
 		this.shortURLService = this.prefs.getCharPref("shortURLService");
 		this.cons.logStringMessage("Short URL service selected: " + this.shortURLService);

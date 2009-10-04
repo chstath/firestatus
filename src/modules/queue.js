@@ -27,6 +27,7 @@ var queue = {
     lastDeliciousTimestamp: "0",
     lastIdenticaId: 0,
     lastIdenticaTimestamp: "0",
+    lastFacebookTimestamp: "0",
     processingQueue: false,
     paused: false,
 
