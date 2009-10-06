@@ -415,7 +415,7 @@ var facebookClient = {
                 firestatus.cons.logStringMessage("Secret exists: " + secret);
                 if (session_key != undefined && secret != undefined) {
                     firestatus.cons.logStringMessage("Using existing key...\n");
-                    var session = {session_key:session_key, secret:secret};
+                    var session = {session_key:session_key, secret:secret, uid:uid};
                     facebookClient.finallyGetNotifications(session);
                     return;
                 }
@@ -540,13 +540,18 @@ var facebookClient = {
 
     finallyGetNotifications: function(session) {
         var params = [];
-        params.push('method=notifications.getList');
+        params.push('method=fql.multiquery');
         params.push('api_key=' + this.apiKey);
         params.push('session_key=' + session.session_key);
         params.push('call_id=' + new Date().getTime());
-      params.push('v=1.0');
+        var nativeJSON = Cc["@mozilla.org/dom/json;1"].createInstance(Ci.nsIJSON);
+        var queries = {};
+        queries.notifications = "select notification_id, title_text, href, updated_time from notification " + 
+                                "where recipient_id=" + session.uid + 
+                                " and is_unread=1 and is_hidden=0 and updated_time>" + firestatus.queue.lastFacebookTimestamp;
+        params.push('queries=' + nativeJSON.encode(queries));
+        params.push('v=1.0');
         params.push('format=JSON');
-        params.push('include_read=true');
         params.push('sig=' + this.generateSig(params, session.secret));
         facebookClient.getNotifications1(params);
     },
@@ -564,24 +569,24 @@ var facebookClient = {
                         var Cc = Components.classes;
                         var nativeJSON = Cc["@mozilla.org/dom/json;1"].createInstance(Ci.nsIJSON);
                         var jsonString = req.responseText;
-                        firestatus.cons.logStringMessage(jsonString);
                         var result = nativeJSON.decode(jsonString);
                         var code = result.error_code;
                         if (!code) {
-                            var notifications = result.notifications.reverse();
-                            for (var i=0; i<notifications.length; i++) {
-                                  var n = notifications[i];
-                                  if (n.is_hidden || !n.title_text || n.updated_time<=firestatus.queue.lastFacebookTimestamp)
-                                     continue;
-                                  firestatus.queue.updateQueue.push({id: n.notification_id,
-                                                                      timestamp: n.updated_time,
-                                                                      title: "Facebook",
-                                                                      image: "chrome://firestatus/skin/facebook.png",
-                                                                      text: n.title_text,
-                                                                      link: n.href
-                                                                     });
-                      						firestatus.queue.lastFacebookTimestamp = n.updated_time;
-                      						firestatus.prefs.setIntPref("lastFacebookTimestamp", n.updated_time);
+                            var notifications = result[0].fql_result_set;
+                            if (notifications.length) {
+                              notifications = notifications.reverse();
+                              for (var i=0; i<notifications.length; i++) {
+                                    var n = notifications[i];
+                                    firestatus.queue.updateQueue.push({id: n.notification_id,
+                                                                        timestamp: n.updated_time,
+                                                                        title: "Facebook",
+                                                                        image: "chrome://firestatus/skin/facebook.png",
+                                                                        text: n.title_text,
+                                                                        link: n.href
+                                                                       });
+                        						firestatus.queue.lastFacebookTimestamp = n.updated_time;
+                        						firestatus.prefs.setCharPref("lastFacebookTimestamp", n.updated_time);
+                              }
                             }
                             if (!firestatus.queue.processingQueue) {
                                 firestatus.queue.processingQueue = true;
