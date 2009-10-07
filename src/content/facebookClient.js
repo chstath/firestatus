@@ -549,7 +549,9 @@ var facebookClient = {
         queries.notifications = "select notification_id, title_text, href, updated_time from notification " + 
                                 "where recipient_id=" + session.uid + 
                                 " and is_unread=1 and is_hidden=0 and updated_time>" + firestatus.queue.lastFacebookTimestamp;
+        queries.stream = "select post_id, updated_time, message, permalink from stream where viewer_id=" + session.uid + " and updated_time>" + firestatus.queue.lastFacebookTimestamp + " and is_hidden=0 and source_id in (SELECT target_id FROM connection WHERE source_id=" + session.uid + ")";    
         params.push('queries=' + nativeJSON.encode(queries));
+        firestatus.cons.logStringMessage(nativeJSON.encode(queries));
         params.push('v=1.0');
         params.push('format=JSON');
         params.push('sig=' + this.generateSig(params, session.secret));
@@ -573,20 +575,23 @@ var facebookClient = {
                         var code = result.error_code;
                         if (!code) {
                             var notifications = result[0].fql_result_set;
-                            if (notifications.length) {
-                              notifications = notifications.reverse();
-                              for (var i=0; i<notifications.length; i++) {
-                                    var n = notifications[i];
-                                    firestatus.queue.updateQueue.push({id: n.notification_id,
-                                                                        timestamp: n.updated_time,
-                                                                        title: "Facebook",
-                                                                        image: "chrome://firestatus/skin/facebook.png",
-                                                                        text: n.title_text,
-                                                                        link: n.href
-                                                                       });
-                        						firestatus.queue.lastFacebookTimestamp = n.updated_time;
-                        						firestatus.prefs.setCharPref("lastFacebookTimestamp", n.updated_time);
-                              }
+                            var stream = result[1].fql_result_set;
+                            var total = [];
+                            if (notifications.length)
+                              total = notifications.reverse();
+                            if (stream.length)
+                              total = total.concat(stream.reverse());
+                            for (var i=0; i<total.length; i++) {
+                                  var n = total[i];
+                                  firestatus.queue.updateQueue.push({id: n.notification_id ? n.notification_id : n.post_id,
+                                                                      timestamp: n.updated_time,
+                                                                      title: "Facebook",
+                                                                      image: "chrome://firestatus/skin/facebook.png",
+                                                                      text: n.title_text ? n.title_text : n.message,
+                                                                      link: n.href ? n.href : n.permalink
+                                                                     });
+                      						firestatus.queue.lastFacebookTimestamp = n.updated_time;
+                      						firestatus.prefs.setCharPref("lastFacebookTimestamp", n.updated_time);
                             }
                             if (!firestatus.queue.processingQueue) {
                                 firestatus.queue.processingQueue = true;
@@ -603,6 +608,11 @@ var facebookClient = {
                             else if (code == 102) {
                                 firestatus.cons.logStringMessage("Asking for new session key...");
                                 facebookClient.getNewSessionAndNotifications();
+                            }
+                            else if (code == 612) {
+                                firestatus.cons.logStringMessage("Requesting authorization...");
+                                window.open("http://www.facebook.com/authorize.php?api_key=" + facebookClient.apiKey + "&v=1.0&ext_perm=read_stream&popup=", "", "chrome, centerscreen,width=646,height=520,modal=yes,close=yes");
+                                facebookClient.getNotifications1(params);
                             }
                         }
                         break;
