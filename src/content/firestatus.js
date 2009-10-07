@@ -617,7 +617,7 @@ var firestatus = {
 								id: status.id,
 								timestamp: t,
                                 image: firestatus.FRIENDFEED_URL + '/' + nickname +
-                                        '/picture?size=small',
+                                        '/picture?size=medium',
 								title: title,
 								text: status.title,
 								link: status.link || firestatus.FRIENDFEED_URL
