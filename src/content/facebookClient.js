@@ -543,18 +543,32 @@ var facebookClient = {
         params.push('method=fql.multiquery');
         params.push('api_key=' + this.apiKey);
         params.push('session_key=' + session.session_key);
-        params.push('call_id=' + new Date().getTime());
+        var callId = new Date().getTime();
+        params.push('call_id=' + callId);
         var nativeJSON = Cc["@mozilla.org/dom/json;1"].createInstance(Ci.nsIJSON);
         var queries = {};
         queries.notifications = "select notification_id, title_text, href, updated_time from notification " + 
                                 "where recipient_id=" + session.uid + 
                                 " and is_unread=1 and is_hidden=0 and updated_time>" + firestatus.queue.lastFacebookTimestamp;
-        queries.stream = "select post_id, updated_time, message, permalink from stream where viewer_id=" + session.uid + " and updated_time>" + firestatus.queue.lastFacebookTimestamp + " and is_hidden=0 and source_id in (SELECT target_id FROM connection WHERE source_id=" + session.uid + ")";    
-        params.push('queries=' + nativeJSON.encode(queries));
+//        queries.stream = "select post_id, updated_time, message, permalink, message, attribution, actor_id from stream where viewer_id=" + session.uid + " and updated_time>" + firestatus.queue.lastFacebookTimestamp + " and is_hidden=0 and source_id in (SELECT target_id FROM connection WHERE source_id=" + session.uid + ")";    
+//        queries.user_stream = "select post_id, updated_time, message, permalink, message, attribution, actor_id, attachment from stream where updated_time>" + firestatus.queue.lastFacebookTimestamp + " and is_hidden=0 and source_id in (SELECT target_id FROM connection WHERE source_id=" + session.uid + ")";    
+        queries.user_stream = "select post_id, updated_time, message, permalink, message, attribution, actor_id, attachment from stream where updated_time>0 and is_hidden=0 and source_id in (SELECT target_id FROM connection WHERE source_id=" + session.uid + ")";    
+        queries.users = "select id, name, pic from profile where id in (select actor_id from #user_stream)";
+        var queriesStr = nativeJSON.encode(queries);    
+        params.push('queries=' + queriesStr);
         firestatus.cons.logStringMessage(nativeJSON.encode(queries));
         params.push('v=1.0');
         params.push('format=JSON');
-        params.push('sig=' + this.generateSig(params, session.secret));
+        var sig = this.generateSig(params, session.secret);
+        params = [];
+        params.push('method=fql.multiquery');
+        params.push('api_key=' + this.apiKey);
+        params.push('session_key=' + session.session_key);
+        params.push('call_id=' + callId);
+        params.push('queries=' + encodeURIComponent(queriesStr));
+        params.push('v=1.0');
+        params.push('format=JSON');
+        params.push('sig=' + sig);
         facebookClient.getNotifications1(params);
     },
     
@@ -571,11 +585,13 @@ var facebookClient = {
                         var Cc = Components.classes;
                         var nativeJSON = Cc["@mozilla.org/dom/json;1"].createInstance(Ci.nsIJSON);
                         var jsonString = req.responseText;
+                        firestatus.cons.logStringMessage(jsonString);
                         var result = nativeJSON.decode(jsonString);
                         var code = result.error_code;
                         if (!code) {
                             var notifications = result[0].fql_result_set;
                             var stream = result[1].fql_result_set;
+                            var users = result[2].fql_result_set;
                             var total = [];
                             if (notifications.length)
                               total = notifications.reverse();
@@ -583,11 +599,34 @@ var facebookClient = {
                               total = total.concat(stream.reverse());
                             for (var i=0; i<total.length; i++) {
                                   var n = total[i];
+                                  var title = "Facebook";
+                                  var text = "";
+                                  var image = "chrome://firestatus/skin/facebook.png";
+                                  if (n.attachment && n.attachment.media && n.attachment.media[0]) {
+                                     var media = n.attachment.media[0];
+                                     image = media.src;
+                                     text = n.attachment.name;
+                                  }
+                                  if (n.actor_id) {
+                                    for (var u=0; u<users.length; u++) {
+                                      if (users[u].id==n.actor_id) {
+                                          title = users[u].name;
+                                          image = users[u].pic;
+                                          break;
+                                      }
+                                    }
+                                  }
+                                  if (n.title_text)
+                                    text += n.title_text;
+                                  else if (n.message)
+                                    text += " " + n.message;
+                                  if (n.attribution)
+                                    text += " (by " + n.attribution + ")";
                                   firestatus.queue.updateQueue.push({id: n.notification_id ? n.notification_id : n.post_id,
                                                                       timestamp: n.updated_time,
-                                                                      title: "Facebook",
-                                                                      image: "chrome://firestatus/skin/facebook.png",
-                                                                      text: n.title_text ? n.title_text : n.message,
+                                                                      title: title,
+                                                                      image: image,
+                                                                      text: text,
                                                                       link: n.href ? n.href : n.permalink
                                                                      });
                       						firestatus.queue.lastFacebookTimestamp = n.updated_time;
