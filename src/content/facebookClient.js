@@ -551,8 +551,8 @@ var facebookClient = {
                                 "where recipient_id=" + session.uid + 
                                 " and is_unread=1 and is_hidden=0 and updated_time>" + firestatus.queue.lastFacebookTimestamp;
 //        queries.stream = "select post_id, updated_time, message, permalink, message, attribution, actor_id from stream where viewer_id=" + session.uid + " and updated_time>" + firestatus.queue.lastFacebookTimestamp + " and is_hidden=0 and source_id in (SELECT target_id FROM connection WHERE source_id=" + session.uid + ")";    
-//        queries.user_stream = "select post_id, updated_time, message, permalink, message, attribution, actor_id, attachment from stream where updated_time>" + firestatus.queue.lastFacebookTimestamp + " and is_hidden=0 and source_id in (SELECT target_id FROM connection WHERE source_id=" + session.uid + ")";    
-        queries.user_stream = "select post_id, updated_time, message, permalink, message, attribution, actor_id, attachment from stream where updated_time>0 and is_hidden=0 and source_id in (SELECT target_id FROM connection WHERE source_id=" + session.uid + ")";    
+        queries.user_stream = "select post_id, updated_time, message, permalink, message, attribution, actor_id, attachment from stream where updated_time>" + firestatus.queue.lastFacebookTimestamp + " and is_hidden=0 and source_id in (SELECT target_id FROM connection WHERE source_id=" + session.uid + ")";    
+//        queries.user_stream = "select post_id, updated_time, message, permalink, message, attribution, actor_id, attachment from stream where updated_time>0 and is_hidden=0 and source_id in (SELECT target_id FROM connection WHERE source_id=" + session.uid + ")";    
         queries.users = "select id, name, pic from profile where id in (select actor_id from #user_stream)";
         var queriesStr = nativeJSON.encode(queries);    
         params.push('queries=' + queriesStr);
