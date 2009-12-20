@@ -1,0 +1,18 @@
+<!ENTITY firestatus.update "Αποστολή ενημέρωσης...">
+<!ENTITY firestatus.clear "Καθαρισμός ληφθέντων ενημερώσεων">
+<!ENTITY firestatus.pause "Παύση">
+<!ENTITY firestatus.resume "Συνέχεια">
+<!ENTITY firestatus.prefs "Επιλογές...">
+<!ENTITY firestatus.about "Περί...">
+<!ENTITY firestatus.iconTip "Kλικ για αποστολή, δεξί κλικ για μενού">
+<!ENTITY firestatus.close "Kλείσιμο">
+<!ENTITY firestatus.sendUrl "Μαζί με το URL">
+<!ENTITY firestatus.shortenUrl "...περιορισμένο">
+<!ENTITY firestatus.labelTwitter "Twitter">
+<!ENTITY firestatus.labelFacebook "Facebook">
+<!ENTITY firestatus.labelFriendFeed "FriendFeed">
+<!ENTITY firestatus.labelIdentica "Identi.ca">
+<!ENTITY firestatus.labelDelicious "del.icio.us">
+<!ENTITY firestatus.send "Aποστολή">
+<!ENTITY firestatus.sendTooltip "Aποστολή ενημέρωσης">
+<!ENTITY firestatus.labelTags "Tags">

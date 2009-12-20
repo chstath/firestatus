@@ -1,0 +1,55 @@
+<!ENTITY prefwindow.title "Eπιλογές του FireStatus">
+<!ENTITY twitterTab.label "Twitter">
+<!ENTITY friendfeedTab.label "FriendFeed">
+<!ENTITY facebookTab.label "Facebook">
+<!ENTITY deliciousTab.label "del.icio.us">
+<!ENTITY identicaTab.label "Identi.ca">
+<!ENTITY enabled.label "Αποστολή ενημερώσεων">
+<!ENTITY twitterEnabled.accesskey "T">
+<!ENTITY identicaEnabled.accesskey "T">
+<!ENTITY username.label "Όνομα χρήστη">
+<!ENTITY twitterUsername.accesskey "U">
+<!ENTITY identicaUsername.accesskey "U">
+<!ENTITY password.label "Συνθηματικό">
+<!ENTITY twitterPassword.accesskey "P">
+<!ENTITY identicaPassword.accesskey "P">
+<!ENTITY updatesEnabled.label "Λήψη ενημερώσεων">
+<!ENTITY twitterUpdatesEnabled.accesskey "S">
+<!ENTITY identicaUpdatesEnabled.accesskey "S">
+<!ENTITY timeout.label "Λεπτά μεταξύ λήψεων">
+<!ENTITY twitterTimeout.accesskey "M">
+<!ENTITY twitter-pane.title "Προτιμήσεις Twitter">
+<!ENTITY identicaTimeout.accesskey "M">
+<!ENTITY identica-pane.title "Προτιμήσεις Identi.ca">
+<!ENTITY friendfeed-pane.title "Προτιμήσεις FriendFeed">
+<!ENTITY friendfeedEnabled.accesskey "N">
+<!ENTITY friendfeedUsername.accesskey "R">
+<!ENTITY friendfeedPassword.accesskey "O">
+<!ENTITY friendfeedUpdatesEnabled.accesskey "D">
+<!ENTITY friendfeedTimeout.accesskey "E">
+<!ENTITY facebookEnabled.accesskey "A">
+<!ENTITY facebookUpdatesEnabled.accesskey "C">
+<!ENTITY facebookTimeout.accesskey "I">
+<!ENTITY remotekey.label "Remote Key">
+<!ENTITY friendfeed.note1 "Σημείωση: το δικό σας Remote Key">
+<!ENTITY friendfeed.note2 "μπορεί να βρεθεί στην ακόλουθη σελίδα:">
+<!ENTITY twitter.note1 "Σημείωση: εάν δε δοθεί όνομα">
+<!ENTITY twitter.note2 "χρήστη και συνθηματικό, το">
+<!ENTITY twitter.note3 "FireStatus θα τα αναζητήσει μέσα">
+<!ENTITY twitter.note4 "στα αποθηκευμένα συνθηματικά του">
+<!ENTITY twitter.note5 "Firefox. Αυτό πιθανώς να εμφανίσει">
+<!ENTITY twitter.note6 "το παράθυρο εισαγωγής του">
+<!ENTITY twitter.note7 "κύριου κωδικού.">
+<!ENTITY identica.note1 "Σημείωση: εάν δε δοθεί όνομα">
+<!ENTITY identica.note2 "χρήστη και συνθηματικό, το">
+<!ENTITY identica.note3 "FireStatus θα τα αναζητήσει μέσα">
+<!ENTITY identica.note4 "στα αποθηκευμένα συνθηματικά του">
+<!ENTITY identica.note5 "Firefox. Αυτό πιθανώς να εμφανίσει">
+<!ENTITY identica.note6 "το παράθυρο εισαγωγής του">
+<!ENTITY identica.note7 "κύριου κωδικού.">
+<!ENTITY urlShortening.label "Περιορισμός URL">
+<!ENTITY tinyUrl.label "tinyURL">
+<!ENTITY urlborg.label "urlBorg">
+<!ENTITY tinyUrl.accesskey "T">
+<!ENTITY urlborg.accesskey "B">
+<!ENTITY shared.label "Μοιρασμένοι σελιδοδείκτες">
