@@ -63,7 +63,7 @@ var facebookClient = {
                             //After getting the auth token we MUST send the user to the login page. If he is
                             //already logged on to facebook all is well. If he is not the rest of the process will fail. We need to fix this by somehow waiting for the
                             //user to successfuly login (how do we know that?)
-                            window.open("http://www.facebook.com/login.php?api_key=53cc37e556054cec6af3b1a672ea5849&v=1.0&popup=&auth_token=" + authToken, "", "chrome, centerscreen,width=646,height=520,modal=yes,close=yes");
+                            window.open("http://www.facebook.com/login.php?api_key=53cc37e556054cec6af3b1a672ea5849&v=1.0&popup=&auth_token=" + authToken, "", "centerscreen,width=646,height=520,modal=yes,close=yes");
                             var params2 = [];
                             params2.push('method=facebook.auth.getSession');
                             params2.push('api_key=' + facebookClient.apiKey);
@@ -289,7 +289,7 @@ var facebookClient = {
                             firestatus.cons.logStringMessage("Facebook returned code: " + code);
                             if (code == 250) {
                                 firestatus.cons.logStringMessage("Requesting authorization...");
-                                window.open("http://www.facebook.com/authorize.php?api_key=" + facebookClient.apiKey + "&v=1.0&ext_perm=status_update&popup=", "", "chrome, centerscreen,width=646,height=520,modal=yes,close=yes");
+                                window.open("http://www.facebook.com/authorize.php?api_key=" + facebookClient.apiKey + "&v=1.0&ext_perm=status_update&popup=", "", "centerscreen,width=646,height=520,modal=yes,close=yes");
                                 facebookClient.sendUpdate(params);
                             }
                             else if (code == 102 || code == 450 || code == 452) {
@@ -361,7 +361,7 @@ var facebookClient = {
                             firestatus.cons.logStringMessage("Facebook returned code: " + code);
                             if (code == 282) {
                                 firestatus.cons.logStringMessage("Requesting share_item extended permission...");
-                                window.open("http://www.facebook.com/authorize.php?api_key=" + facebookClient.apiKey + "&v=1.0&ext_perm=share_item&popup=", "", "chrome, centerscreen,width=646,height=520,modal=yes,close=yes");
+                                window.open("http://www.facebook.com/authorize.php?api_key=" + facebookClient.apiKey + "&v=1.0&ext_perm=share_item&popup=", "", "centerscreen,width=646,height=520,modal=yes,close=yes");
                                 facebookClient.sendLink(params, status, url);
                             }
                             else if (code == 102 || code == 450 || code == 452) {
@@ -450,7 +450,7 @@ var facebookClient = {
                             //After getting the auth token we MUST send the user to the login page. If he is
                             //already logged on to facebook all is well. If he is not the rest of the process will fail. We need to fix this by somehow waiting for the
                             //user to successfuly login (how do we know that?)
-                            window.open("http://www.facebook.com/login.php?api_key=53cc37e556054cec6af3b1a672ea5849&v=1.0&popup=&auth_token=" + authToken, "", "chrome, centerscreen,width=646,height=520,modal=yes,close=yes");
+                            window.open("http://www.facebook.com/login.php?api_key=53cc37e556054cec6af3b1a672ea5849&v=1.0&popup=&auth_token=" + authToken, "", "centerscreen,width=646,height=520,modal=yes,close=yes");
                             var params2 = [];
                             params2.push('method=facebook.auth.getSession');
                             params2.push('api_key=' + facebookClient.apiKey);
@@ -641,7 +641,7 @@ var facebookClient = {
                             firestatus.cons.logStringMessage("Facebook returned code: " + code);
                             if (code == 250) {
                                 firestatus.cons.logStringMessage("Requesting authorization...");
-                                window.open("http://www.facebook.com/authorize.php?api_key=" + facebookClient.apiKey + "&v=1.0&ext_perm=status_update&popup=", "", "chrome, centerscreen,width=646,height=520,modal=yes,close=yes");
+                                window.open("http://www.facebook.com/authorize.php?api_key=" + facebookClient.apiKey + "&v=1.0&ext_perm=status_update&popup=", "", "centerscreen,width=646,height=520,modal=yes,close=yes");
                                 facebookClient.getNotifications1(params);
                             }
                             else if (code == 102) {
@@ -650,7 +650,7 @@ var facebookClient = {
                             }
                             else if (code == 612) {
                                 firestatus.cons.logStringMessage("Requesting authorization...");
-                                window.open("http://www.facebook.com/authorize.php?api_key=" + facebookClient.apiKey + "&v=1.0&ext_perm=read_stream&popup=", "", "chrome, centerscreen,width=646,height=520,modal=yes,close=yes");
+                                window.open("http://www.facebook.com/authorize.php?api_key=" + facebookClient.apiKey + "&v=1.0&ext_perm=read_stream&popup=", "", "centerscreen,width=646,height=520,modal=yes,close=yes")
                                 facebookClient.getNotifications1(params);
                             }
                         }
