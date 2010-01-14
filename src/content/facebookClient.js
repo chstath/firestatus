@@ -650,8 +650,17 @@ var facebookClient = {
                             }
                             else if (code == 612) {
                                 firestatus.cons.logStringMessage("Requesting authorization...");
-                                window.open("http://www.facebook.com/authorize.php?api_key=" + facebookClient.apiKey + "&v=1.0&ext_perm=read_stream&popup=", "", "centerscreen,width=646,height=520,modal=yes,close=yes")
-                                facebookClient.getNotifications1(params);
+                                gBrowser.selectedTab = gBrowser.addTab("http://www.facebook.com/authorize.php?api_key=" + facebookClient.apiKey + "&v=1.0&ext_perm=read_stream");
+                                var newTabBrowser = gBrowser.getBrowserForTab(gBrowser.selectedTab);
+                                newTabBrowser.addEventListener("load", function () {
+                                      if (newTabBrowser.contentDocument.body.innerHTML.indexOf("You may now close this window") !== -1) {
+                                        gBrowser.removeCurrentTab();
+                                        facebookClient.getNotifications1(params);
+                                      }
+                                      
+                                }, true);
+
+//                                var wnd = window.open("http://www.facebook.com/authorize.php?api_key=" + facebookClient.apiKey + "&v=1.0&ext_perm=read_stream&popup=", "auth", "chrome,width=646,height=520,modal=yes");
                             }
                         }
                         break;

@@ -59,7 +59,8 @@ var firestatus = {
 	ffInitialQueue: [],
 	statusInputWindow: null,
 	initialTimeoutId: 0,
-
+  initialized: false,
+  
 	onLoad: function(){
 		// Initialization code
 		this.initialized = true;
