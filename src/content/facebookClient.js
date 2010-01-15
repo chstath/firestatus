@@ -289,8 +289,15 @@ var facebookClient = {
                             firestatus.cons.logStringMessage("Facebook returned code: " + code);
                             if (code == 250) {
                                 firestatus.cons.logStringMessage("Requesting authorization...");
-                                window.open("http://www.facebook.com/authorize.php?api_key=" + facebookClient.apiKey + "&v=1.0&ext_perm=status_update&popup=", "", "centerscreen,width=646,height=520,modal=yes,close=yes");
-                                facebookClient.sendUpdate(params);
+                                gBrowser.selectedTab = gBrowser.addTab("http://www.facebook.com/authorize.php?api_key=" + facebookClient.apiKey + "&v=1.0&ext_perm=status_update");
+                                var newTabBrowser = gBrowser.getBrowserForTab(gBrowser.selectedTab);
+                                newTabBrowser.addEventListener("load", function () {
+                                      if (newTabBrowser.contentDocument.body.innerHTML.indexOf("You may now close this window") !== -1) {
+                                        gBrowser.removeCurrentTab();
+                                        facebookClient.sendUpdate(params);
+                                      }
+                                      
+                                }, true);
                             }
                             else if (code == 102 || code == 450 || code == 452) {
                                 firestatus.cons.logStringMessage("Asking for new session key...");
@@ -361,8 +368,15 @@ var facebookClient = {
                             firestatus.cons.logStringMessage("Facebook returned code: " + code);
                             if (code == 282) {
                                 firestatus.cons.logStringMessage("Requesting share_item extended permission...");
-                                window.open("http://www.facebook.com/authorize.php?api_key=" + facebookClient.apiKey + "&v=1.0&ext_perm=share_item&popup=", "", "centerscreen,width=646,height=520,modal=yes,close=yes");
-                                facebookClient.sendLink(params, status, url);
+                                 gBrowser.selectedTab = gBrowser.addTab("http://www.facebook.com/authorize.php?api_key=" + facebookClient.apiKey + "&v=1.0&ext_perm=share_item");
+                                var newTabBrowser = gBrowser.getBrowserForTab(gBrowser.selectedTab);
+                                newTabBrowser.addEventListener("load", function () {
+                                      if (newTabBrowser.contentDocument.body.innerHTML.indexOf("You may now close this window") !== -1) {
+                                        gBrowser.removeCurrentTab();
+                                        facebookClient.sendLink(params, status, url);
+                                      }
+                                      
+                                }, true);
                             }
                             else if (code == 102 || code == 450 || code == 452) {
                                 firestatus.cons.logStringMessage("Asking for new session key...");
@@ -551,7 +565,7 @@ var facebookClient = {
                                 "where recipient_id=" + session.uid + 
                                 " and is_unread=1 and is_hidden=0 and updated_time>" + firestatus.queue.lastFacebookTimestamp;
 //        queries.stream = "select post_id, updated_time, message, permalink, message, attribution, actor_id from stream where viewer_id=" + session.uid + " and updated_time>" + firestatus.queue.lastFacebookTimestamp + " and is_hidden=0 and source_id in (SELECT target_id FROM connection WHERE source_id=" + session.uid + ")";    
-        queries.user_stream = "select post_id, updated_time, message, permalink, message, attribution, actor_id, attachment from stream where updated_time>" + firestatus.queue.lastFacebookTimestamp + " and is_hidden=0 and source_id in (SELECT target_id FROM connection WHERE source_id=" + session.uid + ")";    
+        queries.user_stream = "select post_id, updated_time, message, permalink, attribution, actor_id, attachment from stream where updated_time>" + firestatus.queue.lastFacebookTimestamp + " and is_hidden=0 and source_id in (SELECT target_id FROM connection WHERE source_id=" + session.uid + ")";    
 //        queries.user_stream = "select post_id, updated_time, message, permalink, message, attribution, actor_id, attachment from stream where updated_time>0 and is_hidden=0 and source_id in (SELECT target_id FROM connection WHERE source_id=" + session.uid + ")";    
         queries.users = "select id, name, pic from profile where id in (select actor_id from #user_stream)";
         var queriesStr = nativeJSON.encode(queries);    
@@ -605,7 +619,8 @@ var facebookClient = {
                                   if (n.attachment && n.attachment.media && n.attachment.media[0]) {
                                      var media = n.attachment.media[0];
                                      image = media.src;
-                                     text = n.attachment.name;
+                                     if (n.attachment.name)
+                                        text = n.attachment.name;
                                   }
                                   if (n.actor_id) {
                                     for (var u=0; u<users.length; u++) {
@@ -617,7 +632,7 @@ var facebookClient = {
                                     }
                                   }
                                   if (n.title_text)
-                                    text += n.title_text;
+                                    text += " " + n.title_text;
                                   else if (n.message)
                                     text += " " + n.message;
                                   if (n.attribution)
@@ -641,8 +656,15 @@ var facebookClient = {
                             firestatus.cons.logStringMessage("Facebook returned code: " + code);
                             if (code == 250) {
                                 firestatus.cons.logStringMessage("Requesting authorization...");
-                                window.open("http://www.facebook.com/authorize.php?api_key=" + facebookClient.apiKey + "&v=1.0&ext_perm=status_update&popup=", "", "centerscreen,width=646,height=520,modal=yes,close=yes");
-                                facebookClient.getNotifications1(params);
+                                gBrowser.selectedTab = gBrowser.addTab("http://www.facebook.com/authorize.php?api_key=" + facebookClient.apiKey + "&v=1.0&ext_perm=status_update");
+                                var newTabBrowser = gBrowser.getBrowserForTab(gBrowser.selectedTab);
+                                newTabBrowser.addEventListener("load", function () {
+                                      if (newTabBrowser.contentDocument.body.innerHTML.indexOf("You may now close this window") !== -1) {
+                                        gBrowser.removeCurrentTab();
+                                        facebookClient.getNotifications1(params);
+                                      }
+                                      
+                                }, true);
                             }
                             else if (code == 102) {
                                 firestatus.cons.logStringMessage("Asking for new session key...");
@@ -659,8 +681,6 @@ var facebookClient = {
                                       }
                                       
                                 }, true);
-
-//                                var wnd = window.open("http://www.facebook.com/authorize.php?api_key=" + facebookClient.apiKey + "&v=1.0&ext_perm=read_stream&popup=", "auth", "chrome,width=646,height=520,modal=yes");
                             }
                         }
                         break;
