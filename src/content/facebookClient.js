@@ -631,10 +631,12 @@ var facebookClient = {
                                       }
                                     }
                                   }
-                                  if (n.title_text)
+                                  if (n.title_text && n.title_text != text)
                                     text += " " + n.title_text;
-                                  else if (n.message)
+                                  else if (n.message && n.message != text)
                                     text += " " + n.message;
+                                  if (text == "" && n.attachment)
+                                    text += n.attachment.href;
                                   if (n.attribution)
                                     text += " (by " + n.attribution + ")";
                                   firestatus.queue.updateQueue.push({id: n.notification_id ? n.notification_id : n.post_id,
