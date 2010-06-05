@@ -81,6 +81,7 @@ var firestatus = {
 	    this.twitterUpdatesEnabled = this.prefs.getBoolPref("twitterUpdatesEnabled");
 	    this.twitterUsername = this.prefs.getCharPref("twitterUsername");
 	    this.twitterPassword = this.prefs.getCharPref("twitterPassword");
+        twitterClient.loadOauthPrefs();
 	    this.twitterTimeout = this.prefs.getIntPref("twitterTimeout");
 	    this.queue.lastTwitterId = this.prefs.getIntPref("lastTwitterId");
 	    this.queue.lastTwitterTimestamp = this.prefs.getCharPref("lastTwitterTimestamp");
@@ -275,8 +276,8 @@ var firestatus = {
         }
 		firestatus.queue.processingQueue = false;
         if (firestatus.twitterUpdatesEnabled) {
-		  firestatus.twitterUpdates();
-		  firestatus.twitterTimeoutId = window.setInterval(firestatus.twitterUpdates, firestatus.twitterTimeout*60*1000);
+		  twitterClient.twitterUpdates();
+		  firestatus.twitterTimeoutId = window.setInterval(twitterClient.twitterUpdates, firestatus.twitterTimeout*60*1000);
 		}
 		if (firestatus.friendfeedUpdatesEnabled) {
 		  firestatus.friendfeedUpdates();
@@ -323,8 +324,8 @@ var firestatus = {
 			case "twitterUpdatesEnabled":
 		    	this.twitterUpdatesEnabled = this.prefs.getBoolPref("twitterUpdatesEnabled");
 				if (this.twitterUpdatesEnabled) {
-					this.twitterUpdates();
-			        this.twitterTimeoutId = window.setInterval(this.twitterUpdates,
+					twitterClient.twitterUpdates();
+			        this.twitterTimeoutId = window.setInterval(twitterClient.twitterUpdates,
 															   this.twitterTimeout*60*1000);
 				} else
 					this.cancelUpdates("twitter");
@@ -339,7 +340,7 @@ var firestatus = {
 		    	this.twitterTimeout = this.prefs.getIntPref("twitterTimeout");
 				if (this.twitterUpdatesEnabled) {
 					this.cancelUpdates("twitter");
-			        this.twitterTimeoutId = window.setInterval(this.twitterUpdates,
+			        this.twitterTimeoutId = window.setInterval(twitterClient.twitterUpdates,
 															   this.twitterTimeout*60*1000);
 				}
 		    	break;
@@ -528,68 +529,6 @@ var firestatus = {
 		}
 	},
   
-	twitterUpdates: function() {
-		if (firestatus.queue.processingQueue) return;
-		var milliseconds = new Number(firestatus.queue.lastTwitterTimestamp);
-		var FRIENDS_URL = firestatus.TWITTER_URL + '/statuses/friends_timeline.json?since=' +
-						encodeURIComponent(new Date(milliseconds).toUTCString());
-	    var req = new XMLHttpRequest();
-	    req.open('GET', FRIENDS_URL, true);
-	    req.onreadystatechange = function (aEvt) {
-	      if (req.readyState == 4) {
-	             if(req.status == 200) {
-		            	var Ci = Components.interfaces;
-		            	var Cc = Components.classes;
-		            	var nativeJSON = Cc["@mozilla.org/dom/json;1"].createInstance(Ci.nsIJSON);
-	                    var jsonString = req.responseText;
-						var statuses = nativeJSON.decode(jsonString);
-						if (statuses.length == 0)
-							return;
-						// Sort the status updates, oldest first.
-						statuses.sort(function(a, b) {
-										return a.id - b.id;
-									});
-						for (var i = 0; i < statuses.length; i++) {
-							var status = statuses[i];
-							var t = Date.parse(status.created_at);
-							if (status.id <= firestatus.queue.lastTwitterId)
-								continue;
-							var text = "";
-							try {
-							  text = decodeURI(status.text);
-							} catch (error) {
-							  firestatus.cons.logStringMessage("Error decoding twitter update: " +
-											   status.text);
-							  text = status.text;
-							}
-							firestatus.queue.updateQueue.push({id: status.id,
-									timestamp: t,
-									image: status.user.profile_image_url,
-									title: status.user.name,
-									text: status.text,
-									link: firestatus.TWITTER_URL + '/' + status.user.screen_name +
-                                            '/status/' + status.id});
-						}
-						firestatus.queue.lastTwitterId = status.id;
-						firestatus.queue.lastTwitterTimestamp = t;
-						firestatus.prefs.setIntPref("lastTwitterId", status.id);
-						firestatus.prefs.setCharPref("lastTwitterTimestamp", t);
-						if (!firestatus.queue.processingQueue) {
-							firestatus.queue.processingQueue = true;
-							firestatus.queue.displayNotification();
-						}
-	             } else if(req.status == 304)
-				 	return;
-				 else
-	             	firestatus.cons.logStringMessage("Error loading Twitter page. " +
-													 "req.status="+req.status);
-	      }
-	    };
-	    var auth = firestatus.twitterUsername+":"+firestatus.twitterPassword;
-	    req.setRequestHeader("Authorization", "Basic "+btoa(auth));
-	    req.send(null);
-	},
-	
 	friendfeedUpdates: function() {
 		if (firestatus.queue.processingQueue) return;
 		var FRIENDS_URL = firestatus.FRIENDFEED_URL + '/api/feed/home';
