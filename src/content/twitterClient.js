@@ -124,9 +124,7 @@ twitterClient.twitterUpdates = function() {
 	if (firestatus.queue.processingQueue) return;
 
     var httpMethod = "GET";
-	var milliseconds = new Number(firestatus.queue.lastTwitterTimestamp);
-    var homeUrl = "http://api.twitter.com/1/statuses/home_timeline.json?since=" +
-					encodeURIComponent(new Date(milliseconds).toUTCString());
+    var homeUrl = "http://api.twitter.com/1/statuses/home_timeline.json?since_id=" + firestatus.queue.lastTwitterId;
 
     if (twitterClient.oauthToken == "" || twitterClient.oauthTokenSecret == "")
         twitterClient.authenticate(twitterClient.twitterUpdates);
@@ -166,7 +164,6 @@ twitterClient.twitterUpdates = function() {
 						  text = status.text;
 						}
 						firestatus.queue.updateQueue.push({id: status.id,
-								timestamp: t,
 								image: status.user.profile_image_url,
 								title: status.user.name,
 								text: status.text,
@@ -174,9 +171,7 @@ twitterClient.twitterUpdates = function() {
                                         '/status/' + status.id});
 					}
 					firestatus.queue.lastTwitterId = status.id;
-					firestatus.queue.lastTwitterTimestamp = t;
 					firestatus.prefs.setIntPref("lastTwitterId", status.id);
-					firestatus.prefs.setCharPref("lastTwitterTimestamp", t);
 					if (!firestatus.queue.processingQueue) {
 						firestatus.queue.processingQueue = true;
 						firestatus.queue.displayNotification();

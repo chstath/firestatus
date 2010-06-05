@@ -84,7 +84,6 @@ var firestatus = {
         twitterClient.loadOauthPrefs();
 	    this.twitterTimeout = this.prefs.getIntPref("twitterTimeout");
 	    this.queue.lastTwitterId = this.prefs.getIntPref("lastTwitterId");
-	    this.queue.lastTwitterTimestamp = this.prefs.getCharPref("lastTwitterTimestamp");
 		
 		if (this.twitterUpdatesEnabled || this.twitterEnabled) {
 			// If no Twitter credentials are set, try the login manager.
