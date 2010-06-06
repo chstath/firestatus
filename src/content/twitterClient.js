@@ -178,9 +178,11 @@ twitterClient.twitterUpdates = function() {
 					}
              } else if(req.status == 304)
 			 	return;
-//			 else if (req.status == lalala) { //oauth_token expired
-//   			 twitterClient.authenticate(twitterClient.twitterUpdates);
-//			 } 	
+			 else if (req.status == 401) { //oauth_token expired
+			    twitterClient.oauthToken = "";
+			    twitterClient.oauthTokenSecret = ""; //Must be cleared
+                twitterClient.authenticate(twitterClient.twitterUpdates);
+			 } 	
 			 else
              	firestatus.cons.logStringMessage("Error loading Twitter page. " +
 											 "req.status="+req.status);
