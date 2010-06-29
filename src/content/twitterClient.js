@@ -42,7 +42,7 @@ twitterClient.getOauthHeader = function(httpMethod, url, parameters) {
     return OAuth.getAuthorizationHeader("", message.parameters);
 };
 
-twitterClient.requestAccessToken = function(requestToken, pin, doNext) {
+twitterClient.requestAccessToken = function(requestToken, pin, doNext, nextParams) {
     var httpMethod = "POST";
     var accessTokenUrl = "https://api.twitter.com/oauth/access_token";    
     var parameters = [];
@@ -65,19 +65,26 @@ twitterClient.requestAccessToken = function(requestToken, pin, doNext) {
                     var screen_name = tokens[3].substring(tokens[3].indexOf('=') + 1);
                     twitterClient.oauthToken = oauth_token;
                     twitterClient.oauthTokenSecret = oauth_token_secret;
-                    firestatus.prefs.setCharPref(")", oauth_token);
+                    firestatus.prefs.setCharPref("twitter_oauth_token", oauth_token);
                     firestatus.prefs.setCharPref("twitter_oauth_token_secret", oauth_token_secret);
                     firestatus.prefs.setCharPref("twitter_user_id", user_id);
                     firestatus.prefs.setCharPref("twitter_screen_name", screen_name);
-                    doNext();
-                break;
+                    if (nextParams)
+                        doNext(nextParams[0], nextParams[1]);
+                    else
+                        doNext();
+                    break;
+                default:
+                    alert("Failed to request access token from twitter. Reponse was " + req.status);
             }
         }
     }
     req.send(null);
 };
 
-twitterClient.authenticate = function (doNext) {
+twitterClient.authenticate = function (doNext, nextParams) {
+    twitterClient.oauthToken = "";
+    twitterClient.oauthTokenSecret = ""; //Must be cleared
     var httpMethod = "POST";
     var requestTokenUrl = "https://api.twitter.com/oauth/request_token";
     var authorizationUrl = "https://api.twitter.com/oauth/authorize";
@@ -101,7 +108,10 @@ twitterClient.authenticate = function (doNext) {
                     twitterClient.oauthTokenSecret = tokens[1].substring(tokens[1].indexOf('=') + 1);
                     window.open(authorizationUrl + "?oauth_token=" + oauth_token, "", "centerscreen,width=646,height=520,modal=yes,close=yes,chrome");
                     var pin = prompt("Enter PIN from twitter:");
-                    twitterClient.requestAccessToken(oauth_token, pin, doNext);
+                    twitterClient.requestAccessToken(oauth_token, pin, doNext, nextParams);
+                    break;
+                default:
+                    alert("Failed to authenticate with twitter. Reponse was " + req.status);
             }
         }
     }
@@ -126,8 +136,10 @@ twitterClient.twitterUpdates = function() {
     var httpMethod = "GET";
     var homeUrl = "http://api.twitter.com/1/statuses/home_timeline.json?since_id=" + firestatus.queue.lastTwitterId;
 
-    if (twitterClient.oauthToken == "" || twitterClient.oauthTokenSecret == "")
+    if (twitterClient.oauthToken == "" || twitterClient.oauthTokenSecret == "") {
         twitterClient.authenticate(twitterClient.twitterUpdates);
+        return;
+    }
         
     var parameters = [];
     parameters.push(["oauth_token", twitterClient.oauthToken]);
@@ -179,15 +191,79 @@ twitterClient.twitterUpdates = function() {
              } else if(req.status == 304)
 			 	return;
 			 else if (req.status == 401) { //oauth_token expired
-			    twitterClient.oauthToken = "";
-			    twitterClient.oauthTokenSecret = ""; //Must be cleared
                 twitterClient.authenticate(twitterClient.twitterUpdates);
 			 } 	
 			 else
-             	firestatus.cons.logStringMessage("Error loading Twitter page. " +
+             	firestatus.cons.logStringMessage("Error getting Twitter updates. " +
 											 "req.status="+req.status);
       }   
     };
     req.send(null);
+};
+
+twitterClient.sendStatusUpdateTwitter = function (statusText, url) {
+    if (twitterClient.oauthToken == "" || twitterClient.oauthTokenSecret == "") {
+        twitterClient.authenticate(twitterClient.sendStatusUpdateTwitter, [statusText, url]);
+        return;
+    }
+
+    var status = statusText;
+
+	if (url)
+	    status += " " + url;
+
+    var httpMethod = 'POST';
+	var postUrl = 'http://api.twitter.com/1/statuses/update.json';
+
+    var parameters = [];
+    parameters.push(["oauth_token", twitterClient.oauthToken]);
+    parameters.push(["status", status]);
+    
+    var oauthHeader = twitterClient.getOauthHeader(httpMethod, postUrl, parameters);
+
+	var req = new XMLHttpRequest ();   
+	req.open("POST", postUrl, true);
+    req.setRequestHeader("Authorization", oauthHeader);
+    req.onreadystatechange = function () {
+	    if (req.readyState == 4) {
+		    switch(req.status) {
+			    case 200:
+				    firestatus.cons.logStringMessage("Twitter update sent.");
+					document.getElementById('statusText').value = '';
+					break;
+				case 400:
+					firestatus.cons.logStringMessage("Twitter response: Bad Request");
+					break;
+				case 401:
+					firestatus.cons.logStringMessage("Twitter response: Not Authorized");
+                    twitterClient.authenticate(twitterClient.sendStatusUpdateTwitter, [statusText, url]);
+					return;
+				case 403:
+					firestatus.cons.logStringMessage("Twitter response: Forbidden");
+					break;
+				case 404:
+					firestatus.cons.logStringMessage("Twitter response: Not Found");
+					break;
+				case 500:
+					firestatus.cons.logStringMessage("Twitter response: Internal Server Error");
+					break;
+				case 502:
+					firestatus.cons.logStringMessage("Twitter response: Bad Gateway");
+					break;
+				case 503:
+					firestatus.cons.logStringMessage("Twitter response: Service Unavailable");
+					break;
+				default:
+					firestatus.cons.logStringMessage("Unknown Twitter status: "+req.status);
+					firestatus.cons.logStringMessage("Twitter response: "+req.responseText);
+			}
+			if (req.status != 200)
+			    alert("Failed to update twitter. Response was " + req.status);
+		}
+	};
+	status = "status=" + encodeURIComponent(status);
+	req.setRequestHeader("Content-length", status.length);
+	req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;");
+	req.send(status); 
 };
 
