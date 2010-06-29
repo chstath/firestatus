@@ -751,7 +751,7 @@ var firestatus = {
 	
 	actuallySendUpdate: function(statusText, url, deliciousTags, sendTwitter, sendFriendfeed, sendFacebook, sendDelicious, sendIdentica) {
 		if (sendTwitter) {
-			firestatus.sendStatusUpdateTwitter(statusText, url);
+			twitterClient.sendStatusUpdateTwitter(statusText, url);
 		}
 		if (sendFriendfeed) {
 			firestatus.sendStatusUpdateFriendfeed(statusText, url);
@@ -778,55 +778,6 @@ var firestatus = {
 		firestatus.facebookClient.updateStatus(statusText, url);
 	},
 
-	sendStatusUpdateTwitter: function (statusText, url) {
-	    var params = "source=firestatus";
-	    if (url)
-	      statusText += " " + url;
-	    var status = encodeURIComponent(statusText);
-	    params += "&status="+status;
-	    var req = new XMLHttpRequest ();   
-	    var POST_URL = firestatus.TWITTER_URL + '/statuses/update.json';
-	    req.open("POST", POST_URL, true);
-	    req.onreadystatechange = function () {
-			if (req.readyState == 4) {
-			     switch(req.status) {
-				 	case 200:
-					 	firestatus.cons.logStringMessage("Twitter update sent.");
-						document.getElementById('statusText').value = '';
-						break;
-					case 400:
-						firestatus.cons.logStringMessage("Twitter response: Bad Request");
-						break;
-					case 401:
-						firestatus.cons.logStringMessage("Twitter response: Not Authorized");
-						break;
-					case 403:
-						firestatus.cons.logStringMessage("Twitter response: Forbidden");
-						break;
-					case 404:
-						firestatus.cons.logStringMessage("Twitter response: Not Found");
-						break;
-					case 500:
-						firestatus.cons.logStringMessage("Twitter response: Internal Server Error");
-						break;
-					case 502:
-						firestatus.cons.logStringMessage("Twitter response: Bad Gateway");
-						break;
-					case 503:
-						firestatus.cons.logStringMessage("Twitter response: Service Unavailable");
-						break;
-					default:
-						firestatus.cons.logStringMessage("Unknown Twitter status: "+req.status);
-						firestatus.cons.logStringMessage("Twitter response: "+req.responseText);
-				 }
-			}
-		};
-	    var auth = firestatus.twitterUsername + ":" + firestatus.twitterPassword;
-	    req.setRequestHeader("Authorization", "Basic "+btoa(auth));
-	    req.setRequestHeader("Content-length", params.length);
-	    req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;");
-	    req.send(params); 
-	},
 
 	sendStatusUpdateFriendfeed: function(statusText, url) {
 	    var status = encodeURIComponent(statusText);
