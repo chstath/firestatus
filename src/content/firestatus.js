@@ -27,8 +27,6 @@ var firestatus = {
 	prefs: null,
 	twitterEnabled: false,
 	twitterUpdatesEnabled: false,
-	twitterUsername: "",
-	twitterPassword: "",
 	twitterTimeoutId: 0,
 	twitterTimeout: 5,
 	friendfeedEnabled: false,
@@ -79,34 +77,9 @@ var firestatus = {
 	    
 	    this.twitterEnabled = this.prefs.getBoolPref("twitterEnabled");
 	    this.twitterUpdatesEnabled = this.prefs.getBoolPref("twitterUpdatesEnabled");
-	    this.twitterUsername = this.prefs.getCharPref("twitterUsername");
-	    this.twitterPassword = this.prefs.getCharPref("twitterPassword");
         twitterClient.loadOauthPrefs();
 	    this.twitterTimeout = this.prefs.getIntPref("twitterTimeout");
 	    this.queue.lastTwitterId = this.prefs.getIntPref("lastTwitterId");
-		
-		if (this.twitterUpdatesEnabled || this.twitterEnabled) {
-			// If no Twitter credentials are set, try the login manager.
-			if (!this.twitterUsername || !this.twitterPassword) {
-				try {
-					// Get Login Manager 
-					var loginManager = Components.classes["@mozilla.org/login-manager;1"].getService(Components.interfaces.nsILoginManager);
-					
-					// Find users for the given parameters
-					var logins = loginManager.findLogins({}, this.TWITTER_URL_S, this.TWITTER_URL_S, null);
-					
-					// Pick the first entry from the returned array of nsILoginInfo objects.
-					if (logins.length > 0) {
-						this.cons.logStringMessage("Using the password manager stored credentials for Twitter.");
-						this.twitterUsername = logins[0].username;
-						this.twitterPassword = logins[0].password;
-					}
-				} 
-				catch (ex) {
-					this.cons.logStringMessage("Error while loading the Login Manager: " + ex);
-				}
-			}
-		}
 		
 	    this.friendfeedEnabled = this.prefs.getBoolPref("friendfeedEnabled");
 	    this.friendfeedUpdatesEnabled = this.prefs.getBoolPref("friendfeedUpdatesEnabled");
@@ -328,12 +301,6 @@ var firestatus = {
 															   this.twitterTimeout*60*1000);
 				} else
 					this.cancelUpdates("twitter");
-		    	break;
-			case "twitterUsername":
-		    	this.twitterUsername = this.prefs.getCharPref("twitterUsername");
-		    	break;
-			case "twitterPassword":
-		    	this.twitterPassword = this.prefs.getCharPref("twitterPassword");
 		    	break;
 			case "twitterTimeout":
 		    	this.twitterTimeout = this.prefs.getIntPref("twitterTimeout");

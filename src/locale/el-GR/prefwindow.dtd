@@ -8,10 +8,8 @@
 <!ENTITY twitterEnabled.accesskey "T">
 <!ENTITY identicaEnabled.accesskey "T">
 <!ENTITY username.label "Όνομα χρήστη">
-<!ENTITY twitterUsername.accesskey "U">
 <!ENTITY identicaUsername.accesskey "U">
 <!ENTITY password.label "Συνθηματικό">
-<!ENTITY twitterPassword.accesskey "P">
 <!ENTITY identicaPassword.accesskey "P">
 <!ENTITY updatesEnabled.label "Λήψη ενημερώσεων">
 <!ENTITY twitterUpdatesEnabled.accesskey "S">
