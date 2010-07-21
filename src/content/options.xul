@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  - Copyright (c) 2008 Panagiotis Astithas
+  -
+  - Permission to use, copy, modify, and distribute this software for any
+  - purpose with or without fee is hereby granted, provided that the above
+  - copyright notice and this permission notice appear in all copies.
+  -
+  - THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+  - WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+  - MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+  - ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+  - WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+  - ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+  - OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+  - -->
+
+<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+<!DOCTYPE prefwindow SYSTEM "chrome://firestatus/locale/prefwindow.dtd">
+<prefwindow id="firestatusPreferences"
+			xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+			title="&prefwindow.title;"
+			type="prefwindow">
+  <prefpane id="pref-pane" label="&prefwindow.title;">
+    <preferences>
+      <preference id="twitterEnabled" name="extensions.firestatus.twitterEnabled" type="bool"/>
+      <preference id="twitterUpdatesEnabled" name="extensions.firestatus.twitterUpdatesEnabled" type="bool"/>
+      <preference id="twitterTimeout" name="extensions.firestatus.twitterTimeout" type="int"/>
+      <preference id="lastTwitterId" name="extensions.firestatus.lastTwitterId" type="int"/>
+      <preference id="lastTwitterTimestamp" name="extensions.firestatus.lastTwitterTimestamp" type="string"/>
+      <preference id="friendfeedEnabled" name="extensions.firestatus.friendfeedEnabled" type="bool"/>
+      <preference id="friendfeedUpdatesEnabled" name="extensions.firestatus.friendfeedUpdatesEnabled" type="bool"/>
+      <preference id="friendfeedUsername" name="extensions.firestatus.friendfeedUsername" type="string"/>
+      <preference id="friendfeedPassword" name="extensions.firestatus.friendfeedPassword" type="string"/> <!-- note that this is only an ASCII string - use unichar for unicode strings -->
+      <preference id="friendfeedTimeout" name="extensions.firestatus.friendfeedTimeout" type="int"/>
+      <preference id="lastFriendfeedId" name="extensions.firestatus.lastFriendfeedId" type="string"/>
+      <preference id="facebookEnabled" name="extensions.firestatus.facebookEnabled" type="bool"/>
+      <preference id="facebookUpdatesEnabled" name="extensions.firestatus.facebookUpdatesEnabled" type="bool"/>
+      <preference id="facebookTimeout" name="extensions.firestatus.facebookTimeout" type="int"/>
+      <preference id="deliciousEnabled" name="extensions.firestatus.deliciousEnabled" type="bool"/>
+      <preference id="deliciousShared" name="extensions.firestatus.deliciousShared" type="bool"/>
+      <preference id="deliciousUpdatesEnabled" name="extensions.firestatus.deliciousUpdatesEnabled" type="bool"/>
+      <preference id="deliciousUsername" name="extensions.firestatus.deliciousUsername" type="string"/>
+      <preference id="deliciousPassword" name="extensions.firestatus.deliciousPassword" type="string"/> <!-- note that this is only an ASCII string - use unichar for unicode strings -->
+      <preference id="deliciousTimeout" name="extensions.firestatus.deliciousTimeout" type="int"/>
+      <preference id="lastDeliciousTimestamp" name="extensions.firestatus.lastDeliciousTimestamp" type="string"/>
+      <preference id="identicaEnabled" name="extensions.firestatus.identicaEnabled" type="bool"/>
+      <preference id="identicaUpdatesEnabled" name="extensions.firestatus.identicaUpdatesEnabled" type="bool"/>
+      <preference id="identicaUsername" name="extensions.firestatus.identicaUsername" type="string"/>
+      <preference id="identicaPassword" name="extensions.firestatus.identicaPassword" type="string"/> <!-- note that this is only an ASCII string - use unichar for unicode strings -->
+      <preference id="identicaTimeout" name="extensions.firestatus.identicaTimeout" type="int"/>
+      <preference id="lastIdenticaId" name="extensions.firestatus.lastIdenticaId" type="int"/>
+      <preference id="lastIdenticaTimestamp" name="extensions.firestatus.lastIdenticaTimestamp" type="string"/>
+      <preference id="shortURLService" name="extensions.firestatus.shortURLService" type="string"/>
+    </preferences>
+
+	<hbox>
+	<groupbox>
+		<caption label="&twitterTab.label;"/>
+        
+		    <checkbox id="twitterEnabled" preference="twitterEnabled" label="&enabled.label;" accesskey="&twitterEnabled.accesskey;" image="chrome://firestatus/skin/twitter.png"/>
+		    <checkbox id="twitterUpdatesEnabled" preference="twitterUpdatesEnabled" label="&updatesEnabled.label;" accesskey="&twitterUpdatesEnabled.accesskey;" image="chrome://firestatus/skin/twitter.png"/>
+		    <label accesskey="&twitterTimeout.accesskey;" control="textTwitterTimeout">&timeout.label;</label><textbox id="textTwitterTimeout" preference="twitterTimeout"/>
+	</groupbox>
+
+	<groupbox>
+        <caption label="&friendfeedTab.label;"/>
+        
+		    <checkbox id="friendfeedEnabled" preference="friendfeedEnabled" label="&enabled.label;" accesskey="&friendfeedEnabled.accesskey;" image="chrome://firestatus/skin/friendfeed.png"/>
+		    <checkbox id="friendfeedUpdatesEnabled" preference="friendfeedUpdatesEnabled" label="&updatesEnabled.label;" accesskey="&friendfeedUpdatesEnabled.accesskey;" image="chrome://firestatus/skin/friendfeed.png"/>
+		    <label accesskey="&friendfeedUsername.accesskey;" control="textFriendfeedUsername">&username.label;</label><textbox id="textFriendfeedUsername" preference="friendfeedUsername"/>
+		    <label accesskey="&friendfeedPassword.accesskey;" control="textFriendfeedPassword">&remotekey.label;</label><textbox id="textFriendfeedPassword" preference="friendfeedPassword" type="password"/>
+		    <label accesskey="&friendfeedTimeout.accesskey;" control="textFriendfeedTimeout">&timeout.label;</label><textbox id="textFriendfeedTimeout" preference="friendfeedTimeout"/>
+   		    <label>&friendfeed.note1;</label>
+			<label>&friendfeed.note2;</label>
+			<label href='http://friendfeed.com/remotekey' class='text-link'>http://friendfeed.com/remotekey</label>
+	</groupbox>
+
+	<groupbox>
+        <caption label="&facebookTab.label;"/>
+	    <checkbox id="facebookEnabled" preference="facebookEnabled" label="&enabled.label;" accesskey="&facebookEnabled.accesskey;" image="chrome://firestatus/skin/facebook.png"/>
+	    <checkbox id="facebookUpdatesEnabled" preference="facebookUpdatesEnabled" label="&updatesEnabled.label;" accesskey="&facebookUpdatesEnabled.accesskey;" image="chrome://firestatus/skin/facebook.png"/>
+	    <label accesskey="&facebookTimeout.accesskey;" control="textFacebookTimeout">&timeout.label;</label><textbox id="textFacebookTimeout" preference="facebookTimeout"/>
+	</groupbox>
+	<groupbox>
+		<caption label="&deliciousTab.label;"/>
+		    <checkbox id="deliciousEnabled" preference="deliciousEnabled" label="&enabled.label;" image="chrome://firestatus/skin/delicious.png"/>
+		    <checkbox id="deliciousShared" preference="deliciousShared" label="&shared.label;" image="chrome://firestatus/skin/delicious.png"/>
+		    <checkbox id="deliciousUpdatesEnabled" preference="deliciousUpdatesEnabled" label="&updatesEnabled.label;" image="chrome://firestatus/skin/delicious.png"/>
+		    <label control="textDeliciousUsername">&username.label;</label><textbox id="textDeliciousUsername" preference="deliciousUsername"/>
+		    <label control="textDeliciousPassword">&password.label;</label><textbox id="textDeliciousPassword" preference="deliciousPassword" type="password"/>
+		    <label control="textDeliciousTimeout">&timeout.label;</label><textbox id="textDeliciousTimeout" preference="deliciousTimeout"/>
+	</groupbox>
+
+	<groupbox>
+		<caption label="&identicaTab.label;"/>
+        
+		    <checkbox id="identicaEnabled" preference="identicaEnabled" label="&enabled.label;" accesskey="&identicaEnabled.accesskey;" image="chrome://firestatus/skin/identica.png"/>
+		    <checkbox id="identicaUpdatesEnabled" preference="identicaUpdatesEnabled" label="&updatesEnabled.label;" accesskey="&identicaUpdatesEnabled.accesskey;" image="chrome://firestatus/skin/identica.png"/>
+		    <label accesskey="&identicaUsername.accesskey;" control="textIdenticaUsername">&username.label;</label><textbox id="textIdenticaUsername" preference="identicaUsername"/>
+		    <label accesskey="&identicaPassword.accesskey;" control="textIdenticaPassword">&password.label;</label><textbox id="textIdenticaPassword" preference="identicaPassword" type="password"/>
+		    <label accesskey="&identicaTimeout.accesskey;" control="textIdenticaTimeout">&timeout.label;</label><textbox id="textIdenticaTimeout" preference="identicaTimeout"/>
+		    <label>&identica.note1;</label>
+			<label>&identica.note2;</label>
+			<label>&identica.note3;</label>
+			<label>&identica.note4;</label>
+			<label>&identica.note5;</label>
+			<label>&identica.note6;</label>
+			<label>&identica.note7;</label>
+	</groupbox>
+
+	<groupbox>
+        <caption label="&urlShortening.label;"/>
+        <radiogroup preference="shortURLService">
+	    	<radio id="tinyUrl" label="&tinyUrl.label;" accesskey="&tinyUrl.accesskey;" value="tinyUrl"/>
+	    	<radio id="urlborg" label="&urlborg.label;" accesskey="&urlborg.accesskey;" value="urlborg"/>
+	    </radiogroup>
+	</groupbox>
+	</hbox>
+  </prefpane>
+</prefwindow>
