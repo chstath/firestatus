@@ -10,7 +10,6 @@
 <!ENTITY username.label "Username">
 <!ENTITY identicaUsername.accesskey "U">
 <!ENTITY password.label "Password">
-<!ENTITY identicaPassword.accesskey "P">
 <!ENTITY updatesEnabled.label "Receive updates">
 <!ENTITY twitterUpdatesEnabled.accesskey "S">
 <!ENTITY identicaUpdatesEnabled.accesskey "S">
@@ -31,13 +30,6 @@
 <!ENTITY remotekey.label "Remote Key">
 <!ENTITY friendfeed.note1 "Note: your own Remote Key can">
 <!ENTITY friendfeed.note2 "be found in the following page:">
-<!ENTITY identica.note1 "Note: if no username and">
-<!ENTITY identica.note2 "password are provided,">
-<!ENTITY identica.note3 "FireStatus will search the">
-<!ENTITY identica.note4 "stored passwords for Identi.ca">
-<!ENTITY identica.note5 "credentials. This may cause">
-<!ENTITY identica.note6 "the master password dialog">
-<!ENTITY identica.note7 " to pop up.">
 <!ENTITY urlShortening.label "URL shortening">
 <!ENTITY tinyUrl.label "tinyURL">
 <!ENTITY urlborg.label "urlBorg">

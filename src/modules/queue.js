@@ -30,6 +30,8 @@ var queue = {
     processingQueue: false,
     paused: false,
 
+    observe: function() {},
+    
     displayNotification: function() {
         if (queue.paused) return;
         var update = queue.updateQueue.shift();

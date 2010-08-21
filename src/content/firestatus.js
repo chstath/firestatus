@@ -44,20 +44,22 @@ var firestatus = {
 	deliciousShared: true,
 	deliciousUpdatesEnabled: false,
 	deliciousUsername: "",
-	deliciousPassword: "",
+	DELICIOUS_REALM: "del.icio.us API",
+	DELICIOUS_HOST: "https://api.del.icio.us",
 	deliciousTimeoutId: 0,
 	deliciousTimeout: 5,
 	identicaEnabled: false,
 	identicaUpdatesEnabled: false,
 	identicaUsername: "",
-	identicaPassword: "",
+	IDENTICA_HOST: "http://identi.ca",
+	IDENTICA_REALM: "Identi.ca API",
 	identicaTimeoutId: 0,
 	identicaTimeout: 7,
 	// An initial queue for ordering FF updates before putting them in updateQueue.
 	ffInitialQueue: [],
 	statusInputWindow: null,
 	initialTimeoutId: 0,
-  initialized: false,
+    initialized: false,
   
 	onLoad: function(){
 		// Initialization code
@@ -101,7 +103,6 @@ var firestatus = {
 	    this.deliciousShared = this.prefs.getBoolPref("deliciousShared");
 	    this.deliciousUpdatesEnabled = this.prefs.getBoolPref("deliciousUpdatesEnabled");
 	    this.deliciousUsername = this.prefs.getCharPref("deliciousUsername");
-	    this.deliciousPassword = this.prefs.getCharPref("deliciousPassword");
 	    this.deliciousTimeout = this.prefs.getIntPref("deliciousTimeout");
 	    if (this.deliciousEnabled && window.document.getElementById("selectedConsumerDelicious").checked)
 	    	window.document.getElementById("deliciousTags").hidden = false;
@@ -109,59 +110,12 @@ var firestatus = {
 	    	window.document.getElementById("deliciousTags").hidden = true;
 	    this.queue.lastDeliciousTimestamp = this.prefs.getCharPref("lastDeliciousTimestamp");
 		
-		if (this.deliciousUpdatesEnabled || this.deliciousEnabled) {
-			// If no delicious credentials are set, try the login manager.
-			if (!this.deliciousUsername || !this.deliciousPassword) {
-				try {
-					// Get Login Manager 
-					var loginManager = Components.classes["@mozilla.org/login-manager;1"].getService(Components.interfaces.nsILoginManager);
-					
-					// Find users for the given parameters
-					var logins = loginManager.findLogins({}, this.DELICIOUS_URL_S, this.DELICIOUS_URL_S, null);
-					
-					// Pick the first entry from the returned array of nsILoginInfo objects.
-					if (logins.length > 0) {
-						this.cons.logStringMessage("Using the password manager stored credentials for delicious.");
-						this.deliciousUsername = logins[0].username;
-						this.deliciousPassword = logins[0].password;
-					}
-				} 
-				catch (ex) {
-					this.cons.logStringMessage("Error while loading the Login Manager: " + ex);
-				}
-			}
-		}
-
 	    this.identicaEnabled = this.prefs.getBoolPref("identicaEnabled");
 	    this.identicaUpdatesEnabled = this.prefs.getBoolPref("identicaUpdatesEnabled");
 	    this.identicaUsername = this.prefs.getCharPref("identicaUsername");
-	    this.identicaPassword = this.prefs.getCharPref("identicaPassword");
 	    this.identicaTimeout = this.prefs.getIntPref("identicaTimeout");
 	    this.queue.lastIdenticaId = this.prefs.getIntPref("lastIdenticaId");
 	    this.queue.lastIdenticaTimestamp = this.prefs.getCharPref("lastIdenticaTimestamp");
-		
-		if (this.identicaUpdatesEnabled || this.identicaEnabled) {
-			// If no Identi.ca credentials are set, try the login manager.
-			if (!this.identicaUsername || !this.identicaPassword) {
-				try {
-					// Get Login Manager 
-					var loginManager = Components.classes["@mozilla.org/login-manager;1"].getService(Components.interfaces.nsILoginManager);
-					
-					// Find users for the given parameters
-					var logins = loginManager.findLogins({}, this.IDENTICA_URL, this.IDENTICA_URL, null);
-					
-					// Pick the first entry from the returned array of nsILoginInfo objects.
-					if (logins.length > 0) {
-						this.cons.logStringMessage("Using the password manager stored credentials for Identi.ca.");
-						this.identicaUsername = logins[0].username;
-						this.identicaPassword = logins[0].password;
-					}
-				} 
-				catch (ex) {
-					this.cons.logStringMessage("Error while loading the Login Manager: " + ex);
-				}
-			}
-		}
 		
 		this.initialTimeoutId = window.setTimeout(this.resume, 7*1000);
 	},
@@ -416,9 +370,6 @@ var firestatus = {
 			case "deliciousUsername":
 		    	this.deliciousUsername = this.prefs.getCharPref("deliciousUsername");
 		    	break;
-			case "deliciousPassword":
-		    	this.deliciousPassword = this.prefs.getCharPref("deliciousPassword");
-		    	break;
 			case "deliciousTimeout":
 		    	this.deliciousTimeout = this.prefs.getIntPref("deliciousTimeout");
 				if (this.deliciousUpdatesEnabled) {
@@ -460,9 +411,6 @@ var firestatus = {
 		    	break;
 			case "identicaUsername":
 		    	this.identicaUsername = this.prefs.getCharPref("identicaUsername");
-		    	break;
-			case "identicaPassword":
-		    	this.identicaPassword = this.prefs.getCharPref("identicaPassword");
 		    	break;
 			case "identicaTimeout":
 		    	this.identicaTimeout = this.prefs.getIntPref("identicaTimeout");
@@ -658,7 +606,8 @@ var firestatus = {
 													 "req.status="+req.status);
 	      }
 	    };
-	    var auth = firestatus.identicaUsername+":"+firestatus.identicaPassword;
+	    var identicaPassword = firestatus.loadPassword(firestatus.deliciousUsername, firestatus.DELICIOUS_HOST, firestatus.DELICIOUS_REALM);
+	    var auth = firestatus.identicaUsername + ":" + identicaPassword;
 	    req.setRequestHeader("Authorization", "Basic "+btoa(auth));
 	    req.send(null);
 	},
@@ -804,6 +753,18 @@ var firestatus = {
 		}
 	},
 	
+	loadPassword: function (username, hostname, realm) {
+	    var passwordManager = Components.classes["@mozilla.org/login-manager;1"].  
+                                getService(Components.interfaces.nsILoginManager);
+                                
+        var logins = passwordManager.findLogins({}, hostname, '', realm);
+        for (var i = 0; i < logins.length; i++) {  
+            if (logins[i].username == username) {  
+                return logins[i].password;  
+            }  
+        }
+	},
+	
 	sendStatusUpdateDelicious: function (statusText, deliciousTags, url, title) {
 	    var status = encodeURIComponent(statusText);
 	    deliciousTags = encodeURIComponent(deliciousTags);
@@ -847,7 +808,8 @@ var firestatus = {
 				 }
 			}
 		};
-	    var auth = firestatus.deliciousUsername + ":" + firestatus.deliciousPassword;
+	    var deliciousPassword = firestatus.loadPassword(firestatus.deliciousUsername, firestatus.DELICIOUS_HOST, firestatus.DELICIOUS_REALM);
+	    var auth = firestatus.deliciousUsername + ":" + deliciousPassword;
 	    firestatus.cons.logStringMessage(auth);
 	    req.setRequestHeader("Authorization", "Basic " + btoa(auth));
 	    req.setRequestHeader("Content-length", params.length);
@@ -898,12 +860,13 @@ var firestatus = {
 				 }
 			}
 		};
-	    var auth = firestatus.identicaUsername + ":" + firestatus.identicaPassword;
+	    var identicaPassword = firestatus.loadPassword(firestatus.identicaUsername, firestatus.IDENTICA_HOST, firestatus.IDENTICA_REALM);
+	    var auth = firestatus.identicaUsername + ":" + identicaPassword;
 	    req.setRequestHeader("Authorization", "Basic "+btoa(auth));
 	    req.setRequestHeader("Content-length", params.length);
 	    req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;");
 	    req.send(params); 
-	}
+	},
 };	
 
 Components.utils.import("resource://firestatus/queue.js", firestatus);
