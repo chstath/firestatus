@@ -41,13 +41,11 @@
       <preference id="deliciousShared" name="extensions.firestatus.deliciousShared" type="bool"/>
       <preference id="deliciousUpdatesEnabled" name="extensions.firestatus.deliciousUpdatesEnabled" type="bool"/>
       <preference id="deliciousUsername" name="extensions.firestatus.deliciousUsername" type="string"/>
-      <preference id="deliciousPassword" name="extensions.firestatus.deliciousPassword" type="string"/> <!-- note that this is only an ASCII string - use unichar for unicode strings -->
       <preference id="deliciousTimeout" name="extensions.firestatus.deliciousTimeout" type="int"/>
       <preference id="lastDeliciousTimestamp" name="extensions.firestatus.lastDeliciousTimestamp" type="string"/>
       <preference id="identicaEnabled" name="extensions.firestatus.identicaEnabled" type="bool"/>
       <preference id="identicaUpdatesEnabled" name="extensions.firestatus.identicaUpdatesEnabled" type="bool"/>
       <preference id="identicaUsername" name="extensions.firestatus.identicaUsername" type="string"/>
-      <preference id="identicaPassword" name="extensions.firestatus.identicaPassword" type="string"/> <!-- note that this is only an ASCII string - use unichar for unicode strings -->
       <preference id="identicaTimeout" name="extensions.firestatus.identicaTimeout" type="int"/>
       <preference id="lastIdenticaId" name="extensions.firestatus.lastIdenticaId" type="int"/>
       <preference id="lastIdenticaTimestamp" name="extensions.firestatus.lastIdenticaTimestamp" type="string"/>
@@ -88,7 +86,6 @@
 		    <checkbox id="deliciousShared" preference="deliciousShared" label="&shared.label;" image="chrome://firestatus/skin/delicious.png"/>
 		    <checkbox id="deliciousUpdatesEnabled" preference="deliciousUpdatesEnabled" label="&updatesEnabled.label;" image="chrome://firestatus/skin/delicious.png"/>
 		    <label control="textDeliciousUsername">&username.label;</label><textbox id="textDeliciousUsername" preference="deliciousUsername"/>
-		    <label control="textDeliciousPassword">&password.label;</label><textbox id="textDeliciousPassword" preference="deliciousPassword" type="password"/>
 		    <label control="textDeliciousTimeout">&timeout.label;</label><textbox id="textDeliciousTimeout" preference="deliciousTimeout"/>
 	</groupbox>
 
@@ -98,15 +95,7 @@
 		    <checkbox id="identicaEnabled" preference="identicaEnabled" label="&enabled.label;" accesskey="&identicaEnabled.accesskey;" image="chrome://firestatus/skin/identica.png"/>
 		    <checkbox id="identicaUpdatesEnabled" preference="identicaUpdatesEnabled" label="&updatesEnabled.label;" accesskey="&identicaUpdatesEnabled.accesskey;" image="chrome://firestatus/skin/identica.png"/>
 		    <label accesskey="&identicaUsername.accesskey;" control="textIdenticaUsername">&username.label;</label><textbox id="textIdenticaUsername" preference="identicaUsername"/>
-		    <label accesskey="&identicaPassword.accesskey;" control="textIdenticaPassword">&password.label;</label><textbox id="textIdenticaPassword" preference="identicaPassword" type="password"/>
 		    <label accesskey="&identicaTimeout.accesskey;" control="textIdenticaTimeout">&timeout.label;</label><textbox id="textIdenticaTimeout" preference="identicaTimeout"/>
-		    <label>&identica.note1;</label>
-			<label>&identica.note2;</label>
-			<label>&identica.note3;</label>
-			<label>&identica.note4;</label>
-			<label>&identica.note5;</label>
-			<label>&identica.note6;</label>
-			<label>&identica.note7;</label>
 	</groupbox>
 
 	<groupbox>
