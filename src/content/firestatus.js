@@ -32,7 +32,7 @@ var firestatus = {
 	friendfeedEnabled: false,
 	friendfeedUpdatesEnabled: false,
 	friendfeedUsername: "",
-	friendfeedPassword: "",
+	friendfeedKey: "",
 	friendfeedTimeoutId: 0,
 	friendfeedTimeout: 4,
 	facebookEnabled: false,
@@ -86,7 +86,7 @@ var firestatus = {
 	    this.friendfeedEnabled = this.prefs.getBoolPref("friendfeedEnabled");
 	    this.friendfeedUpdatesEnabled = this.prefs.getBoolPref("friendfeedUpdatesEnabled");
 	    this.friendfeedUsername = this.prefs.getCharPref("friendfeedUsername");
-	    this.friendfeedPassword = this.prefs.getCharPref("friendfeedPassword");
+	    this.friendfeedKey = this.prefs.getCharPref("friendfeedKey");
 	    this.friendfeedTimeout = this.prefs.getIntPref("friendfeedTimeout");
 	    this.queue.lastFriendfeedId = this.prefs.getCharPref("lastFriendfeedId");
 		
@@ -294,8 +294,8 @@ var firestatus = {
 			case "friendfeedUsername":
 		    	this.friendfeedUsername = this.prefs.getCharPref("friendfeedUsername");
 		    	break;
-			case "friendfeedPassword":
-		    	this.friendfeedPassword = this.prefs.getCharPref("friendfeedPassword");
+			case "friendfeedKey":
+		    	this.friendfeedKey = this.prefs.getCharPref("friendfeedKey");
 		    	break;
 			case "friendfeedTimeout":
 		    	this.friendfeedTimeout = this.prefs.getIntPref("friendfeedTimeout");
@@ -490,7 +490,7 @@ var firestatus = {
 	             	firestatus.cons.logStringMessage("Error loading FF page. req.status="+req.status);
 	      }
 	    };
-	    var auth = firestatus.friendfeedUsername+":"+firestatus.friendfeedPassword;
+	    var auth = firestatus.friendfeedUsername+":"+firestatus.friendfeedKey;
 	    req.setRequestHeader("Authorization", "Basic "+btoa(auth));
 	    req.send(null);
 	},
@@ -737,7 +737,7 @@ var firestatus = {
 				 }
 			}
 		};
-	    var auth = firestatus.friendfeedUsername + ":" + firestatus.friendfeedPassword;
+	    var auth = firestatus.friendfeedUsername + ":" + firestatus.friendfeedKey;
 	    req.setRequestHeader("Authorization", "Basic "+btoa(auth));
 	    req.setRequestHeader("Content-length", params.length);
 	    req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;");

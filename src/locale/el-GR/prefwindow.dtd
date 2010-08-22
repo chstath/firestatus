@@ -21,7 +21,7 @@
 <!ENTITY friendfeed-pane.title "Προτιμήσεις FriendFeed">
 <!ENTITY friendfeedEnabled.accesskey "N">
 <!ENTITY friendfeedUsername.accesskey "R">
-<!ENTITY friendfeedPassword.accesskey "O">
+<!ENTITY friendfeedKey.accesskey "O">
 <!ENTITY friendfeedUpdatesEnabled.accesskey "D">
 <!ENTITY friendfeedTimeout.accesskey "E">
 <!ENTITY facebookEnabled.accesskey "A">
