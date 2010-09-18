@@ -142,9 +142,10 @@ var firestatus = {
 		fsContainer.setAttribute("collapsed", 'false');
 		var textField = window.document.getElementById('statusText');
 		var title = document.title;
-		title = title.substr(0, title.lastIndexOf('-')-1);
-		if (textField.value == "")
-			textField.value = title;
+		title = title.substr(0, title.lastIndexOf('-')-1).trim();
+		firestatus.url = document.getElementById("sendUrl").checked ? document.getElementById("urlbar").value : "";
+		textField.value = (title.trim() + " " + firestatus.url).trim();
+		statusInput.updateCharCount();
 		textField.select();
 	},
 	
