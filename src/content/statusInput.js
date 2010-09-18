@@ -107,7 +107,7 @@ var statusInput = {
 		firestatus.prefs.setBoolPref("lastFriendfeedChecked", document.getElementById("selectedConsumerFriendfeed").checked);
 		firestatus.prefs.setBoolPref("lastFacebookChecked", document.getElementById("selectedConsumerFacebook").checked);
 		firestatus.prefs.setBoolPref("lastDeliciousChecked", document.getElementById("selectedConsumerDelicious").checked);
-		firestatus.prefs.setBoolPref("lastIdenticaChecked", document.getElementById("selectedConsumerIdenticar").checked);
+		firestatus.prefs.setBoolPref("lastIdenticaChecked", document.getElementById("selectedConsumerIdentica").checked);
 	},
 	
 	sendStatusUpdate: function() {
@@ -119,29 +119,33 @@ var statusInput = {
 		var sendFacebook = firestatus.facebookEnabled && document.getElementById("selectedConsumerFacebook").checked;
 		var sendDelicious = firestatus.deliciousEnabled && document.getElementById("selectedConsumerDelicious").checked;
 		var sendIdentica = firestatus.identicaEnabled && document.getElementById("selectedConsumerIdentica").checked;
-		if (url && document.getElementById("shortenUrl").checked)
-			firestatus.getShrinkedUrl(encodeURI(url), statusText, deliciousTags, sendTwitter, sendFriendfeed, sendFacebook, sendDelicious, sendIdentica);
-		else {
-			firestatus.actuallySendUpdate(statusText, url, deliciousTags, sendTwitter, sendFriendfeed, sendFacebook, sendDelicious, sendIdentica);
-		}
+		firestatus.actuallySendUpdate(statusText, url, deliciousTags, sendTwitter, sendFriendfeed, sendFacebook, sendDelicious, sendIdentica);
 		firestatus.hide();
 	},
 	
 	updateCharCount: function(event) {
 		var statusText = document.getElementById('statusText').value;
 		document.getElementById('charcount').value = statusText.length;
-		switch (event.keyCode) {
-			case 27:
-				firestatus.hide();
-				break;
-			case 13:
-				statusInput.sendStatusUpdate();
-				break;
-		}
+		if (event)
+		    switch (event.keyCode) {
+			    case 27:
+				    firestatus.hide();
+				    break;
+			    case 13:
+				    statusInput.sendStatusUpdate();
+				    break;
+		    }
 	},
 	
 	toggleSendUrl: function() {
 		document.getElementById("shortenUrl").disabled = document.getElementById("sendUrl").checked;
+        var statusText = document.getElementById('statusText').value;
+	   	if (document.getElementById("sendUrl").checked)
+		    document.getElementById('statusText').value = statusText.replace(firestatus.url, "").trim();
+		else {		
+		    firestatus.url = document.getElementById("urlbar").value;
+		    document.getElementById('statusText').value = statusText.trim() + " " + firestatus.url;
+		}
 	}
 };
 
