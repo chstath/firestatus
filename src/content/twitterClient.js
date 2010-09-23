@@ -226,7 +226,6 @@ twitterClient.sendStatusUpdateTwitter = function (statusText) {
 		    switch(req.status) {
 			    case 200:
 				    firestatus.cons.logStringMessage("Twitter update sent.");
-					document.getElementById('statusText').value = '';
 					break;
 				case 400:
 					firestatus.cons.logStringMessage("Twitter response: Bad Request");
@@ -255,7 +254,7 @@ twitterClient.sendStatusUpdateTwitter = function (statusText) {
 					firestatus.cons.logStringMessage("Twitter response: "+req.responseText);
 			}
 			if (req.status != 200)
-			    alert("Failed to update twitter. Response was " + req.status);
+			    alert("Failed to update twitter. Response was " + req.status + ": " + req.responseText);
 		}
 	};
 	status = "status=" + encodeURIComponent(status);

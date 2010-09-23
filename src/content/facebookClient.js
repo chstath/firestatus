@@ -149,6 +149,7 @@ var facebookClient = {
                         firestatus.cons.logStringMessage("Unknown facebook code: "+req.status);
                         firestatus.cons.logStringMessage("Facebook response: "+req.responseText);
                  }
+                 if 
             }
         };
         req.send(null);
@@ -281,7 +282,6 @@ var facebookClient = {
                         firestatus.cons.logStringMessage(jsonString);
                         if (jsonString == "true") {
                             firestatus.cons.logStringMessage("Facebook update sent.");
-                            document.getElementById('statusText').value = '';
                         }
                         else {
                             var result = nativeJSON.decode(jsonString);
@@ -333,6 +333,8 @@ var facebookClient = {
                         firestatus.cons.logStringMessage("Unknown facebook code: "+req.status);
                         firestatus.cons.logStringMessage("Facebook response: "+req.responseText);
                  }
+			    if (req.status != 200)
+			        alert("Failed to update facebook. Response was " + req.status + ": " + req.responseText);
             }
         };
         firestatus.cons.logStringMessage("Updating facebook status");
@@ -361,7 +363,6 @@ var facebookClient = {
                         var result = nativeJSON.decode(jsonString);
                         if (result.link_id) {
                             firestatus.cons.logStringMessage("Facebook update sent.");
-                            document.getElementById('statusText').value = '';
                         }
                         else {
                             var code = result.error_code;
@@ -412,6 +413,8 @@ var facebookClient = {
                         firestatus.cons.logStringMessage("Unknown facebook code: "+req.status);
                         firestatus.cons.logStringMessage("Facebook response: "+req.responseText);
                  }
+			    if (req.status != 200)
+			        alert("Failed to update facebook. Response was " + req.status + ": " + req.responseText);
             }
         };
         firestatus.cons.logStringMessage("Updating facebook status");
