@@ -44,7 +44,7 @@
 	        <label id="charcount" value="0"/>
 	        <vbox id="urlGroup">
 	            <checkbox id="sendUrl" checked="false" label="&firestatus.sendUrl;" onclick="statusInput.toggleSendUrl()"/>
-	            <checkbox id="shortenUrl" disabled="true" checked="true" label="&firestatus.shortenUrl;"/>
+	            <checkbox id="shortenUrl" disabled="true" checked="true" label="&firestatus.shortenUrl;" onclick="statusInput.toggleShortenUrl()"/>
 	        </vbox>
         	<vbox align="start">
 	            <image id="twitter-icon" tooltiptext="&firestatus.labelTwitter;"/>

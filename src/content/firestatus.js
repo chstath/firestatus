@@ -69,7 +69,11 @@ var firestatus = {
 	    this.cons = Components.classes["@mozilla.org/consoleservice;1"].
         			getService(Components.interfaces.nsIConsoleService);
 
-
+        if (window.screen.width < 1024) {
+            window.document.getElementById('statusText').size = 40;
+            window.document.getElementById('deliciousTags').size = 40;
+        }
+        
 		// Register to receive notifications of preference changes
 	    this.prefs = Components.classes["@mozilla.org/preferences-service;1"]
 	        .getService(Components.interfaces.nsIPrefService)
@@ -143,15 +147,34 @@ var firestatus = {
 		var textField = window.document.getElementById('statusText');
 		var title = document.title;
 		title = title.substr(0, title.lastIndexOf('-')-1).trim();
-		firestatus.url = document.getElementById("sendUrl").checked ? document.getElementById("urlbar").value : "";
-		textField.value = (title.trim() + " " + firestatus.url).trim();
-		statusInput.updateCharCount();
+		firestatus.url = document.getElementById("urlbar").value;
+		firestatus.shortUrl = null;
+		if (document.getElementById("sendUrl").checked) {
+		    if (document.getElementById("shortenUrl").checked) {
+		        firestatus.getShortUrl(firestatus.url, function () {
+		            textField.value = title.trim() + " " + firestatus.shortUrl;
+		            statusInput.updateCharCount();
+		            textField.select();
+		        });
+		    }
+		    else {
+		        textField.value = (title.trim() + " " + firestatus.url).trim();
+		    }
+		}
+		else {
+    		textField.value = title.trim();
+		}
+		
+//		statusInput.updateCharCount();
 		textField.select();
 	},
 	
 	hide: function() {
 		var fsContainer = window.document.getElementById('firestatusContainer');
 		fsContainer.setAttribute("collapsed", 'true');
+		firestatus.url = null;
+		firestatus.shortUrl = null;
+		window.document.getElementById('statusText').value = "";
 	},
 	
 	clear: function() {
@@ -613,6 +636,57 @@ var firestatus = {
 	    req.send(null);
 	},
 	
+	getShortUrl: function (url, callback) {
+		if (this.shortURLService == "tinyUrl")
+			var tinyurl = "http://tinyurl.com/api-create.php?url=" + url;
+		else
+			tinyurl = "http://urlborg.com/api/77577-9314/url/create_or_reuse.json/" + url;
+	    var req = new XMLHttpRequest();
+		req.open('GET', tinyurl, true); 
+	    req.onreadystatechange = function () {
+			if (req.readyState == 4) {
+			     switch(req.status) {
+				 	case 200:
+				 		if (firestatus.shortURLService != "tinyUrl") {
+			            	var nativeJSON = Cc["@mozilla.org/dom/json;1"].createInstance(Ci.nsIJSON);
+		                    var jsonString = req.responseText;
+							firestatus.shortUrl = nativeJSON.decode(jsonString).s_url;
+				 		}
+				 		else {
+				 			firestatus.shortUrl = req.responseText;
+				 		}
+				 		callback();
+						break;
+					case 400:
+						firestatus.cons.logStringMessage("Bad Request");
+						break;
+					case 401:
+						firestatus.cons.logStringMessage("Not Authorized");
+						break;
+					case 403:
+						firestatus.cons.logStringMessage("Forbidden");
+						break;
+					case 404:
+						firestatus.cons.logStringMessage("Not Found");
+						break;
+					case 500:
+						firestatus.cons.logStringMessage("Internal Server Error");
+						break;
+					case 502:
+						firestatus.cons.logStringMessage("Bad Gateway");
+						break;
+					case 503:
+						firestatus.cons.logStringMessage("Service Unavailable");
+						break;
+					default:
+						firestatus.cons.logStringMessage("Unknown tinyurl code: "+req.status);
+						firestatus.cons.logStringMessage("Tinyurl response: "+req.responseText);
+			     }
+			}
+	    };
+		req.send(null);
+	},
+	
 	getShrinkedUrl: function (url, statusText, deliciousTags, sendTwitter, sendFriendfeed, sendFacebook, sendDelicious, sendIdentica) {
 		firestatus.cons.logStringMessage("Shortening url ...");
 		var tinyurl = null;
@@ -666,41 +740,40 @@ var firestatus = {
 		req.send(null);
 	},
 	
-	actuallySendUpdate: function(statusText, url, deliciousTags, sendTwitter, sendFriendfeed, sendFacebook, sendDelicious, sendIdentica) {
+	actuallySendUpdate: function(statusText, deliciousTags, sendTwitter, sendFriendfeed, sendFacebook, sendDelicious, sendIdentica) {
 		if (sendTwitter) {
-			twitterClient.sendStatusUpdateTwitter(statusText, url);
+			twitterClient.sendStatusUpdateTwitter(statusText);
 		}
 		if (sendFriendfeed) {
-			firestatus.sendStatusUpdateFriendfeed(statusText, url);
+			firestatus.sendStatusUpdateFriendfeed(statusText);
 		}
 		if (sendFacebook) {
-			firestatus.sendStatusUpdateFacebook(statusText, url);
+			firestatus.sendStatusUpdateFacebook(statusText, document.getElementById("sendUrl").checked ? firestatus.url : null);
 		}
 		if (sendDelicious) {
 			var title = document.title;
-			title = title.substr(0, title.lastIndexOf('-')-1);
-			firestatus.sendStatusUpdateDelicious(statusText, deliciousTags, document.getElementById("urlbar").value, title);
+			title = title.substr(0, title.lastIndexOf('-') - 1);
+			firestatus.sendStatusUpdateDelicious(statusInput.clearUrlFromStatus(statusText, document.getElementById("shortenUrl").checked), deliciousTags, firestatus.url, title);
 		}
 		if (sendIdentica) {
-			firestatus.sendStatusUpdateIdentica(statusText, url);
+			firestatus.sendStatusUpdateIdentica(statusText);
 		}
 	},
 
 	sendStatusUpdateFacebook: function(statusText, url) {
 		firestatus.cons.logStringMessage("Starting facebook update...");
 		var title = document.title;
-		title = title.substr(0, title.lastIndexOf('-')-1);
-    if (title == statusText && url)
-      statusText = "";
-		firestatus.facebookClient.updateStatus(statusText, url);
+		title = title.substr(0, title.lastIndexOf('-')-1).trim();
+		st = statusInput.clearUrlFromStatus(statusText, document.getElementById("shortenUrl").checked);
+        if ((title == st) && url)
+            st = "";
+		firestatus.facebookClient.updateStatus(st, url);
 	},
 
 
-	sendStatusUpdateFriendfeed: function(statusText, url) {
+	sendStatusUpdateFriendfeed: function(statusText) {
 	    var status = encodeURIComponent(statusText);
 	    var params = "title="+status;
-	    if (url)
-	      params += "&link=" + url;
 	    var req = new XMLHttpRequest();   
 	    var POST_URL = firestatus.FRIENDFEED_URL + '/api/share';
 	    req.open("POST", POST_URL, true);
@@ -818,10 +891,8 @@ var firestatus = {
 	    req.send(params); 
 	},
 
-	sendStatusUpdateIdentica: function (statusText, url) {
+	sendStatusUpdateIdentica: function (statusText) {
 	    var params = "source=firestatus";
-	    if (url)
-	      statusText += " " + url;
 	    var status = encodeURIComponent(statusText);
 	    params += "&status="+status;
 	    var req = new XMLHttpRequest ();   
