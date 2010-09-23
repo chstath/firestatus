@@ -165,7 +165,6 @@ var firestatus = {
     		textField.value = title.trim();
 		}
 		
-//		statusInput.updateCharCount();
 		textField.select();
 	},
 	
@@ -782,7 +781,6 @@ var firestatus = {
 			     switch(req.status) {
 				 	case 200:
 					 	firestatus.cons.logStringMessage("FriendFeed update sent.");
-						document.getElementById('statusText').value = '';
 						break;
 					case 400:
 						firestatus.cons.logStringMessage("FriendFeed response: Bad Request");
@@ -809,6 +807,8 @@ var firestatus = {
 						firestatus.cons.logStringMessage("Unknown FriendFeed status: "+req.status);
 						firestatus.cons.logStringMessage("FriendFeed response: "+req.responseText);
 				 }
+			    if (req.status != 200)
+			        alert("Failed to update friendfeed. Response was " + req.status + ": " + req.responseText);
 			}
 		};
 	    var auth = firestatus.friendfeedUsername + ":" + firestatus.friendfeedKey;
@@ -852,8 +852,6 @@ var firestatus = {
 			     switch(req.status) {
 				 	case 200:
 					 	firestatus.cons.logStringMessage("Del.icio.us bookmark saved.");
-						document.getElementById('statusText').value = '';
-						document.getElementById('deliciousTags').value = '';
 						break;
 					case 400:
 						firestatus.cons.logStringMessage("Bad Request");
@@ -880,6 +878,8 @@ var firestatus = {
 						firestatus.cons.logStringMessage("Unknown del.icio.us status: "+req.status);
 						firestatus.cons.logStringMessage("del.icio.us response: "+req.responseText);
 				 }
+			    if (req.status != 200)
+			        alert("Failed to update del.icio.us. Response was " + req.status + ": " + req.responseText);
 			}
 		};
 	    var deliciousPassword = firestatus.loadPassword(firestatus.deliciousUsername, firestatus.DELICIOUS_HOST, firestatus.DELICIOUS_REALM);
@@ -903,7 +903,6 @@ var firestatus = {
 			     switch(req.status) {
 				 	case 200:
 					 	firestatus.cons.logStringMessage("Identi.ca update sent.");
-						document.getElementById('statusText').value = '';
 						break;
 					case 400:
 						firestatus.cons.logStringMessage("Identica response: Bad Request");
@@ -930,6 +929,8 @@ var firestatus = {
 						firestatus.cons.logStringMessage("Unknown Identi.ca status: "+req.status);
 						firestatus.cons.logStringMessage("Identi.ca response: "+req.responseText);
 				 }
+			    if (req.status != 200)
+			        alert("Failed to update identi.ca. Response was " + req.status + ": " + req.responseText);
 			}
 		};
 	    var identicaPassword = firestatus.loadPassword(firestatus.identicaUsername, firestatus.IDENTICA_HOST, firestatus.IDENTICA_REALM);
