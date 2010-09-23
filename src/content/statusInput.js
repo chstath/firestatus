@@ -113,13 +113,12 @@ var statusInput = {
 	sendStatusUpdate: function() {
 		var statusText = document.getElementById('statusText').value;
 		var deliciousTags = document.getElementById('deliciousTags').value;
-		var url = document.getElementById("sendUrl").checked ? document.getElementById("urlbar").value : "";
 		var sendTwitter = firestatus.twitterEnabled && document.getElementById("selectedConsumerTwitter").checked;
 		var sendFriendfeed = firestatus.friendfeedEnabled && document.getElementById("selectedConsumerFriendfeed").checked;
 		var sendFacebook = firestatus.facebookEnabled && document.getElementById("selectedConsumerFacebook").checked;
 		var sendDelicious = firestatus.deliciousEnabled && document.getElementById("selectedConsumerDelicious").checked;
 		var sendIdentica = firestatus.identicaEnabled && document.getElementById("selectedConsumerIdentica").checked;
-		firestatus.actuallySendUpdate(statusText, url, deliciousTags, sendTwitter, sendFriendfeed, sendFacebook, sendDelicious, sendIdentica);
+		firestatus.actuallySendUpdate(statusText, deliciousTags, sendTwitter, sendFriendfeed, sendFacebook, sendDelicious, sendIdentica);
 		firestatus.hide();
 	},
 	
@@ -137,15 +136,57 @@ var statusInput = {
 		    }
 	},
 	
+	clearUrlFromStatus: function (status, shorted) {
+	    if (shorted)
+	        return status.replace(firestatus.shortUrl, "").trim();
+	    return status.replace(firestatus.url, "").trim();
+	},
+	
 	toggleSendUrl: function() {
 		document.getElementById("shortenUrl").disabled = document.getElementById("sendUrl").checked;
         var statusText = document.getElementById('statusText').value;
-	   	if (document.getElementById("sendUrl").checked)
-		    document.getElementById('statusText').value = statusText.replace(firestatus.url, "").trim();
-		else {		
-		    firestatus.url = document.getElementById("urlbar").value;
-		    document.getElementById('statusText').value = statusText.trim() + " " + firestatus.url;
+	   	if (document.getElementById("sendUrl").checked) {
+		    document.getElementById('statusText').value = statusInput.clearUrlFromStatus(statusText, document.getElementById("shortenUrl").checked);
 		}
+		else {		
+    	    var mustShortenUrl = document.getElementById("shortenUrl").checked;
+    	    if (!mustShortenUrl) {
+		        document.getElementById('statusText').value = statusText.trim() + " " + firestatus.url;
+        		statusInput.updateCharCount();
+    	    }
+    	    else {
+    	        var doAfterShort = function () {
+		            document.getElementById('statusText').value = statusText.trim() + " " + firestatus.shortUrl;
+                    statusInput.updateCharCount();
+    	        }
+    	        if (firestatus.shortUrl) {
+    	            doAfterShort();
+    	        }
+    	        else
+	                firestatus.getShortUrl(firestatus.url, doAfterShort);
+    	    }
+		}
+	},
+	
+	toggleShortenUrl: function () {
+	    var mustShortenUrl = !document.getElementById("shortenUrl").checked;
+        var statusText = document.getElementById('statusText').value;
+        var temp = statusInput.clearUrlFromStatus(statusText, !mustShortenUrl);
+	    if (!mustShortenUrl) {
+	        document.getElementById('statusText').value = temp + " " + firestatus.url;
+	        statusInput.updateCharCount();
+	    }
+	    else {
+	        var doAfterShort = function () {
+                document.getElementById('statusText').value = temp + " " + firestatus.shortUrl;
+                statusInput.updateCharCount();
+	        }
+	        if (firestatus.shortUrl) {
+	            doAfterShort();
+	        }
+	        else
+	            firestatus.getShortUrl(firestatus.url, doAfterShort);
+	    }
 	}
 };
 

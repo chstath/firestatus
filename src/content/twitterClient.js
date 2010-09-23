@@ -70,7 +70,7 @@ twitterClient.requestAccessToken = function(requestToken, pin, doNext, nextParam
                     firestatus.prefs.setCharPref("twitter_user_id", user_id);
                     firestatus.prefs.setCharPref("twitter_screen_name", screen_name);
                     if (nextParams)
-                        doNext(nextParams[0], nextParams[1]);
+                        doNext(nextParams[0]);
                     else
                         doNext();
                     break;
@@ -201,16 +201,13 @@ twitterClient.twitterUpdates = function() {
     req.send(null);
 };
 
-twitterClient.sendStatusUpdateTwitter = function (statusText, url) {
+twitterClient.sendStatusUpdateTwitter = function (statusText) {
     if (twitterClient.oauthToken == "" || twitterClient.oauthTokenSecret == "") {
-        twitterClient.authenticate(twitterClient.sendStatusUpdateTwitter, [statusText, url]);
+        twitterClient.authenticate(twitterClient.sendStatusUpdateTwitter, [statusText]);
         return;
     }
 
     var status = statusText;
-
-	if (url)
-	    status += " " + url;
 
     var httpMethod = 'POST';
 	var postUrl = 'http://api.twitter.com/1/statuses/update.json';
