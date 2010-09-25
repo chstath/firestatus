@@ -243,7 +243,7 @@ var facebookClient = {
         params.push('call_id=' + callId);
         params.push('format=JSON');
         params.push('uid=' + session.uid);
-        params.push('url=' + url);
+        params.push('url=' + facebookClient.convert2UTF8(url));
         var utf8Status = facebookClient.convert2UTF8(status);
         params.push('comment=' + utf8Status);
         var sig = this.generateSig(params, session.secret);
@@ -256,7 +256,7 @@ var facebookClient = {
         params.push('call_id=' + callId);
         params.push('format=JSON');
         params.push('uid=' + session.uid);
-        params.push('url=' + url);
+        params.push('url=' + encodeURIComponent(url));
         params.push('comment=' + encodeURIComponent(status));
         params.push('sig=' + sig);
         facebookClient.sendLink(params, status, url);
