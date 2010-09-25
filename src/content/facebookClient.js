@@ -149,7 +149,6 @@ var facebookClient = {
                         firestatus.cons.logStringMessage("Unknown facebook code: "+req.status);
                         firestatus.cons.logStringMessage("Facebook response: "+req.responseText);
                  }
-                 if 
             }
         };
         req.send(null);
@@ -304,7 +303,7 @@ var facebookClient = {
                                 facebookClient.getNewSessionAndUpdate(status);
                             }
                             else if (code != "") {
-                                alert("Facebook status will not be updated ("+code+")");
+                                alert("Facebook status will not be updated (" + code + ")");
                             }
                         }
                         break;
@@ -384,7 +383,7 @@ var facebookClient = {
                                 facebookClient.getNewSessionAndUpdate(status, url);
                             }
                             else if (code != "") {
-                                alert("Facebook status will not be updated ("+code+")");
+                                alert("Facebook status will not be updated (" + code + ")");
                             }
                         }
                         break;
