@@ -159,10 +159,12 @@ var firestatus = {
 		    }
 		    else {
 		        textField.value = (title.trim() + " " + firestatus.url).trim();
+        		statusInput.updateCharCount();
 		    }
 		}
 		else {
     		textField.value = title.trim();
+       		statusInput.updateCharCount();
 		}
 		
 		textField.select();

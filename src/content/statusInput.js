@@ -147,6 +147,7 @@ var statusInput = {
         var statusText = document.getElementById('statusText').value;
 	   	if (document.getElementById("sendUrl").checked) {
 		    document.getElementById('statusText').value = statusInput.clearUrlFromStatus(statusText, document.getElementById("shortenUrl").checked);
+       		statusInput.updateCharCount();
 		}
 		else {		
     	    var mustShortenUrl = document.getElementById("shortenUrl").checked;
