@@ -69,11 +69,6 @@ var firestatus = {
 	    this.cons = Components.classes["@mozilla.org/consoleservice;1"].
         			getService(Components.interfaces.nsIConsoleService);
 
-        if (window.screen.width < 1024) {
-            window.document.getElementById('statusText').size = 40;
-            window.document.getElementById('deliciousTags').size = 40;
-        }
-        
 		// Register to receive notifications of preference changes
 	    this.prefs = Components.classes["@mozilla.org/preferences-service;1"]
 	        .getService(Components.interfaces.nsIPrefService)
@@ -122,6 +117,11 @@ var firestatus = {
 	    this.queue.lastIdenticaTimestamp = this.prefs.getCharPref("lastIdenticaTimestamp");
 		
 		this.initialTimeoutId = window.setTimeout(this.resume, 7*1000);
+        
+        window.document.addEventListener('resize', function () {
+            window.document.getElementById('statusText').width = window.innerWidth * 0.9 - 420;
+            window.document.getElementById('deliciousTags').width = window.innerWidth * 0.9 - 420;
+        }, false);
 	},
 	
 	onUnload: function() {
@@ -163,8 +163,9 @@ var firestatus = {
 		    }
 		}
 		else {
-    		textField.value = title.trim();
-       		statusInput.updateCharCount();
+
+	    		textField.value = title.trim();
+	       		statusInput.updateCharCount();
 		}
 		
 		textField.select();
