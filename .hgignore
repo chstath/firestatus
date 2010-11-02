@@ -3,4 +3,4 @@ syntax: regexp
 .DS_Store
 .swp$
 .swo$
-
+^firestatus.komodoproject$
