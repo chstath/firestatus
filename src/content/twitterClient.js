@@ -178,7 +178,7 @@ twitterClient.twitterUpdates = function() {
 						firestatus.queue.updateQueue.push({id: status.id,
 								image: status.user.profile_image_url,
 								title: status.user.name,
-								text: status.text,
+								text: status.text.length > 140 ? status.text.substring(0, 140) : status.text,
 								link: firestatus.TWITTER_URL + '/' + status.user.screen_name +
                                         '/status/' + status.id});
 					}
