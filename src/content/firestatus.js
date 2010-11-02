@@ -499,7 +499,7 @@ var firestatus = {
                                 image: firestatus.FRIENDFEED_URL + '/' + nickname +
                                         '/picture?size=medium',
 								title: title,
-								text: status.title,
+								text: status.title.length > 140 ? status.title.substring(0, 140) : status.title,
 								link: status.link || firestatus.FRIENDFEED_URL
 							});
 						}
@@ -559,7 +559,7 @@ var firestatus = {
 							firestatus.queue.updateQueue.push({
 									image: "chrome://firestatus/skin/delicious.png",
 									timestamp: t,
-									text: status.d,
+									text: status.d.length>140 ? status.d.substring(0, 140) : status.d,
 									link: status.u
 							});
 						}
@@ -614,7 +614,7 @@ var firestatus = {
 									timestamp: t,
 									image: status.user.profile_image_url,
 									title: status.user.name,
-									text: status.text,
+									text: status.text.length > 140 ? status.text.substring(0, 140) : status.text,
 									link: firestatus.IDENTICA_URL + '/notice/' + status.id});
 						}
 						firestatus.queue.lastIdenticaId = status.id;

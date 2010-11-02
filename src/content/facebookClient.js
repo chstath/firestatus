@@ -645,7 +645,7 @@ var facebookClient = {
                                                                       timestamp: n.updated_time,
                                                                       title: title,
                                                                       image: image,
-                                                                      text: text,
+                                                                      text: text.length > 140 ? text.substring(0, 140) : text,
                                                                       link: n.href ? n.href : n.permalink
                                                                      });
                       						firestatus.queue.lastFacebookTimestamp = n.updated_time;
