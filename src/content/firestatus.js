@@ -516,7 +516,7 @@ var firestatus = {
 	             	firestatus.cons.logStringMessage("Error loading FF page. req.status="+req.status);
 	      }
 	    };
-	    var auth = firestatus.friendfeedUsername+":"+firestatus.friendfeedKey;
+	    var auth = firestatus.friendfeedUsername + ":" + firestatus.friendfeedKey;
 	    req.setRequestHeader("Authorization", "Basic "+btoa(auth));
 	    req.send(null);
 	},
@@ -632,8 +632,8 @@ var firestatus = {
 													 "req.status="+req.status);
 	      }
 	    };
-	    var identicaPassword = firestatus.loadPassword(firestatus.deliciousUsername, firestatus.DELICIOUS_HOST, firestatus.DELICIOUS_REALM);
-	    var auth = firestatus.identicaUsername + ":" + identicaPassword;
+	    var identicaPassword = firestatus.loadPassword(firestatus.deliciousUsername, firestatus.IDENTICA_HOST, firestatus.IDENTICA_REALM);
+	    var auth = firestatus.identicaUsername + (identicaPassword ? (":" + identicaPassword) : "");
 	    req.setRequestHeader("Authorization", "Basic "+btoa(auth));
 	    req.send(null);
 	},
@@ -886,7 +886,7 @@ var firestatus = {
 			}
 		};
 	    var deliciousPassword = firestatus.loadPassword(firestatus.deliciousUsername, firestatus.DELICIOUS_HOST, firestatus.DELICIOUS_REALM);
-	    var auth = firestatus.deliciousUsername + ":" + deliciousPassword;
+	    var auth = firestatus.deliciousUsername + (deliciousPassword ? (":" + deliciousPassword) : "");
 	    firestatus.cons.logStringMessage(auth);
 	    req.setRequestHeader("Authorization", "Basic " + btoa(auth));
 	    req.setRequestHeader("Content-length", params.length);
@@ -937,7 +937,7 @@ var firestatus = {
 			}
 		};
 	    var identicaPassword = firestatus.loadPassword(firestatus.identicaUsername, firestatus.IDENTICA_HOST, firestatus.IDENTICA_REALM);
-	    var auth = firestatus.identicaUsername + ":" + identicaPassword;
+	    var auth = firestatus.identicaUsername + (identicaPassword ? (":" + identicaPassword) : "");
 	    req.setRequestHeader("Authorization", "Basic "+btoa(auth));
 	    req.setRequestHeader("Content-length", params.length);
 	    req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;");
