@@ -1,0 +1,38 @@
+<!ENTITY prefwindow.title "Eπιλογές του FireStatus">
+<!ENTITY twitterTab.label "Twitter">
+<!ENTITY friendfeedTab.label "FriendFeed">
+<!ENTITY facebookTab.label "Facebook">
+<!ENTITY deliciousTab.label "del.icio.us">
+<!ENTITY identicaTab.label "Identi.ca">
+<!ENTITY enabled.label "Αποστολή ενημερώσεων">
+<!ENTITY twitterEnabled.accesskey "T">
+<!ENTITY identicaEnabled.accesskey "T">
+<!ENTITY username.label "Όνομα χρήστη">
+<!ENTITY identicaUsername.accesskey "U">
+<!ENTITY password.label "Συνθηματικό">
+<!ENTITY updatesEnabled.label "Λήψη ενημερώσεων">
+<!ENTITY twitterUpdatesEnabled.accesskey "S">
+<!ENTITY identicaUpdatesEnabled.accesskey "S">
+<!ENTITY timeout.label "Λεπτά μεταξύ λήψεων">
+<!ENTITY twitterTimeout.accesskey "M">
+<!ENTITY twitter-pane.title "Προτιμήσεις Twitter">
+<!ENTITY identicaTimeout.accesskey "M">
+<!ENTITY identica-pane.title "Προτιμήσεις Identi.ca">
+<!ENTITY friendfeed-pane.title "Προτιμήσεις FriendFeed">
+<!ENTITY friendfeedEnabled.accesskey "N">
+<!ENTITY friendfeedUsername.accesskey "R">
+<!ENTITY friendfeedKey.accesskey "O">
+<!ENTITY friendfeedUpdatesEnabled.accesskey "D">
+<!ENTITY friendfeedTimeout.accesskey "E">
+<!ENTITY facebookEnabled.accesskey "A">
+<!ENTITY facebookUpdatesEnabled.accesskey "C">
+<!ENTITY facebookTimeout.accesskey "I">
+<!ENTITY remotekey.label "Remote Key">
+<!ENTITY friendfeed.note1 "Σημείωση: το δικό σας Remote Key">
+<!ENTITY friendfeed.note2 "μπορεί να βρεθεί στην ακόλουθη σελίδα:">
+<!ENTITY urlShortening.label "Περιορισμός URL">
+<!ENTITY tinyUrl.label "tinyURL">
+<!ENTITY urlborg.label "urlBorg">
+<!ENTITY tinyUrl.accesskey "T">
+<!ENTITY urlborg.accesskey "B">
+<!ENTITY shared.label "Μοιρασμένοι σελιδοδείκτες">

@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  - Copyright (c) 2008 Panagiotis Astithas
+  -
+  - Permission to use, copy, modify, and distribute this software for any
+  - purpose with or without fee is hereby granted, provided that the above
+  - copyright notice and this permission notice appear in all copies.
+  -
+  - THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+  - WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+  - MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+  - ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+  - WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+  - ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+  - OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+  - -->
+
+<?xml-stylesheet href="chrome://firestatus/skin/firestatus.css" type="text/css"?>
+<!DOCTYPE overlay SYSTEM "chrome://firestatus/locale/firestatus.dtd">
+<overlay id="firestatus-overlay"
+         xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+  <script src="chrome://firestatus/content/firestatus.js"/>
+  <script src="chrome://firestatus/content/statusInput.js"/>
+  <script src="chrome://firestatus/content/facebookClient.js"/>
+  <script src="chrome://firestatus/content/twitterClient.js"/>
+  <script src="chrome://firestatus/content/oauth.js"/>
+  <script src="chrome://firestatus/content/sha1.js"/>
+  <stringbundleset id="stringbundleset">
+    <stringbundle id="firestatus-strings" src="chrome://firestatus/locale/firestatus.properties"/>
+  </stringbundleset>
+
+  <vbox id="appcontent">
+    <splitter id="firestatusContentSplitter" collapsed="true"/>
+    <vbox id="firestatusContainer" collapsed="true">
+
+      <hbox id="firestatusPanelBox">
+
+	    <hbox align="center">
+			<toolbarbutton id="status-close" onclick="firestatus.hide()" tooltiptext="&firestatus.close;"/>
+			<vbox>
+	        	<textbox id="statusText" spellcheck="true" onkeyup="statusInput.updateCharCount(event)"/>
+	        	<textbox id="deliciousTags" spellcheck="true" hidden="true" tooltiptext="&firestatus.labelTags;"/>
+	        </vbox>
+	        <label id="charcount" value="0"/>
+	        <vbox id="urlGroup">
+	            <checkbox id="sendUrl" checked="false" label="&firestatus.sendUrl;" onclick="statusInput.toggleSendUrl()"/>
+	            <checkbox id="shortenUrl" disabled="true" checked="true" label="&firestatus.shortenUrl;" onclick="statusInput.toggleShortenUrl()"/>
+	        </vbox>
+        	<vbox align="start">
+	            <image id="twitter-icon" tooltiptext="&firestatus.labelTwitter;"/>
+	            <checkbox id="selectedConsumerTwitter" checked="true" tooltiptext="&firestatus.labelTwitter;"/>
+        	</vbox>
+        	<vbox align="start">
+	            <image id="facebook-icon" tooltiptext="&firestatus.labelFacebook;"/>
+	            <checkbox id="selectedConsumerFacebook" checked="false" tooltiptext="&firestatus.labelFacebook;"/>
+        	</vbox>
+        	<vbox align="start">
+	            <image id="friendfeed-icon" tooltiptext="&firestatus.labelFriendFeed;"/>
+		    	<checkbox id="selectedConsumerFriendfeed" checked="false" tooltiptext="&firestatus.labelFriendFeed;"/>
+        	</vbox>
+        	<vbox align="start">
+	            <image id="delicious-icon" tooltiptext="&firestatus.labelDelicious;"/>
+		    	<checkbox id="selectedConsumerDelicious" checked="false" tooltiptext="&firestatus.labelDelicious;" onclick="firestatus.showTagsBox();"/>
+        	</vbox>
+        	<vbox align="start">
+	            <image id="identica-icon" tooltiptext="&firestatus.labelIdentica;"/>
+		    	<checkbox id="selectedConsumerIdentica" checked="false" tooltiptext="&firestatus.labelIdentica;"/>
+        	</vbox>
+			<toolbarbutton id="status-send" label="&firestatus.send;" onclick="statusInput.sendStatusUpdate()" tooltiptext="&firestatus.sendTooltip;"/>
+	    </hbox>
+
+	  </hbox>
+	</vbox>
+  </vbox>
+
+    <statusbar id="status-bar">
+        <menupopup id="firestatus-popup">
+            <menuitem id="firestatus-update" label="&firestatus.update;" oncommand="firestatus.show()"/>
+            <menuitem id="firestatus-pause" label="&firestatus.pause;" oncommand="firestatus.pause()"/>
+            <menuitem id="firestatus-clear" label="&firestatus.clear;" oncommand="firestatus.clear()"/>
+            <menuitem id="firestatus-prefs" label="&firestatus.prefs;" oncommand="openDialog('chrome://firestatus/content/options.xul', 'prefs', 'chrome,resizable=yes,centerscreen=yes');"/>
+            <menuitem id="firestatus-about" label="&firestatus.about;" oncommand="openDialog('chrome://firestatus/content/about.xul', 'about', 'chrome,resizable=yes,centerscreen=yes');"/>
+        </menupopup>
+
+        <statusbarpanel id="firestatus-panel" onclick="firestatus.onClick(event);" context="firestatus-popup">
+        	<image id="firestatus-icon" tooltiptext="&firestatus.iconTip;" src="chrome://firestatus/skin/fs-icon-16.png"/>
+        </statusbarpanel>
+    </statusbar>
+</overlay>
