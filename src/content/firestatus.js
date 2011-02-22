@@ -244,8 +244,8 @@ var firestatus = {
   		  firestatus.deliciousTimeoutId = window.setInterval(firestatus.deliciousUpdates, firestatus.deliciousTimeout*60*1000);
   		}
         if (firestatus.identicaUpdatesEnabled) {
-		  firestatus.identicaUpdates();
-		  firestatus.identicaTimeoutId = window.setInterval(firestatus.identicaUpdates, firestatus.identicaTimeout*60*1000);
+		  identicaClient.identicaUpdates();
+		  firestatus.identicaTimeoutId = window.setInterval(identicaClient.identicaUpdates, firestatus.identicaTimeout*60*1000);
 		}
    },
 
@@ -429,8 +429,8 @@ var firestatus = {
 			case "identicaUpdatesEnabled":
 		    	this.identicaUpdatesEnabled = this.prefs.getBoolPref("identicaUpdatesEnabled");
 				if (this.identicaUpdatesEnabled) {
-					this.identicaUpdates();
-			        this.identicaTimeoutId = window.setInterval(this.identicaUpdates,
+					identicaClient.identicaUpdates();
+			        this.identicaTimeoutId = window.setInterval(identicaClient.identicaUpdates,
 															   this.identicaTimeout*60*1000);
 				} else
 					this.cancelUpdates("identica");
@@ -442,7 +442,7 @@ var firestatus = {
 		    	this.identicaTimeout = this.prefs.getIntPref("identicaTimeout");
 				if (this.identicaUpdatesEnabled) {
 					this.cancelUpdates("identica");
-			        this.identicaTimeoutId = window.setInterval(this.identicaUpdates,
+			        this.identicaTimeoutId = window.setInterval(identicaClient.identicaUpdates,
 															   this.identicaTimeout*60*1000);
 				}
 		    	break;
@@ -758,7 +758,7 @@ var firestatus = {
 			firestatus.sendStatusUpdateDelicious(statusInput.clearUrlFromStatus(statusText, document.getElementById("shortenUrl").checked), deliciousTags, firestatus.url, title);
 		}
 		if (sendIdentica) {
-			firestatus.sendStatusUpdateIdentica(statusText);
+			identicaClient.sendStatusUpdateIdentica(statusText);
 		}
 	},
 
@@ -892,57 +892,7 @@ var firestatus = {
 	    req.setRequestHeader("Content-length", params.length);
 	    req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;");
 	    req.send(params); 
-	},
-
-	sendStatusUpdateIdentica: function (statusText) {
-	    var params = "source=firestatus";
-	    var status = encodeURIComponent(statusText);
-	    params += "&status="+status;
-	    var req = new XMLHttpRequest ();   
-	    var POST_URL = firestatus.IDENTICA_URL + '/api/statuses/update.json';
-	    req.open("POST", POST_URL, true);
-	    req.onreadystatechange = function () {
-			if (req.readyState == 4) {
-			     switch(req.status) {
-				 	case 200:
-					 	firestatus.cons.logStringMessage("Identi.ca update sent.");
-						break;
-					case 400:
-						firestatus.cons.logStringMessage("Identica response: Bad Request");
-						break;
-					case 401:
-						firestatus.cons.logStringMessage("Identi.ca response: Not Authorized");
-						break;
-					case 403:
-						firestatus.cons.logStringMessage("Identi.ca response: Forbidden");
-						break;
-					case 404:
-						firestatus.cons.logStringMessage("Identi.ca response: Not Found");
-						break;
-					case 500:
-						firestatus.cons.logStringMessage("Identi.ca response: Internal Server Error");
-						break;
-					case 502:
-						firestatus.cons.logStringMessage("Identi.ca response: Bad Gateway");
-						break;
-					case 503:
-						firestatus.cons.logStringMessage("Identi.ca response: Service Unavailable");
-						break;
-					default:
-						firestatus.cons.logStringMessage("Unknown Identi.ca status: "+req.status);
-						firestatus.cons.logStringMessage("Identi.ca response: "+req.responseText);
-				 }
-			    if (req.status != 200)
-			        alert("Failed to update identi.ca. Response was " + req.status + ": " + req.responseText);
-			}
-		};
-	    var identicaPassword = firestatus.loadPassword(firestatus.identicaUsername, firestatus.IDENTICA_HOST, firestatus.IDENTICA_REALM);
-	    var auth = firestatus.identicaUsername + (identicaPassword ? (":" + identicaPassword) : "");
-	    req.setRequestHeader("Authorization", "Basic "+btoa(auth));
-	    req.setRequestHeader("Content-length", params.length);
-	    req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;");
-	    req.send(params); 
-	},
+	}
 };	
 
 Components.utils.import("resource://firestatus/queue.js", firestatus);
