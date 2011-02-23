@@ -30,7 +30,7 @@ identicaClient.getOauthHeader = function(httpMethod, url, parameters) {
         action: url,
         parameters: parameters
     };
-    var accessor = { 
+    var accessor = {
         consumerSecret: identicaClient.oauthConsumerSecret,
         tokenSecret: identicaClient.oauthTokenSecret
     };
@@ -44,7 +44,7 @@ identicaClient.getOauthHeader = function(httpMethod, url, parameters) {
 
 identicaClient.requestAccessToken = function(requestToken, pin, doNext, nextParams) {
     var httpMethod = "POST";
-    var accessTokenUrl = "https://identi.ca/api/oauth/access_token";    
+    var accessTokenUrl = "https://identi.ca/api/oauth/access_token";
     var parameters = [];
     parameters.push(["oauth_token", requestToken]);
     parameters.push(["oauth_verifier", pin]);
@@ -87,9 +87,9 @@ identicaClient.authenticate = function (doNext, nextParams) {
     var callback = "oob";
     var parameters = [];
     parameters.push(["oauth_callback", callback]);
-    
+
     var oauthHeader = identicaClient.getOauthHeader(httpMethod, requestTokenUrl, parameters);
-     
+
     var req = new XMLHttpRequest();
     req.open(httpMethod, requestTokenUrl, true);
     req.setRequestHeader("Authorization", oauthHeader);
@@ -111,7 +111,7 @@ identicaClient.authenticate = function (doNext, nextParams) {
             }
         }
     }
-    req.send(null);            
+    req.send(null);
 };
 
 identicaClient.loadOauthPrefs = function() {
@@ -139,10 +139,10 @@ identicaClient.identicaUpdates = function() {
         identicaClient.authenticate(identicaClient.identicaUpdates);
         return;
     }
-        
+
     var parameters = [];
     parameters.push(["oauth_token", identicaClient.oauthToken]);
-    
+
     var oauthHeader = identicaClient.getOauthHeader(httpMethod, homeUrl, parameters);
     var req = new XMLHttpRequest();
     req.open('GET', homeUrl, true);
@@ -191,11 +191,11 @@ identicaClient.identicaUpdates = function() {
 			 	return;
 			 else if (req.status == 401) { //oauth_token expired
                 identicaClient.authenticate(identicaClient.identicaUpdates);
-			 } 	
+			 }
 			 else
              	firestatus.cons.logStringMessage("Error getting identica updates. " +
 											 "req.status="+req.status);
-      }   
+      }
     };
     req.send(null);
 };
@@ -214,10 +214,10 @@ identicaClient.sendStatusUpdateIdentica = function (statusText) {
     var parameters = [];
     parameters.push(["oauth_token", identicaClient.oauthToken]);
     parameters.push(["status", status]);
-    
+
     var oauthHeader = identicaClient.getOauthHeader(httpMethod, postUrl, parameters);
 
-	var req = new XMLHttpRequest ();   
+	var req = new XMLHttpRequest ();
 	req.open("POST", postUrl, true);
     req.setRequestHeader("Authorization", oauthHeader);
     req.onreadystatechange = function () {
@@ -259,6 +259,5 @@ identicaClient.sendStatusUpdateIdentica = function (statusText) {
 	status = "status=" + encodeURIComponent(status);
 	req.setRequestHeader("Content-length", status.length);
 	req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;");
-	req.send(status); 
+	req.send(status);
 };
-
