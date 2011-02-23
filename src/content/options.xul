@@ -45,7 +45,6 @@
       <preference id="lastDeliciousTimestamp" name="extensions.firestatus.lastDeliciousTimestamp" type="string"/>
       <preference id="identicaEnabled" name="extensions.firestatus.identicaEnabled" type="bool"/>
       <preference id="identicaUpdatesEnabled" name="extensions.firestatus.identicaUpdatesEnabled" type="bool"/>
-      <preference id="identicaUsername" name="extensions.firestatus.identicaUsername" type="string"/>
       <preference id="identicaTimeout" name="extensions.firestatus.identicaTimeout" type="int"/>
       <preference id="lastIdenticaId" name="extensions.firestatus.lastIdenticaId" type="int"/>
       <preference id="lastIdenticaTimestamp" name="extensions.firestatus.lastIdenticaTimestamp" type="string"/>
@@ -71,7 +70,7 @@
             <tabpanel id="twitterTab">
 	            <groupbox>
 		            <caption label="&twitterTab.label;"/>
-                    
+
 		                <checkbox id="twitterEnabled" preference="twitterEnabled" label="&enabled.label;" accesskey="&twitterEnabled.accesskey;" image="chrome://firestatus/skin/twitter.png"/>
 		                <checkbox id="twitterUpdatesEnabled" preference="twitterUpdatesEnabled" label="&updatesEnabled.label;" accesskey="&twitterUpdatesEnabled.accesskey;" image="chrome://firestatus/skin/twitter.png"/>
 		                <label accesskey="&twitterTimeout.accesskey;" control="textTwitterTimeout">&timeout.label;</label><textbox id="textTwitterTimeout" preference="twitterTimeout"/>
@@ -80,7 +79,7 @@
             <tabpanel id="friendfeedTab">
 	            <groupbox>
                     <caption label="&friendfeedTab.label;"/>
-                    
+
 		                <checkbox id="friendfeedEnabled" preference="friendfeedEnabled" label="&enabled.label;" accesskey="&friendfeedEnabled.accesskey;" image="chrome://firestatus/skin/friendfeed.png"/>
 		                <checkbox id="friendfeedUpdatesEnabled" preference="friendfeedUpdatesEnabled" label="&updatesEnabled.label;" accesskey="&friendfeedUpdatesEnabled.accesskey;" image="chrome://firestatus/skin/friendfeed.png"/>
 		                <label accesskey="&friendfeedUsername.accesskey;" control="textFriendfeedUsername">&username.label;</label><textbox id="textFriendfeedUsername" preference="friendfeedUsername"/>
@@ -112,10 +111,9 @@
             <tabpanel id="identicaTab">
 	            <groupbox>
 		            <caption label="&identicaTab.label;"/>
-                    
+
 		                <checkbox id="identicaEnabled" preference="identicaEnabled" label="&enabled.label;" accesskey="&identicaEnabled.accesskey;" image="chrome://firestatus/skin/identica.png"/>
 		                <checkbox id="identicaUpdatesEnabled" preference="identicaUpdatesEnabled" label="&updatesEnabled.label;" accesskey="&identicaUpdatesEnabled.accesskey;" image="chrome://firestatus/skin/identica.png"/>
-		                <label accesskey="&identicaUsername.accesskey;" control="textIdenticaUsername">&username.label;</label><textbox id="textIdenticaUsername" preference="identicaUsername"/>
 		                <label accesskey="&identicaTimeout.accesskey;" control="textIdenticaTimeout">&timeout.label;</label><textbox id="textIdenticaTimeout" preference="identicaTimeout"/>
 	            </groupbox>
             </tabpanel>

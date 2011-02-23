@@ -60,12 +60,12 @@ var firestatus = {
 	statusInputWindow: null,
 	initialTimeoutId: 0,
     initialized: false,
-  
+
 	onLoad: function(){
 		// Initialization code
 		this.initialized = true;
 		this.strings = document.getElementById("firestatus-strings");
-		
+
 	    this.cons = Components.classes["@mozilla.org/consoleservice;1"].
         			getService(Components.interfaces.nsIConsoleService);
 
@@ -75,26 +75,26 @@ var firestatus = {
 	        .getBranch("extensions.firestatus.");
 	    this.prefs.QueryInterface(Components.interfaces.nsIPrefBranch2);
 	    this.prefs.addObserver("", this, false);
-	    
+
 	    this.twitterEnabled = this.prefs.getBoolPref("twitterEnabled");
 	    this.twitterUpdatesEnabled = this.prefs.getBoolPref("twitterUpdatesEnabled");
         twitterClient.loadOauthPrefs();
 	    this.twitterTimeout = this.prefs.getIntPref("twitterTimeout");
 	    this.queue.lastTwitterId = this.prefs.getIntPref("lastTwitterId");
-		
+
 	    this.friendfeedEnabled = this.prefs.getBoolPref("friendfeedEnabled");
 	    this.friendfeedUpdatesEnabled = this.prefs.getBoolPref("friendfeedUpdatesEnabled");
 	    this.friendfeedUsername = this.prefs.getCharPref("friendfeedUsername");
 	    this.friendfeedKey = this.prefs.getCharPref("friendfeedKey");
 	    this.friendfeedTimeout = this.prefs.getIntPref("friendfeedTimeout");
 	    this.queue.lastFriendfeedId = this.prefs.getCharPref("lastFriendfeedId");
-		
+
 		this.facebookClient = facebookClient;
 	    this.facebookEnabled = this.prefs.getBoolPref("facebookEnabled");
 	    this.facebookUpdatesEnabled = this.prefs.getBoolPref("facebookUpdatesEnabled");
 	    this.facebookTimeout = this.prefs.getIntPref("facebookTimeout");
 	    this.queue.lastFacebookTimestamp = this.prefs.getCharPref("lastFacebookTimestamp");
-		
+
 		this.shortURLService = this.prefs.getCharPref("shortURLService");
 		this.cons.logStringMessage("Short URL service selected: " + this.shortURLService);
 
@@ -108,26 +108,26 @@ var firestatus = {
 	    else
 	    	window.document.getElementById("deliciousTags").hidden = true;
 	    this.queue.lastDeliciousTimestamp = this.prefs.getCharPref("lastDeliciousTimestamp");
-		
+
 	    this.identicaEnabled = this.prefs.getBoolPref("identicaEnabled");
 	    this.identicaUpdatesEnabled = this.prefs.getBoolPref("identicaUpdatesEnabled");
-	    this.identicaUsername = this.prefs.getCharPref("identicaUsername");
+		identicaClient.loadOauthPrefs();
 	    this.identicaTimeout = this.prefs.getIntPref("identicaTimeout");
 	    this.queue.lastIdenticaId = this.prefs.getIntPref("lastIdenticaId");
 	    this.queue.lastIdenticaTimestamp = this.prefs.getCharPref("lastIdenticaTimestamp");
-		
+
 		this.initialTimeoutId = window.setTimeout(this.resume, 7*1000);
-        
+
         window.document.addEventListener('resize', function () {
             window.document.getElementById('statusText').width = window.innerWidth * 0.9 - 420;
             window.document.getElementById('deliciousTags').width = window.innerWidth * 0.9 - 420;
         }, false);
 	},
-	
+
 	onUnload: function() {
 		this.prefs.removeObserver("", this);
 	},
-	
+
 	onClick: function(event) {
 		if (event.button == 0 && !event.ctrlKey) {
 			if (window.document.getElementById('firestatusContainer').getAttribute("collapsed") === "true")
@@ -140,7 +140,7 @@ var firestatus = {
 			popup.openPopup(panel, 'after_start', 12, 4, true, false);
 		}
 	},
-	
+
 	show: function() {
 		var fsContainer = window.document.getElementById('firestatusContainer');
 		fsContainer.setAttribute("collapsed", 'false');
@@ -167,10 +167,10 @@ var firestatus = {
 	    		textField.value = title.trim();
 	       		statusInput.updateCharCount();
 		}
-		
+
 		textField.select();
 	},
-	
+
 	hide: function() {
 		var fsContainer = window.document.getElementById('firestatusContainer');
 		fsContainer.setAttribute("collapsed", 'true');
@@ -178,7 +178,7 @@ var firestatus = {
 		firestatus.shortUrl = null;
 		window.document.getElementById('statusText').value = "";
 	},
-	
+
 	clear: function() {
 		firestatus.queue.updateQueue.length = 0;
 	},
@@ -212,7 +212,7 @@ var firestatus = {
                     win.document.getElementById('firestatus-pause').label = strbundle.getString("extensions.firestatus.resume");
                 }
         })();
-        
+
     },
 
 	resume: function() {
@@ -253,7 +253,7 @@ var firestatus = {
 		if (topic != "nsPref:changed") {
 			return;
 		}
-		
+
 		switch(data) {
 			case "twitterEnabled":
 		    	this.twitterEnabled = this.prefs.getBoolPref("twitterEnabled");
@@ -271,7 +271,7 @@ var firestatus = {
 					window.document.getElementById("selectedConsumerTwitter").disabled = true;
 					window.document.getElementById("selectedConsumerTwitter").checked = false;
 					firestatus.prefs.setBoolPref("lastTwitterChecked", false);
-		    	}	
+		    	}
 		    	break;
 			case "twitterUpdatesEnabled":
 		    	this.twitterUpdatesEnabled = this.prefs.getBoolPref("twitterUpdatesEnabled");
@@ -306,7 +306,7 @@ var firestatus = {
 					window.document.getElementById("selectedConsumerFriendfeed").disabled = true;
 					window.document.getElementById("selectedConsumerFriendfeed").checked = false;
 					firestatus.prefs.setBoolPref("lastFriendfeedChecked", false);
-		    	}	
+		    	}
 		    	break;
 			case "friendfeedUpdatesEnabled":
 		    	this.friendfeedUpdatesEnabled = this.prefs.getBoolPref("friendfeedUpdatesEnabled");
@@ -347,7 +347,7 @@ var firestatus = {
 					window.document.getElementById("selectedConsumerFacebook").disabled = true;
 					window.document.getElementById("selectedConsumerFacebook").checked = false;
 					firestatus.prefs.setBoolPref("lastFacebookChecked", false);
-		    	}	
+		    	}
 		    	break;
 		    case "facebookUpdatesEnabled":
 		    	this.facebookUpdatesEnabled = this.prefs.getBoolPref("facebookUpdatesEnabled");
@@ -379,7 +379,7 @@ var firestatus = {
 					window.document.getElementById("selectedConsumerDelicious").checked = false;
 					firestatus.prefs.setBoolPref("lastDeliciousChecked", false);
 					window.document.getElementById("deliciousTags").hidden = true;
-		    	}	
+		    	}
 		    	break;
 			case "deliciousShared":
 				this.deliciousShared = this.prefs.getBoolPref("deliciousShared");
@@ -424,7 +424,7 @@ var firestatus = {
 					window.document.getElementById("selectedConsumerIdentica").disabled = true;
 					window.document.getElementById("selectedConsumerIdentica").checked = false;
 					firestatus.prefs.setBoolPref("lastIdenticaChecked", false);
-		    	}	
+		    	}
 		    	break;
 			case "identicaUpdatesEnabled":
 		    	this.identicaUpdatesEnabled = this.prefs.getBoolPref("identicaUpdatesEnabled");
@@ -448,7 +448,7 @@ var firestatus = {
 		    	break;
 		}
 	},
-	
+
 	cancelUpdates: function(service) {
 		switch(service) {
 			case "twitter":
@@ -468,7 +468,7 @@ var firestatus = {
 				break;
 		}
 	},
-  
+
 	friendfeedUpdates: function() {
 		if (firestatus.queue.processingQueue) return;
 		var FRIENDS_URL = firestatus.FRIENDFEED_URL + '/api/feed/home';
@@ -520,7 +520,7 @@ var firestatus = {
 	    req.setRequestHeader("Authorization", "Basic "+btoa(auth));
 	    req.send(null);
 	},
-	
+
 	facebookUpdates: function() {
 		if (firestatus.queue.processingQueue) return;
 		facebookClient.getNotifications();
@@ -637,14 +637,14 @@ var firestatus = {
 	    req.setRequestHeader("Authorization", "Basic "+btoa(auth));
 	    req.send(null);
 	},
-	
+
 	getShortUrl: function (url, callback) {
 		if (this.shortURLService == "tinyUrl")
 			var tinyurl = "http://tinyurl.com/api-create.php?url=" + url;
 		else
 			tinyurl = "http://urlborg.com/api/77577-9314/url/create_or_reuse.json/" + url;
 	    var req = new XMLHttpRequest();
-		req.open('GET', tinyurl, true); 
+		req.open('GET', tinyurl, true);
 	    req.onreadystatechange = function () {
 			if (req.readyState == 4) {
 			     switch(req.status) {
@@ -688,7 +688,7 @@ var firestatus = {
 	    };
 		req.send(null);
 	},
-	
+
 	getShrinkedUrl: function (url, statusText, deliciousTags, sendTwitter, sendFriendfeed, sendFacebook, sendDelicious, sendIdentica) {
 		firestatus.cons.logStringMessage("Shortening url ...");
 		var tinyurl = null;
@@ -697,7 +697,7 @@ var firestatus = {
 		else
 			tinyurl = "http://urlborg.com/api/77577-9314/url/create_or_reuse.json/" + url;
 	    var req = new XMLHttpRequest();
-		req.open('GET', tinyurl, true); 
+		req.open('GET', tinyurl, true);
 	    req.onreadystatechange = function () {
 			if (req.readyState == 4) {
 			     switch(req.status) {
@@ -741,7 +741,7 @@ var firestatus = {
 	    };
 		req.send(null);
 	},
-	
+
 	actuallySendUpdate: function(statusText, deliciousTags, sendTwitter, sendFriendfeed, sendFacebook, sendDelicious, sendIdentica) {
 		if (sendTwitter) {
 			twitterClient.sendStatusUpdateTwitter(statusText);
@@ -776,7 +776,7 @@ var firestatus = {
 	sendStatusUpdateFriendfeed: function(statusText) {
 	    var status = encodeURIComponent(statusText);
 	    var params = "title="+status;
-	    var req = new XMLHttpRequest();   
+	    var req = new XMLHttpRequest();
 	    var POST_URL = firestatus.FRIENDFEED_URL + '/api/share';
 	    req.open("POST", POST_URL, true);
 	    req.onreadystatechange = function () {
@@ -818,7 +818,7 @@ var firestatus = {
 	    req.setRequestHeader("Authorization", "Basic "+btoa(auth));
 	    req.setRequestHeader("Content-length", params.length);
 	    req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;");
-	    req.send(params); 
+	    req.send(params);
 	},
 
 	showTagsBox: function () {
@@ -829,19 +829,19 @@ var firestatus = {
 				document.getElementById("deliciousTags").hidden = false;
 		}
 	},
-	
+
 	loadPassword: function (username, hostname, realm) {
-	    var passwordManager = Components.classes["@mozilla.org/login-manager;1"].  
+	    var passwordManager = Components.classes["@mozilla.org/login-manager;1"].
                                 getService(Components.interfaces.nsILoginManager);
-                                
+
         var logins = passwordManager.findLogins({}, hostname, '', realm);
-        for (var i = 0; i < logins.length; i++) {  
-            if (logins[i].username == username) {  
-                return logins[i].password;  
-            }  
+        for (var i = 0; i < logins.length; i++) {
+            if (logins[i].username == username) {
+                return logins[i].password;
+            }
         }
 	},
-	
+
 	sendStatusUpdateDelicious: function (statusText, deliciousTags, url, title) {
 	    var status = encodeURIComponent(statusText);
 	    deliciousTags = encodeURIComponent(deliciousTags);
@@ -891,9 +891,9 @@ var firestatus = {
 	    req.setRequestHeader("Authorization", "Basic " + btoa(auth));
 	    req.setRequestHeader("Content-length", params.length);
 	    req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;");
-	    req.send(params); 
+	    req.send(params);
 	}
-};	
+};
 
 Components.utils.import("resource://firestatus/queue.js", firestatus);
 
