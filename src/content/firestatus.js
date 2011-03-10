@@ -61,7 +61,7 @@ var firestatus = {
 	initialTimeoutId: 0,
     initialized: false,
 
-	onLoad: function(){
+	onLoad: function(){	
 		// Initialization code
 		this.initialized = true;
 		this.strings = document.getElementById("firestatus-strings");
@@ -97,6 +97,8 @@ var firestatus = {
 
 		this.shortURLService = this.prefs.getCharPref("shortURLService");
 		this.cons.logStringMessage("Short URL service selected: " + this.shortURLService);
+		this.bitlyUsername = this.prefs.getCharPref("bitlyUsername");
+		this.bitlyKey = this.prefs.getCharPref("bitlyKey");
 
 	    this.deliciousEnabled = this.prefs.getBoolPref("deliciousEnabled");
 	    this.deliciousShared = this.prefs.getBoolPref("deliciousShared");
@@ -119,8 +121,8 @@ var firestatus = {
 		this.initialTimeoutId = window.setTimeout(this.resume, 7*1000);
 
         window.document.addEventListener('resize', function () {
-            window.document.getElementById('statusText').width = window.innerWidth * 0.9 - 420;
-            window.document.getElementById('deliciousTags').width = window.innerWidth * 0.9 - 420;
+            window.document.getElementById('statusText').width = window.innerWidth * 0.9 - 320;
+            window.document.getElementById('deliciousTags').width = window.innerWidth * 0.9 - 320;
         }, false);
 	},
 
@@ -253,7 +255,7 @@ var firestatus = {
 		if (topic != "nsPref:changed") {
 			return;
 		}
-
+        
 		switch(data) {
 			case "twitterEnabled":
 		    	this.twitterEnabled = this.prefs.getBoolPref("twitterEnabled");
@@ -446,6 +448,12 @@ var firestatus = {
 															   this.identicaTimeout*60*1000);
 				}
 		    	break;
+		    case "bitlyUsername":
+		        this.bitlyUsername = this.prefs.getCharPref("bitlyUsername");
+		        break;
+		    case "bitlyKey":
+		        this.bitlyKey = this.prefs.getCharPref("bitlyKey");
+		        break;
 		}
 	},
 
@@ -638,108 +646,94 @@ var firestatus = {
 	    req.send(null);
 	},
 
-	getShortUrl: function (url, callback) {
-		if (this.shortURLService == "tinyUrl")
-			var tinyurl = "http://tinyurl.com/api-create.php?url=" + url;
-		else
-			tinyurl = "http://urlborg.com/api/77577-9314/url/create_or_reuse.json/" + url;
-	    var req = new XMLHttpRequest();
-		req.open('GET', tinyurl, true);
-	    req.onreadystatechange = function () {
-			if (req.readyState == 4) {
-			     switch(req.status) {
-				 	case 200:
-				 		if (firestatus.shortURLService != "tinyUrl") {
-			            	var nativeJSON = Cc["@mozilla.org/dom/json;1"].createInstance(Ci.nsIJSON);
-		                    var jsonString = req.responseText;
-							firestatus.shortUrl = nativeJSON.decode(jsonString).s_url;
-				 		}
-				 		else {
-				 			firestatus.shortUrl = req.responseText;
-				 		}
-				 		callback();
-						break;
-					case 400:
-						firestatus.cons.logStringMessage("Bad Request");
-						break;
-					case 401:
-						firestatus.cons.logStringMessage("Not Authorized");
-						break;
-					case 403:
-						firestatus.cons.logStringMessage("Forbidden");
-						break;
-					case 404:
-						firestatus.cons.logStringMessage("Not Found");
-						break;
-					case 500:
-						firestatus.cons.logStringMessage("Internal Server Error");
-						break;
-					case 502:
-						firestatus.cons.logStringMessage("Bad Gateway");
-						break;
-					case 503:
-						firestatus.cons.logStringMessage("Service Unavailable");
-						break;
-					default:
-						firestatus.cons.logStringMessage("Unknown tinyurl code: "+req.status);
-						firestatus.cons.logStringMessage("Tinyurl response: "+req.responseText);
-			     }
-			}
-	    };
-		req.send(null);
-	},
+    getGoogleShortUrl: function (url, callback) {
+		var req = new XMLHttpRequest();
+		req.open('POST','https://www.googleapis.com/urlshortener/v1/url');
+		var params = '{"longUrl": "'+url+'"}';
+		req.setRequestHeader("Content-type","application/json");
+		req.setRequestHeader("Content-length", params.length);
+		req.setRequestHeader("Connection", "close");
 
-	getShrinkedUrl: function (url, statusText, deliciousTags, sendTwitter, sendFriendfeed, sendFacebook, sendDelicious, sendIdentica) {
-		firestatus.cons.logStringMessage("Shortening url ...");
-		var tinyurl = null;
-		if (this.shortURLService == "tinyUrl")
-			tinyurl = "http://tinyurl.com/api-create.php?url=" + url;
-		else
-			tinyurl = "http://urlborg.com/api/77577-9314/url/create_or_reuse.json/" + url;
+		req.onreadystatechange = function() {				
+		    if (req.readyState == 4) {
+			    if (req.status == 200) {
+			        firestatus.shortUrl = JSON.parse(req.responseText).id;
+			    } else {
+				    firestatus.cons.logStringMessage("Goo.gl returned error message: " + req.status + " " + req.statusText);
+			    };
+			    callback();				
+			};
+		};
+		req.send(params);		
+    },
+    
+    getTinyShortUrl: function (url, callback) {
 	    var req = new XMLHttpRequest();
-		req.open('GET', tinyurl, true);
+		req.open('GET', 'http://tinyurl.com/api-create.php?url='+url);
+		
 	    req.onreadystatechange = function () {
 			if (req.readyState == 4) {
-			     switch(req.status) {
-				 	case 200:
-				 		if (firestatus.shortURLService != "tinyUrl") {
-			            	var nativeJSON = Cc["@mozilla.org/dom/json;1"].createInstance(Ci.nsIJSON);
-		                    var jsonString = req.responseText;
-							url = nativeJSON.decode(jsonString).s_url;
-				 		}
-				 		else {
-				 			url = req.responseText;
-				 		}
-                    firestatus.actuallySendUpdate(statusText, url, deliciousTags, sendTwitter, sendFriendfeed, sendFacebook, sendDelicious, sendIdentica);
-						break;
-					case 400:
-						firestatus.cons.logStringMessage("Bad Request");
-						break;
-					case 401:
-						firestatus.cons.logStringMessage("Not Authorized");
-						break;
-					case 403:
-						firestatus.cons.logStringMessage("Forbidden");
-						break;
-					case 404:
-						firestatus.cons.logStringMessage("Not Found");
-						break;
-					case 500:
-						firestatus.cons.logStringMessage("Internal Server Error");
-						break;
-					case 502:
-						firestatus.cons.logStringMessage("Bad Gateway");
-						break;
-					case 503:
-						firestatus.cons.logStringMessage("Service Unavailable");
-						break;
-					default:
-						firestatus.cons.logStringMessage("Unknown tinyurl code: "+req.status);
-						firestatus.cons.logStringMessage("Tinyurl response: "+req.responseText);
-			     }
-			}
-	    };
+			    if (req.status == 200) {
+			        firestatus.shortUrl = req.responseText;			    
+			    } else {
+			        firestatus.cons.logStringMessage("Tinyurl returned error message: " + req.status + " " + req.statusText);
+			    };
+			    callback();
+			};
+		};
 		req.send(null);
+    },
+    
+    getUrlBorgShortUrl: function (url, callback) {
+	    var req = new XMLHttpRequest();
+		req.open('GET', 'http://urlborg.com/api/77577-9314/url/create_or_reuse.json/'+url);
+		
+	    req.onreadystatechange = function () {
+			if (req.readyState == 4) {
+			    if (req.status == 200) {
+				    firestatus.shortUrl = JSON.parse(req.responseText).s_url;
+			    } else {
+			        firestatus.cons.logStringMessage("Tinyurl returned error message: " + req.status + " " + req.statusText);
+			    };
+			    callback();
+			};
+		};
+		req.send(null);
+    },
+    
+    getBitlyShortUrl: function (url, callback) {
+	    var req = new XMLHttpRequest();
+		req.open('GET', 'http://api.bitly.com/v3/shorten?login='+this.bitlyUsername+'&apiKey='+this.bitlyKey+'&longUrl='+url+'&format=json');
+		
+	    req.onreadystatechange = function () {
+			if (req.readyState == 4) {
+			    if (req.status == 200) {
+				    firestatus.shortUrl = JSON.parse(req.responseText).data.url;
+			    } else {
+			        firestatus.cons.logStringMessage("Bit.ly returned error message: " + JSON.parse(req.responseText).status_txt);
+			    };
+			    callback();
+			};
+		};
+		req.send(null);
+    },
+    
+	getShortUrl: function (url, callback) {
+	    this.shortUrl = "";
+	    switch(this.shortURLService) {
+	        case "google":
+	            this.getGoogleShortUrl(url, callback);
+	            break;
+            case "tinyUrl":
+	            this.getTinyShortUrl(url, callback);
+	            break;
+            case "urlborg":
+	            this.getUrlBorgShortUrl(url, callback);
+	            break;
+            case "bitly":
+	            this.getBitlyShortUrl(url, callback);
+	            break;
+        }
 	},
 
 	actuallySendUpdate: function(statusText, deliciousTags, sendTwitter, sendFriendfeed, sendFacebook, sendDelicious, sendIdentica) {
@@ -769,7 +763,7 @@ var firestatus = {
 		st = statusInput.clearUrlFromStatus(statusText, document.getElementById("shortenUrl").checked);
         if ((title == st) && url)
             st = "";
-		firestatus.facebookClient.updateStatus(st, url);
+		firestatus.facebookClient.prePostStatus(st, url);
 	},
 
 
