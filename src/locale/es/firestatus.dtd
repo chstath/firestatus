@@ -1,0 +1,18 @@
+<!ENTITY firestatus.update "Actualiza tu estado...">
+<!ENTITY firestatus.clear "Descartar notificaciones pendientes">
+<!ENTITY firestatus.pause "Pausar">
+<!ENTITY firestatus.resume "Reanudar">
+<!ENTITY firestatus.prefs "Preferencias...">
+<!ENTITY firestatus.about "Sobre...">
+<!ENTITY firestatus.iconTip "Clic para enviar, clic derecho para menú">
+<!ENTITY firestatus.close "Cerrar popup">
+<!ENTITY firestatus.sendUrl "Incluir URL">
+<!ENTITY firestatus.shortenUrl "...acortada">
+<!ENTITY firestatus.labelTwitter "Twitter">
+<!ENTITY firestatus.labelFacebook "Facebook">
+<!ENTITY firestatus.labelFriendFeed "FriendFeed">
+<!ENTITY firestatus.labelIdentica "Identi.ca">
+<!ENTITY firestatus.labelDelicious "del.icio.us">
+<!ENTITY firestatus.send "Enviar">
+<!ENTITY firestatus.sendTooltip "Enviar actualización">
+<!ENTITY firestatus.labelTags "Etiquetas">

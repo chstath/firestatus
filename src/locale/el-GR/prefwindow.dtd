@@ -5,34 +5,32 @@
 <!ENTITY deliciousTab.label "del.icio.us">
 <!ENTITY identicaTab.label "Identi.ca">
 <!ENTITY enabled.label "Αποστολή ενημερώσεων">
-<!ENTITY twitterEnabled.accesskey "T">
-<!ENTITY identicaEnabled.accesskey "T">
-<!ENTITY username.label "Όνομα χρήστη">
-<!ENTITY identicaUsername.accesskey "U">
-<!ENTITY password.label "Συνθηματικό">
 <!ENTITY updatesEnabled.label "Λήψη ενημερώσεων">
-<!ENTITY twitterUpdatesEnabled.accesskey "S">
-<!ENTITY identicaUpdatesEnabled.accesskey "S">
+<!ENTITY username.label "Όνομα χρήστη">
+<!ENTITY password.label "Συνθηματικό">
 <!ENTITY timeout.label "Λεπτά μεταξύ λήψεων">
-<!ENTITY twitterTimeout.accesskey "M">
-<!ENTITY twitter-pane.title "Προτιμήσεις Twitter">
-<!ENTITY identicaTimeout.accesskey "M">
-<!ENTITY identica-pane.title "Προτιμήσεις Identi.ca">
-<!ENTITY friendfeed-pane.title "Προτιμήσεις FriendFeed">
-<!ENTITY friendfeedEnabled.accesskey "N">
-<!ENTITY friendfeedUsername.accesskey "R">
-<!ENTITY friendfeedKey.accesskey "O">
-<!ENTITY friendfeedUpdatesEnabled.accesskey "D">
-<!ENTITY friendfeedTimeout.accesskey "E">
-<!ENTITY facebookEnabled.accesskey "A">
-<!ENTITY facebookUpdatesEnabled.accesskey "C">
-<!ENTITY facebookTimeout.accesskey "I">
 <!ENTITY remotekey.label "Remote Key">
-<!ENTITY friendfeed.note1 "Σημείωση: το δικό σας Remote Key">
-<!ENTITY friendfeed.note2 "μπορεί να βρεθεί στην ακόλουθη σελίδα:">
 <!ENTITY urlShortening.label "Περιορισμός URL">
+<!ENTITY shared.label "Μοιρασμένοι σελιδοδείκτες">
 <!ENTITY tinyUrl.label "tinyURL">
 <!ENTITY urlborg.label "urlBorg">
+<!ENTITY google.label "goo.gl">
+<!ENTITY bitly.label "bit.ly">
+<!ENTITY textBitlyKey.label "API Key">
+<!ENTITY bitlyData.label "Λογαριασμός χρήστη bit.ly">
+<!ENTITY bitly.note1 "Σημείωση: Μπορείτε να βρείτε τα δεδομένα σας">
+<!ENTITY bitly.note2 "πρόσβαση στην επόμενη σελίδα:">
+<!ENTITY friendfeed.note1 "Σημείωση: το δικό σας Remote Key">
+<!ENTITY friendfeed.note2 "μπορεί να βρεθεί στην ακόλουθη σελίδα:">
+<!ENTITY shared.accesskey "b">
+<!ENTITY enabled.accesskey "T">
+<!ENTITY updatesEnabled.accesskey "S">
+<!ENTITY timeout.accesskey "M">
+<!ENTITY username.accesskey "U">
+<!ENTITY remotekey.accesskey "K">
 <!ENTITY tinyUrl.accesskey "T">
 <!ENTITY urlborg.accesskey "B">
-<!ENTITY shared.label "Μοιρασμένοι σελιδοδείκτες">
+<!ENTITY google.accesskey "G">
+<!ENTITY bitly.accesskey "L">
+<!ENTITY textBitlyKey.accesskey "A">
+

@@ -27,3 +27,7 @@ pref("extensions.firestatus.shortURLService", "tinyUrl");
 pref("extensions.firestatus.deliciousShared", true);
 // See http://kb.mozillazine.org/Localize_extension_descriptions
 pref("extensions.firestatus@astithas.com.description", "chrome://firestatus/locale/firestatus.properties");
+pref("extensions.firestatus.bitlyUsername", "");
+pref("extensions.firestatus.bitlyKey", "");
+pref("extensions.firestatus.fbToken", "");
+

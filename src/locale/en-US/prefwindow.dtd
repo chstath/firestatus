@@ -5,33 +5,32 @@
 <!ENTITY deliciousTab.label "del.icio.us">
 <!ENTITY identicaTab.label "Identi.ca">
 <!ENTITY enabled.label "Send updates">
-<!ENTITY twitterEnabled.accesskey "T">
-<!ENTITY identicaEnabled.accesskey "T">
+<!ENTITY updatesEnabled.label "Receive updates">
 <!ENTITY username.label "Username">
 <!ENTITY password.label "Password">
-<!ENTITY updatesEnabled.label "Receive updates">
-<!ENTITY twitterUpdatesEnabled.accesskey "S">
-<!ENTITY identicaUpdatesEnabled.accesskey "S">
 <!ENTITY timeout.label "Minutes between updates">
-<!ENTITY twitterTimeout.accesskey "M">
-<!ENTITY twitter-pane.title "Twitter preferences">
-<!ENTITY identicaTimeout.accesskey "M">
-<!ENTITY identica-pane.title "Identi.ca preferences">
-<!ENTITY friendfeed-pane.title "FriendFeed preferences">
-<!ENTITY friendfeedEnabled.accesskey "N">
-<!ENTITY friendfeedUsername.accesskey "R">
-<!ENTITY friendfeedKey.accesskey "O">
-<!ENTITY friendfeedUpdatesEnabled.accesskey "D">
-<!ENTITY friendfeedTimeout.accesskey "E">
-<!ENTITY facebookEnabled.accesskey "A">
-<!ENTITY facebookUpdatesEnabled.accesskey "C">
-<!ENTITY facebookTimeout.accesskey "I">
 <!ENTITY remotekey.label "Remote Key">
-<!ENTITY friendfeed.note1 "Note: your own Remote Key can">
-<!ENTITY friendfeed.note2 "be found in the following page:">
 <!ENTITY urlShortening.label "URL shortening">
+<!ENTITY shared.label "Shared bookmarks">
 <!ENTITY tinyUrl.label "tinyURL">
 <!ENTITY urlborg.label "urlBorg">
+<!ENTITY google.label "goo.gl">
+<!ENTITY bitly.label "bit.ly">
+<!ENTITY textBitlyKey.label "API Key">
+<!ENTITY bitlyData.label "User account bit.ly">
+<!ENTITY bitly.note1 "Note: your own user account data">
+<!ENTITY bitly.note2 "can be found in the following page:">
+<!ENTITY friendfeed.note1 "Note: your own Remote Key can">
+<!ENTITY friendfeed.note2 "be found in the following page:">
+<!ENTITY shared.accesskey "b">
+<!ENTITY enabled.accesskey "S">
+<!ENTITY updatesEnabled.accesskey "R">
+<!ENTITY timeout.accesskey "M">
+<!ENTITY username.accesskey "U">
+<!ENTITY remotekey.accesskey "K">
 <!ENTITY tinyUrl.accesskey "T">
 <!ENTITY urlborg.accesskey "B">
-<!ENTITY shared.label "Shared bookmarks">
+<!ENTITY google.accesskey "G">
+<!ENTITY bitly.accesskey "L">
+<!ENTITY textBitlyKey.accesskey "A">
+
