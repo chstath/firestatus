@@ -20,13 +20,9 @@ var facebookClient = {
     },
     
     prePostStatus: function(status, url) {
-        //var url = /(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/
-        var params = "";
-        //if (status.match(url)) {   
+        var params = "&message="+encodeURIComponent(status);
         if (url) {   
-            params = "&message="+encodeURIComponent(status.replace(url,""))+"&link="+encodeURIComponent(RegExp['$&']);
-        } else {
-            params = "&message="+encodeURIComponent(status);
+            params += "&link="+encodeURIComponent(url);
         }
         this.postStatus(params);
     },
