@@ -757,12 +757,7 @@ var firestatus = {
 	},
 
 	sendStatusUpdateFacebook: function(statusText, url) {
-		firestatus.cons.logStringMessage("Starting facebook update...");
-		var title = document.title;
-		title = title.substr(0, title.lastIndexOf('-')-1).trim();
 		st = statusInput.clearUrlFromStatus(statusText, document.getElementById("shortenUrl").checked);
-        if ((title == st) && url)
-            st = "";
 		firestatus.facebookClient.prePostStatus(st, url);
 	},
 
