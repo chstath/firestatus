@@ -134,7 +134,7 @@ twitterClient.twitterUpdates = function() {
 	if (firestatus.queue.processingQueue) return;
 
     var httpMethod = "GET";
-    var homeUrl = "http://api.twitter.com/1/statuses/home_timeline.json?since_id=" + firestatus.queue.lastTwitterId;
+    var homeUrl = "https://api.twitter.com/1/statuses/home_timeline.json?since_id=" + firestatus.queue.lastTwitterId;
 
     if (twitterClient.oauthToken == "" || twitterClient.oauthTokenSecret == "") {
         twitterClient.authenticate(twitterClient.twitterUpdates);
@@ -210,7 +210,7 @@ twitterClient.sendStatusUpdateTwitter = function (statusText) {
     var status = statusText;
 
     var httpMethod = 'POST';
-	var postUrl = 'http://api.twitter.com/1/statuses/update.json';
+	var postUrl = 'https://api.twitter.com/1/statuses/update.json';
 
     var parameters = [];
     parameters.push(["oauth_token", twitterClient.oauthToken]);
