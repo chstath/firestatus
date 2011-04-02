@@ -1,0 +1,36 @@
+<!ENTITY prefwindow.title "Eπιλογές του FireStatus">
+<!ENTITY twitterTab.label "Twitter">
+<!ENTITY friendfeedTab.label "FriendFeed">
+<!ENTITY facebookTab.label "Facebook">
+<!ENTITY deliciousTab.label "del.icio.us">
+<!ENTITY identicaTab.label "Identi.ca">
+<!ENTITY enabled.label "Αποστολή ενημερώσεων">
+<!ENTITY updatesEnabled.label "Λήψη ενημερώσεων">
+<!ENTITY username.label "Όνομα χρήστη">
+<!ENTITY password.label "Συνθηματικό">
+<!ENTITY timeout.label "Λεπτά μεταξύ λήψεων">
+<!ENTITY remotekey.label "Remote Key">
+<!ENTITY urlShortening.label "Περιορισμός URL">
+<!ENTITY shared.label "Μοιρασμένοι σελιδοδείκτες">
+<!ENTITY tinyUrl.label "tinyURL">
+<!ENTITY urlborg.label "urlBorg">
+<!ENTITY google.label "goo.gl">
+<!ENTITY bitly.label "bit.ly">
+<!ENTITY textBitlyKey.label "API Key">
+<!ENTITY bitlyData.label "Λογαριασμός χρήστη bit.ly">
+<!ENTITY bitly.note1 "Σημείωση: Μπορείτε να βρείτε τα δεδομένα>
+<!ENTITY bitly.note2 "πρόσβασης στην επόμενη σελίδα:">
+<!ENTITY friendfeed.note1 "Σημείωση: το δικό σας Remote Key">
+<!ENTITY friendfeed.note2 "μπορεί να βρεθεί στην ακόλουθη σελίδα:">
+<!ENTITY shared.accesskey "b">
+<!ENTITY enabled.accesskey "T">
+<!ENTITY updatesEnabled.accesskey "S">
+<!ENTITY timeout.accesskey "M">
+<!ENTITY username.accesskey "U">
+<!ENTITY remotekey.accesskey "K">
+<!ENTITY tinyUrl.accesskey "T">
+<!ENTITY urlborg.accesskey "B">
+<!ENTITY google.accesskey "G">
+<!ENTITY bitly.accesskey "L">
+<!ENTITY textBitlyKey.accesskey "A">
+

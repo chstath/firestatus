@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  - Copyright (c) 2008 Panagiotis Astithas
+  -
+  - Permission to use, copy, modify, and distribute this software for any
+  - purpose with or without fee is hereby granted, provided that the above
+  - copyright notice and this permission notice appear in all copies.
+  -
+  - THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+  - WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+  - MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+  - ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+  - WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+  - ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+  - OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+  - -->
+
+<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+<!DOCTYPE prefwindow SYSTEM "chrome://firestatus/locale/prefwindow.dtd">
+<prefwindow id="firestatusPreferences"
+			xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+			title="&prefwindow.title;"
+			type="prefwindow">
+  <prefpane id="pref-pane" label="&prefwindow.title;">
+    <preferences>
+      <preference id="twitterEnabled" name="extensions.firestatus.twitterEnabled" type="bool"/>
+      <preference id="twitterUpdatesEnabled" name="extensions.firestatus.twitterUpdatesEnabled" type="bool"/>
+      <preference id="twitterTimeout" name="extensions.firestatus.twitterTimeout" type="int"/>
+      <preference id="lastTwitterId" name="extensions.firestatus.lastTwitterId" type="int"/>
+      <preference id="lastTwitterTimestamp" name="extensions.firestatus.lastTwitterTimestamp" type="string"/>
+      <preference id="friendfeedEnabled" name="extensions.firestatus.friendfeedEnabled" type="bool"/>
+      <preference id="friendfeedUpdatesEnabled" name="extensions.firestatus.friendfeedUpdatesEnabled" type="bool"/>
+      <preference id="friendfeedUsername" name="extensions.firestatus.friendfeedUsername" type="string"/>
+      <preference id="friendfeedKey" name="extensions.firestatus.friendfeedKey" type="string"/> <!-- note that this is only an ASCII string - use unichar for unicode strings -->
+      <preference id="friendfeedTimeout" name="extensions.firestatus.friendfeedTimeout" type="int"/>
+      <preference id="lastFriendfeedId" name="extensions.firestatus.lastFriendfeedId" type="string"/>
+      <preference id="facebookEnabled" name="extensions.firestatus.facebookEnabled" type="bool"/>
+      <preference id="facebookUpdatesEnabled" name="extensions.firestatus.facebookUpdatesEnabled" type="bool"/>
+      <preference id="facebookTimeout" name="extensions.firestatus.facebookTimeout" type="int"/>
+      <preference id="deliciousEnabled" name="extensions.firestatus.deliciousEnabled" type="bool"/>
+      <preference id="deliciousShared" name="extensions.firestatus.deliciousShared" type="bool"/>
+      <preference id="deliciousUpdatesEnabled" name="extensions.firestatus.deliciousUpdatesEnabled" type="bool"/>
+      <preference id="deliciousUsername" name="extensions.firestatus.deliciousUsername" type="string"/>
+      <preference id="deliciousTimeout" name="extensions.firestatus.deliciousTimeout" type="int"/>
+      <preference id="lastDeliciousTimestamp" name="extensions.firestatus.lastDeliciousTimestamp" type="string"/>
+      <preference id="identicaEnabled" name="extensions.firestatus.identicaEnabled" type="bool"/>
+      <preference id="identicaUpdatesEnabled" name="extensions.firestatus.identicaUpdatesEnabled" type="bool"/>
+      <preference id="identicaTimeout" name="extensions.firestatus.identicaTimeout" type="int"/>
+      <preference id="lastIdenticaId" name="extensions.firestatus.lastIdenticaId" type="int"/>
+      <preference id="lastIdenticaTimestamp" name="extensions.firestatus.lastIdenticaTimestamp" type="string"/>
+      <preference id="shortURLService" name="extensions.firestatus.shortURLService" type="string"/>
+      <preference id="bitlyUsername" name="extensions.firestatus.bitlyUsername" type="string"/>
+      <preference id="bitlyKey" name="extensions.firestatus.bitlyKey" type="string"/>
+    </preferences>
+
+    <tabbox>
+        <tabs>
+            <tab label="&twitterTab.label;">
+            </tab>
+            <tab label="&friendfeedTab.label;">
+            </tab>
+            <tab label="&facebookTab.label;">
+            </tab>
+            <tab label="&deliciousTab.label;">
+            </tab>
+            <tab label="&identicaTab.label;">
+            </tab>
+            <tab label="&urlShortening.label;">
+            </tab>
+        </tabs>
+        <tabpanels>
+            <tabpanel id="twitterTab">
+	            <groupbox>
+		            <caption label="&twitterTab.label;"/>
+
+		                <checkbox id="twitterEnabled" preference="twitterEnabled" label="&enabled.label;" accesskey="&enabled.accesskey;" image="chrome://firestatus/skin/twitter.png"/>
+		                <checkbox id="twitterUpdatesEnabled" preference="twitterUpdatesEnabled" label="&updatesEnabled.label;" accesskey="&updatesEnabled.accesskey;" image="chrome://firestatus/skin/twitter.png"/>
+		                <label accesskey="&timeout.accesskey;" control="textTwitterTimeout">&timeout.label;</label><textbox id="textTwitterTimeout" preference="twitterTimeout"/>
+	            </groupbox>
+            </tabpanel>
+            <tabpanel id="friendfeedTab">
+	            <groupbox>
+                    <caption label="&friendfeedTab.label;"/>
+
+		                <checkbox id="friendfeedEnabled" preference="friendfeedEnabled" label="&enabled.label;" accesskey="&enabled.accesskey;" image="chrome://firestatus/skin/friendfeed.png"/>
+		                <checkbox id="friendfeedUpdatesEnabled" preference="friendfeedUpdatesEnabled" label="&updatesEnabled.label;" accesskey="&updatesEnabled.accesskey;" image="chrome://firestatus/skin/friendfeed.png"/>
+		                <label accesskey="&username.accesskey;" control="textFriendfeedUsername">&username.label;</label><textbox id="textFriendfeedUsername" preference="friendfeedUsername"/>
+		                <label accesskey="&remotekey.accesskey;" control="textFriendfeedKey">&remotekey.label;</label><textbox id="textFriendfeedKey" preference="friendfeedKey"/>
+		                <label accesskey="&timeout.accesskey;" control="textFriendfeedTimeout">&timeout.label;</label><textbox id="textFriendfeedTimeout" preference="friendfeedTimeout"/>
+               		    <label>&friendfeed.note1;</label>
+			            <label>&friendfeed.note2;</label>
+			            <label href='http://friendfeed.com/remotekey' class='text-link'>http://friendfeed.com/remotekey</label>
+	            </groupbox>
+            </tabpanel>
+            <tabpanel id="facebookTab">
+	            <groupbox>
+                    <caption label="&facebookTab.label;"/>
+	                <checkbox id="facebookEnabled" preference="facebookEnabled" label="&enabled.label;" accesskey="&enabled.accesskey;" image="chrome://firestatus/skin/facebook.png"/>
+	                <checkbox id="facebookUpdatesEnabled" preference="facebookUpdatesEnabled" label="&updatesEnabled.label;" accesskey="&updatesEnabled.accesskey;" image="chrome://firestatus/skin/facebook.png"/>
+	                <label accesskey="&timeout.accesskey;" control="textFacebookTimeout">&timeout.label;</label><textbox id="textFacebookTimeout" preference="facebookTimeout"/>
+	            </groupbox>
+            </tabpanel>
+            <tabpanel id="deliciousTab">
+	            <groupbox>
+		            <caption label="&deliciousTab.label;"/>
+		                <checkbox id="deliciousEnabled" preference="deliciousEnabled" label="&enabled.label;" accesskey="&enabled.accesskey;" image="chrome://firestatus/skin/delicious.png"/>
+		                <checkbox id="deliciousShared" preference="deliciousShared" label="&shared.label;" accesskey="&shared.accesskey;" image="chrome://firestatus/skin/delicious.png"/>
+		                <checkbox id="deliciousUpdatesEnabled" preference="deliciousUpdatesEnabled" accesskey="&updatesEnabled.accesskey;" label="&updatesEnabled.label;" image="chrome://firestatus/skin/delicious.png"/>
+		                <label accesskey="&username.accesskey;" control="textDeliciousUsername">&username.label;</label><textbox id="textDeliciousUsername" preference="deliciousUsername"/>
+		                <label accesskey="&timeout.accesskey;" control="textDeliciousTimeout">&timeout.label;</label><textbox id="textDeliciousTimeout" preference="deliciousTimeout"/>
+	            </groupbox>
+            </tabpanel>
+            <tabpanel id="identicaTab">
+	            <groupbox>
+		            <caption label="&identicaTab.label;"/>
+		                <checkbox id="identicaEnabled" preference="identicaEnabled" label="&enabled.label;" accesskey="&enabled.accesskey;" image="chrome://firestatus/skin/identica.png"/>
+		                <checkbox id="identicaUpdatesEnabled" preference="identicaUpdatesEnabled" label="&updatesEnabled.label;" accesskey="&updatesEnabled.accesskey;" image="chrome://firestatus/skin/identica.png"/>
+		                <label accesskey="&timeout.accesskey;" control="textIdenticaTimeout">&timeout.label;</label><textbox id="textIdenticaTimeout" preference="identicaTimeout"/>
+	            </groupbox>
+            </tabpanel>
+            <tabpanel>
+	            <groupbox>
+                    <caption label="&urlShortening.label;"/>
+                    <radiogroup preference="shortURLService">
+	                	<radio id="tinyUrl" label="&tinyUrl.label;" accesskey="&tinyUrl.accesskey;" value="tinyUrl"/>
+	                	<radio id="urlborg" label="&urlborg.label;" accesskey="&urlborg.accesskey;" value="urlborg"/>
+	                	<radio id="google" label="&google.label;" accesskey="&google.accesskey;" value="google"/>
+	                	<radio id="bitly" label="&bitly.label;" accesskey="&bitly.accesskey;" value="bitly"/>
+	                	<hbox>
+                	    <spacer width="20px"/>
+	                    <groupbox id="bitlydata">
+	                        <caption label="&bitlyData.label;"/>
+	                        <label accesskey="&username.accesskey;" control="textBitlyUsername">&username.label;</label><textbox id="textBitlyUsername" preference="bitlyUsername"/>
+	                        <label accesskey="&textBitlyKey.accesskey;" control="textBitlyKey">&textBitlyKey.label;</label><textbox id="textBitlyKey" preference="bitlyKey"/>
+                   		    <label>&bitly.note1;</label>
+			                    <label>&bitly.note2;</label>
+			                    <label href='http://bit.ly/a/your_api_key' class='text-link'>http://bit.ly/a/your_api_key</label>
+	                    </groupbox>
+	                    </hbox>
+	                </radiogroup>
+	            </groupbox>
+            </tabpanel>
+        </tabpanels>
+    </tabbox>
+  </prefpane>
+</prefwindow>

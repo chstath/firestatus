@@ -1,0 +1,36 @@
+<!ENTITY prefwindow.title "FireStatus preferences">
+<!ENTITY twitterTab.label "Twitter">
+<!ENTITY friendfeedTab.label "FriendFeed">
+<!ENTITY facebookTab.label "Facebook">
+<!ENTITY deliciousTab.label "del.icio.us">
+<!ENTITY identicaTab.label "Identi.ca">
+<!ENTITY enabled.label "Send updates">
+<!ENTITY updatesEnabled.label "Receive updates">
+<!ENTITY username.label "Username">
+<!ENTITY password.label "Password">
+<!ENTITY timeout.label "Minutes between updates">
+<!ENTITY remotekey.label "Remote Key">
+<!ENTITY urlShortening.label "URL shortening">
+<!ENTITY shared.label "Shared bookmarks">
+<!ENTITY tinyUrl.label "tinyURL">
+<!ENTITY urlborg.label "urlBorg">
+<!ENTITY google.label "goo.gl">
+<!ENTITY bitly.label "bit.ly">
+<!ENTITY textBitlyKey.label "API Key">
+<!ENTITY bitlyData.label "User account bit.ly">
+<!ENTITY bitly.note1 "Note: your own user account data">
+<!ENTITY bitly.note2 "can be found in the following page:">
+<!ENTITY friendfeed.note1 "Note: your own Remote Key can">
+<!ENTITY friendfeed.note2 "be found in the following page:">
+<!ENTITY shared.accesskey "b">
+<!ENTITY enabled.accesskey "S">
+<!ENTITY updatesEnabled.accesskey "R">
+<!ENTITY timeout.accesskey "M">
+<!ENTITY username.accesskey "U">
+<!ENTITY remotekey.accesskey "K">
+<!ENTITY tinyUrl.accesskey "T">
+<!ENTITY urlborg.accesskey "B">
+<!ENTITY google.accesskey "G">
+<!ENTITY bitly.accesskey "L">
+<!ENTITY textBitlyKey.accesskey "A">
+
