@@ -160,10 +160,10 @@ var statusInput = {
 		            document.getElementById('statusText').value = statusText.trim() + " " + firestatus.shortUrl;
                     statusInput.updateCharCount();
     	        }
-    	        /*if (firestatus.shortUrl) {
+    	        if (firestatus.shortUrl) {
     	            doAfterShort();
     	        }
-    	        else*/
+    	        else
 	                firestatus.getShortUrl(firestatus.url, doAfterShort);
     	    }
 		}

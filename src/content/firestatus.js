@@ -61,7 +61,7 @@ var firestatus = {
 	initialTimeoutId: 0,
     initialized: false,
 
-	onLoad: function(){	
+	onLoad: function() {
 		// Initialization code
 		this.initialized = true;
 		this.strings = document.getElementById("firestatus-strings");
@@ -92,6 +92,7 @@ var firestatus = {
 		this.facebookClient = facebookClient;
 	    this.facebookEnabled = this.prefs.getBoolPref("facebookEnabled");
 	    this.facebookUpdatesEnabled = this.prefs.getBoolPref("facebookUpdatesEnabled");
+        facebookClient.loadOauthPrefs();
 	    this.facebookTimeout = this.prefs.getIntPref("facebookTimeout");
 	    this.queue.lastFacebookTimestamp = this.prefs.getCharPref("lastFacebookTimestamp");
 
@@ -255,7 +256,7 @@ var firestatus = {
 		if (topic != "nsPref:changed") {
 			return;
 		}
-        
+
 		switch(data) {
 			case "twitterEnabled":
 		    	this.twitterEnabled = this.prefs.getBoolPref("twitterEnabled");
@@ -763,7 +764,7 @@ var firestatus = {
 		st = statusInput.clearUrlFromStatus(statusText, document.getElementById("shortenUrl").checked);
         if ((title == st) && url)
             st = "";
-		firestatus.facebookClient.prePostStatus(st, url);
+		firestatus.facebookClient.sendStatus(st, url);
 	},
 
 
