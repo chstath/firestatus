@@ -24,6 +24,7 @@
   <script src="chrome://firestatus/content/facebookClient.js"/>
   <script src="chrome://firestatus/content/twitterClient.js"/>
   <script src="chrome://firestatus/content/identicaClient.js"/>
+  <script src="chrome://firestatus/content/deliciousClient.js"/>
   <script src="chrome://firestatus/content/oauth.js"/>
   <script src="chrome://firestatus/content/sha1.js"/>
   <stringbundleset id="stringbundleset">

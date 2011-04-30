@@ -43,9 +43,6 @@ var firestatus = {
 	deliciousEnabled: false,
 	deliciousShared: true,
 	deliciousUpdatesEnabled: false,
-	deliciousUsername: "",
-	DELICIOUS_REALM: "del.icio.us API",
-	DELICIOUS_HOST: "https://api.del.icio.us",
 	deliciousTimeoutId: 0,
 	deliciousTimeout: 5,
 	identicaEnabled: false,
@@ -104,7 +101,7 @@ var firestatus = {
 	    this.deliciousEnabled = this.prefs.getBoolPref("deliciousEnabled");
 	    this.deliciousShared = this.prefs.getBoolPref("deliciousShared");
 	    this.deliciousUpdatesEnabled = this.prefs.getBoolPref("deliciousUpdatesEnabled");
-	    this.deliciousUsername = this.prefs.getCharPref("deliciousUsername");
+        deliciousClient.loadOauthPrefs();
 	    this.deliciousTimeout = this.prefs.getIntPref("deliciousTimeout");
 	    if (this.deliciousEnabled && window.document.getElementById("selectedConsumerDelicious").checked)
 	    	window.document.getElementById("deliciousTags").hidden = false;
@@ -243,8 +240,8 @@ var firestatus = {
 		  firestatus.facebookTimeoutId = window.setInterval(firestatus.facebookUpdates, firestatus.facebookTimeout*60*1000);
 		}
         if (firestatus.deliciousUpdatesEnabled) {
-  		  firestatus.deliciousUpdates();
-  		  firestatus.deliciousTimeoutId = window.setInterval(firestatus.deliciousUpdates, firestatus.deliciousTimeout*60*1000);
+  		  deliciousClient.deliciousUpdates();
+  		  firestatus.deliciousTimeoutId = window.setInterval(deliciousClient.deliciousUpdates, firestatus.deliciousTimeout*60*1000);
   		}
         if (firestatus.identicaUpdatesEnabled) {
 		  identicaClient.identicaUpdates();
@@ -390,20 +387,17 @@ var firestatus = {
 			case "deliciousUpdatesEnabled":
 		    	this.deliciousUpdatesEnabled = this.prefs.getBoolPref("deliciousUpdatesEnabled");
 				if (this.deliciousUpdatesEnabled) {
-					this.deliciousUpdates();
-			        this.deliciousTimeoutId = window.setInterval(this.deliciousUpdates,
+					deliciousClient.deliciousUpdates();
+			        this.deliciousTimeoutId = window.setInterval(deliciousClient.deliciousUpdates,
 															   this.deliciousTimeout*60*1000);
 				} else
 					this.cancelUpdates("delicious");
-		    	break;
-			case "deliciousUsername":
-		    	this.deliciousUsername = this.prefs.getCharPref("deliciousUsername");
 		    	break;
 			case "deliciousTimeout":
 		    	this.deliciousTimeout = this.prefs.getIntPref("deliciousTimeout");
 				if (this.deliciousUpdatesEnabled) {
 					this.cancelUpdates("delicious");
-			        this.deliciousTimeoutId = window.setInterval(this.deliciousUpdates,
+			        this.deliciousTimeoutId = window.setInterval(deliciousClient.deliciousUpdates,
 															   this.deliciousTimeout*60*1000);
 				}
 		    	break;
@@ -750,7 +744,7 @@ var firestatus = {
 		if (sendDelicious) {
 			var title = document.title;
 			title = title.substr(0, title.lastIndexOf('-') - 1);
-			firestatus.sendStatusUpdateDelicious(statusInput.clearUrlFromStatus(statusText, document.getElementById("shortenUrl").checked), deliciousTags, firestatus.url, title);
+			deliciousClient.sendStatusUpdateDelicious(statusInput.clearUrlFromStatus(statusText, document.getElementById("shortenUrl").checked), deliciousTags, firestatus.url, title);
 		}
 		if (sendIdentica) {
 			identicaClient.sendStatusUpdateIdentica(statusText);
