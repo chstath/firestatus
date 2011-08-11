@@ -152,9 +152,8 @@ identicaClient.identicaUpdates = function() {
              if(req.status == 200) {
 	            	var Ci = Components.interfaces;
 	            	var Cc = Components.classes;
-	            	var nativeJSON = Cc["@mozilla.org/dom/json;1"].createInstance(Ci.nsIJSON);
                     var jsonString = req.responseText;
-					var statuses = nativeJSON.decode(jsonString);
+					var statuses = JSON.parse(jsonString);
 					if (statuses.length == 0)
 						return;
 					// Sort the status updates, oldest first.

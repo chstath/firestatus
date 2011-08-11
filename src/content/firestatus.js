@@ -488,9 +488,8 @@ var firestatus = {
 	             if(req.status == 200) {
 		            	var Ci = Components.interfaces;
 		            	var Cc = Components.classes;
-		            	var nativeJSON = Cc["@mozilla.org/dom/json;1"].createInstance(Ci.nsIJSON);
 	                    var jsonString = req.responseText;
-						var statuses = nativeJSON.decode(jsonString).entries;
+						var statuses = JSON.parse(jsonString).entries;
 						// Sort the status updates, newest first.
 						statuses.sort(function(a, b) {
 										return a.updated > b.updated? -1: a.updated < b.updated? 1: 0;
@@ -545,10 +544,9 @@ var firestatus = {
 	             if(req.status == 200) {
 		            	var Ci = Components.interfaces;
 		            	var Cc = Components.classes;
-		            	var nativeJSON = Cc["@mozilla.org/dom/json;1"].createInstance(Ci.nsIJSON);
 	                    var jsonString = req.responseText;
 	                    firestatus.cons.logStringMessage(req.responseText);
-						var statuses = nativeJSON.decode(jsonString);
+						var statuses = JSON.parse(jsonString);
 						if (statuses.length == 0)
 							return;
 						statuses.reverse();
@@ -597,9 +595,8 @@ var firestatus = {
 	             if(req.status == 200) {
 		            	var Ci = Components.interfaces;
 		            	var Cc = Components.classes;
-		            	var nativeJSON = Cc["@mozilla.org/dom/json;1"].createInstance(Ci.nsIJSON);
 	                    var jsonString = req.responseText;
-						var statuses = nativeJSON.decode(jsonString);
+						var statuses = JSON.parse(jsonString);
 						if (statuses.length == 0)
 							return;
 						// Sort the status updates, oldest first.
