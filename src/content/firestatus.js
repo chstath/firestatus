@@ -97,7 +97,6 @@ var firestatus = {
 	    this.queue.lastFacebookTimestamp = this.prefs.getCharPref("lastFacebookTimestamp");
 
 		this.shortURLService = this.prefs.getCharPref("shortURLService");
-		this.cons.logStringMessage("Short URL service selected: " + this.shortURLService);
 		this.bitlyUsername = this.prefs.getCharPref("bitlyUsername");
 		this.bitlyKey = this.prefs.getCharPref("bitlyKey");
 
@@ -409,7 +408,6 @@ var firestatus = {
 		    	break;
 		    case "shortURLService":
 		    	this.shortURLService = this.prefs.getCharPref("shortURLService");
-				this.cons.logStringMessage("Short URL service selected: " + this.shortURLService);
 		    	break;
 			case "identicaEnabled":
 		    	this.identicaEnabled = this.prefs.getBoolPref("identicaEnabled");
@@ -545,7 +543,6 @@ var firestatus = {
 		            	var Ci = Components.interfaces;
 		            	var Cc = Components.classes;
 	                    var jsonString = req.responseText;
-	                    firestatus.cons.logStringMessage(req.responseText);
 						var statuses = JSON.parse(jsonString);
 						if (statuses.length == 0)
 							return;
@@ -755,7 +752,6 @@ var firestatus = {
 	},
 
 	sendStatusUpdateFacebook: function(statusText, url) {
-		firestatus.cons.logStringMessage("Starting facebook update...");
 		var title = document.title;
 		title = title.substr(0, title.lastIndexOf('-')-1).trim();
 		st = statusInput.clearUrlFromStatus(statusText, document.getElementById("shortenUrl").checked);
@@ -773,35 +769,6 @@ var firestatus = {
 	    req.open("POST", POST_URL, true);
 	    req.onreadystatechange = function () {
 			if (req.readyState == 4) {
-			     switch(req.status) {
-				 	case 200:
-					 	firestatus.cons.logStringMessage("FriendFeed update sent.");
-						break;
-					case 400:
-						firestatus.cons.logStringMessage("FriendFeed response: Bad Request");
-						break;
-					case 401:
-						firestatus.cons.logStringMessage("FriendFeed response: Not Authorized");
-						break;
-					case 403:
-						firestatus.cons.logStringMessage("FriendFeed response: Forbidden");
-						break;
-					case 404:
-						firestatus.cons.logStringMessage("FriendFeed response: Not Found");
-						break;
-					case 500:
-						firestatus.cons.logStringMessage("FriendFeed response: Internal Server Error");
-						break;
-					case 502:
-						firestatus.cons.logStringMessage("FriendFeed response: Bad Gateway");
-						break;
-					case 503:
-						firestatus.cons.logStringMessage("FriendFeed response: Service Unavailable");
-						break;
-					default:
-						firestatus.cons.logStringMessage("Unknown FriendFeed status: "+req.status);
-						firestatus.cons.logStringMessage("FriendFeed response: "+req.responseText);
-				 }
 			    if (req.status != 200)
 			        alert("Failed to update friendfeed. Response was " + req.status + ": " + req.responseText);
 			}
@@ -844,47 +811,28 @@ var firestatus = {
 	    req.open("POST", firestatus.DELICIOUS_URL_S + "/v1/posts/add", true);
 	    req.onreadystatechange = function () {
 			if (req.readyState == 4) {
-			     switch(req.status) {
-				 	case 200:
-					 	firestatus.cons.logStringMessage("Del.icio.us bookmark saved.");
-						break;
-					case 400:
-						firestatus.cons.logStringMessage("Bad Request");
-						break;
-					case 401:
-						firestatus.cons.logStringMessage("Not Authorized");
-						break;
-					case 403:
-						firestatus.cons.logStringMessage("Forbidden");
-						break;
-					case 404:
-						firestatus.cons.logStringMessage("Not Found");
-						break;
-					case 500:
-						firestatus.cons.logStringMessage("Internal Server Error");
-						break;
-					case 502:
-						firestatus.cons.logStringMessage("Bad Gateway");
-						break;
-					case 503:
-						firestatus.cons.logStringMessage("Service Unavailable");
-						break;
-					default:
-						firestatus.cons.logStringMessage("Unknown del.icio.us status: "+req.status);
-						firestatus.cons.logStringMessage("del.icio.us response: "+req.responseText);
-				 }
 			    if (req.status != 200)
 			        alert("Failed to update del.icio.us. Response was " + req.status + ": " + req.responseText);
 			}
 		};
 	    var deliciousPassword = firestatus.loadPassword(firestatus.deliciousUsername, firestatus.DELICIOUS_HOST, firestatus.DELICIOUS_REALM);
 	    var auth = firestatus.deliciousUsername + (deliciousPassword ? (":" + deliciousPassword) : "");
-	    firestatus.cons.logStringMessage(auth);
 	    req.setRequestHeader("Authorization", "Basic " + btoa(auth));
 	    req.setRequestHeader("Content-length", params.length);
 	    req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;");
 	    req.send(params);
-	}
+	},
+    
+    aboutInit: function() {
+        setTimeout(function () {
+            Components.utils.import("resource://gre/modules/AddonManager.jsm");
+            AddonManager.getAddonByID("firestatus@astithas.com", function(addon) {
+                var version = document.getElementsByClassName("version")[0];
+                version.attributes["value"].nodeValue = addon.version;
+            });
+        }, 0);
+        sizeToContent();
+    }
 };
 
 Components.utils.import("resource://firestatus/queue.js", firestatus);

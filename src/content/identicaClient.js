@@ -55,7 +55,6 @@ identicaClient.requestAccessToken = function(requestToken, pin, doNext, nextPara
     req.onreadystatechange = function () {
         if (req.readyState == 4) {
             var response = req.responseText;
-            firestatus.cons.logStringMessage(response);
             switch(req.status) {
                 case 200:
                     var tokens = response.split('&');
@@ -96,7 +95,6 @@ identicaClient.authenticate = function (doNext, nextParams) {
     req.onreadystatechange = function () {
         if (req.readyState == 4) {
             var response = req.responseText;
-            firestatus.cons.logStringMessage(response);
              switch(req.status) {
                 case 200:
                     var tokens = response.split('&');
@@ -221,35 +219,9 @@ identicaClient.sendStatusUpdateIdentica = function (statusText) {
     req.setRequestHeader("Authorization", oauthHeader);
     req.onreadystatechange = function () {
 	    if (req.readyState == 4) {
-		    switch(req.status) {
-			    case 200:
-				    firestatus.cons.logStringMessage("Identica update sent.");
-					break;
-				case 400:
-					firestatus.cons.logStringMessage("Identica response: Bad Request");
-					break;
-				case 401:
-					firestatus.cons.logStringMessage("Identica response: Not Authorized");
-                    identicaClient.authenticate(identicaClient.sendStatusUpdateidentica, [statusText, url]);
-					return;
-				case 403:
-					firestatus.cons.logStringMessage("Identica response: Forbidden");
-					break;
-				case 404:
-					firestatus.cons.logStringMessage("Identica response: Not Found");
-					break;
-				case 500:
-					firestatus.cons.logStringMessage("Identica response: Internal Server Error");
-					break;
-				case 502:
-					firestatus.cons.logStringMessage("Identica response: Bad Gateway");
-					break;
-				case 503:
-					firestatus.cons.logStringMessage("Identica response: Service Unavailable");
-					break;
-				default:
-					firestatus.cons.logStringMessage("Unknown Identica status: " + req.status);
-					firestatus.cons.logStringMessage("Identica response: " + req.responseText);
+		    if (req.status == 401) {
+                identicaClient.authenticate(identicaClient.sendStatusUpdateidentica, [statusText, url]);
+				return;
 			}
 			if (req.status != 200)
 			    alert("Failed to update identica. Response was " + req.status + ": " + req.responseText);

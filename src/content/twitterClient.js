@@ -55,7 +55,6 @@ twitterClient.requestAccessToken = function(requestToken, pin, doNext, nextParam
     req.onreadystatechange = function () {
         if (req.readyState == 4) {
             var response = req.responseText;
-            firestatus.cons.logStringMessage(response);
             switch(req.status) {
                 case 200:
                     var tokens = response.split('&');
@@ -100,7 +99,6 @@ twitterClient.authenticate = function (doNext, nextParams) {
     req.onreadystatechange = function () {
         if (req.readyState == 4) {
             var response = req.responseText;
-            firestatus.cons.logStringMessage(response);
              switch(req.status) {
                 case 200:
                     var tokens = response.split('&');
@@ -222,35 +220,9 @@ twitterClient.sendStatusUpdateTwitter = function (statusText) {
     req.setRequestHeader("Authorization", oauthHeader);
     req.onreadystatechange = function () {
 	    if (req.readyState == 4) {
-		    switch(req.status) {
-			    case 200:
-				    firestatus.cons.logStringMessage("Twitter update sent.");
-					break;
-				case 400:
-					firestatus.cons.logStringMessage("Twitter response: Bad Request");
-					break;
-				case 401:
-					firestatus.cons.logStringMessage("Twitter response: Not Authorized");
-                    twitterClient.authenticate(twitterClient.sendStatusUpdateTwitter, [statusText, url]);
-					return;
-				case 403:
-					firestatus.cons.logStringMessage("Twitter response: Forbidden");
-					break;
-				case 404:
-					firestatus.cons.logStringMessage("Twitter response: Not Found");
-					break;
-				case 500:
-					firestatus.cons.logStringMessage("Twitter response: Internal Server Error");
-					break;
-				case 502:
-					firestatus.cons.logStringMessage("Twitter response: Bad Gateway");
-					break;
-				case 503:
-					firestatus.cons.logStringMessage("Twitter response: Service Unavailable");
-					break;
-				default:
-					firestatus.cons.logStringMessage("Unknown Twitter status: "+req.status);
-					firestatus.cons.logStringMessage("Twitter response: "+req.responseText);
+		    if (req.status == 401) {
+                twitterClient.authenticate(twitterClient.sendStatusUpdateTwitter, [statusText, url]);
+				return;
 			}
 			if (req.status != 200)
 			    alert("Failed to update twitter. Response was " + req.status + ": " + req.responseText);
