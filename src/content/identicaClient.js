@@ -37,9 +37,9 @@ identicaClient.getOauthHeader = function(httpMethod, url, parameters) {
     message.parameters.push(["oauth_consumer_key", identicaClient.oauthConsumerKey]);
     message.parameters.push(["oauth_signature_method", identicaClient.signatureMethod]);
     message.parameters.push(["oauth_version", identicaClient.version]);
-    OAuth.setTimestampAndNonce(message);
-    OAuth.SignatureMethod.sign(message, accessor);
-    return OAuth.getAuthorizationHeader("", message.parameters);
+    firestatus.OAuth.setTimestampAndNonce(message);
+    firestatus.OAuth.SignatureMethod.sign(message, accessor);
+    return firestatus.OAuth.getAuthorizationHeader("", message.parameters);
 };
 
 identicaClient.requestAccessToken = function(requestToken, pin, doNext, nextParams) {
@@ -62,8 +62,28 @@ identicaClient.requestAccessToken = function(requestToken, pin, doNext, nextPara
                     var oauth_token_secret = tokens[1].substring(tokens[1].indexOf('=') + 1);
                     identicaClient.oauthToken = oauth_token;
                     identicaClient.oauthTokenSecret = oauth_token_secret;
-                    firestatus.prefs.setCharPref("identica_oauth_token", oauth_token);
-                    firestatus.prefs.setCharPref("identica_oauth_token_secret", oauth_token_secret);
+					var passwordManager = Components.classes["@mozilla.org/login-manager;1"].  
+                        getService(Components.interfaces.nsILoginManager);
+					var nsLoginInfo = new Components.Constructor("@mozilla.org/login-manager/loginInfo;1",  
+                                             Components.interfaces.nsILoginInfo, "init");  
+					var logins = passwordManager.findLogins({}, "chrome://firestatus", null, "identica_oauth_token");
+					for (var i = 0; i < logins.length; i++) {  
+						if (logins[i].username == "firestatus") {
+							passwordManager.removeLogin(logins[i]);
+						}  
+					} 
+					var logins = passwordManager.findLogins({}, "chrome://firestatus", null, "identica_oauth_token_secret");
+					for (var i = 0; i < logins.length; i++) {  
+						if (logins[i].username == "firestatus") {  
+							passwordManager.removeLogin(logins[i]);
+						}  
+					} 
+					var loginInfo = new nsLoginInfo("chrome://firestatus", null, "identica_oauth_token", "firestatus", oauth_token,  
+                                "", "");
+					passwordManager.addLogin(loginInfo);
+					var loginInfo = new nsLoginInfo("chrome://firestatus", null, "identica_oauth_token_secret", "firestatus", oauth_token_secret,  
+                                "", "");
+					passwordManager.addLogin(loginInfo);
                     if (nextParams)
                         doNext(nextParams[0]);
                     else
@@ -113,15 +133,26 @@ identicaClient.authenticate = function (doNext, nextParams) {
 };
 
 identicaClient.loadOauthPrefs = function() {
-    if (firestatus.prefs.prefHasUserValue("identica_oauth_token") &&
-            firestatus.prefs.prefHasUserValue("identica_oauth_token_secret")) {
-        identicaClient.oauthToken = firestatus.prefs.getCharPref("identica_oauth_token");
-        identicaClient.oauthTokenSecret = firestatus.prefs.getCharPref("identica_oauth_token_secret");
-    }
-    else {
-        identicaClient.oauthToken = "";
-        identicaClient.oauthTokenSecret = "";
-    }
+    identicaClient.oauthToken = "";
+    identicaClient.oauthTokenSecret = "";
+	var passwordManager = Components.classes["@mozilla.org/login-manager;1"].  
+                        getService(Components.interfaces.nsILoginManager);
+	var nsLoginInfo = new Components.Constructor("@mozilla.org/login-manager/loginInfo;1",  
+                            Components.interfaces.nsILoginInfo, "init");  
+	var logins = passwordManager.findLogins({}, "chrome://firestatus", null, "identica_oauth_token");
+	for (var i = 0; i < logins.length; i++) {  
+		if (logins[i].username == "firestatus") {  
+			identicaClient.oauthToken = logins[i].password;
+			break;  
+		}  
+	} 
+	var logins = passwordManager.findLogins({}, "chrome://firestatus", null, "identica_oauth_token_secret");
+	for (var i = 0; i < logins.length; i++) {  
+		if (logins[i].username == "firestatus") {  
+			identicaClient.oauthTokenSecret = logins[i].password;
+			break;  
+		}  
+	} 
 };
 
 identicaClient.identicaUpdates = function() {

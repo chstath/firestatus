@@ -23,26 +23,34 @@ facebookClient.oauthToken = "";
 facebookClient.uid = null;
     
 facebookClient.loadOauthPrefs = function() {
-    if (firestatus.prefs.prefHasUserValue("facebook_oauth_token") &&
-        firestatus.prefs.prefHasUserValue("facebook_uid")) {
-        facebookClient.oauthToken = firestatus.prefs.getCharPref("facebook_oauth_token");
-        facebookClient.uid = firestatus.prefs.getCharPref("facebook_uid");
+    facebookClient.oauthToken = "";
+    facebookClient.uid = "";
+	var passwordManager = Components.classes["@mozilla.org/login-manager;1"].  
+                        getService(Components.interfaces.nsILoginManager);
+	var nsLoginInfo = new Components.Constructor("@mozilla.org/login-manager/loginInfo;1",  
+                            Components.interfaces.nsILoginInfo, "init");  
+	var logins = passwordManager.findLogins({}, "chrome://firestatus", null, "facebook_oauth_token");
+	for (var i = 0; i < logins.length; i++) {  
+		if (logins[i].username == "firestatus") {  
+			facebookClient.oauthToken = logins[i].password;
+			break;  
+		}
     }
-    else {
-        facebookClient.oauthToken = "";
-        facebookClient.uid = "";
-    }
+	var logins = passwordManager.findLogins({}, "chrome://firestatus", null, "facebook_uid");
+	for (var i = 0; i < logins.length; i++) {  
+		if (logins[i].username == "firestatus") {  
+			facebookClient.uid = logins[i].password;
+			break;  
+		}  
+	} 
 };
 
 facebookClient.authenticate = function (doNext, doNextParams) {      
     window.open("chrome://firestatus/content/fbOAuth.xul", "Facebook Authentication", "modal,width=600,height=500,scrollbars=1,toolbar=0,location=0,minimizable=0,chrome,centerscreen");
-    if (facebookClient.firestatus.prefs.prefHasUserValue("facebook_oauth_token"))
-        facebookClient.oauthToken = facebookClient.firestatus.prefs.getCharPref("facebook_oauth_token");
-    else
-        facebookClient.oauthToken = "";
+    facebookClient.loadOauthPrefs();
     
     var req = new XMLHttpRequest();
-    req.open("GET", "https://graph.facebook.com/me?access_token=" + facebookClient.appKey + "|" + facebookClient.oauthToken, true);
+    req.open("GET", "https://graph.facebook.com/me?access_token=" + facebookClient.oauthToken, true);
     req.onreadystatechange = function () {
         if (req.readyState == 4) {
             if (req.status != 200) {
@@ -51,7 +59,13 @@ facebookClient.authenticate = function (doNext, doNextParams) {
                 alert("Error: " +  req.status + ": " + req.statusText + ": " + JSON.parse(req.responseText).error.message);
             } else {
                 facebookClient.uid = JSON.parse(req.responseText).id;
-                facebookClient.firestatus.prefs.setCharPref("facebook_uid", facebookClient.uid);
+                var passwordManager = Components.classes["@mozilla.org/login-manager;1"].  
+                    getService(Components.interfaces.nsILoginManager);
+                var nsLoginInfo = new Components.Constructor("@mozilla.org/login-manager/loginInfo;1",  
+                                         Components.interfaces.nsILoginInfo, "init");  
+                var loginInfo = new nsLoginInfo("chrome://firestatus", null, "facebook_uid", "firestatus", facebookClient.uid,  
+                            "", "");
+                passwordManager.addLogin(loginInfo);
                 if (doNext)
                     if (doNextParams)
                         doNext(doNextParams[0], doNextParams[1]);
@@ -69,7 +83,7 @@ facebookClient.sendStatus = function(status, url) {
         return;
     }
 
-    var params = "access_token=" + facebookClient.appKey + "|" + facebookClient.oauthToken + "&message=" + encodeURIComponent(status);
+    var params = "access_token=" + facebookClient.oauthToken + "&message=" + encodeURIComponent(status);
     if (url) {   
         params += "&link=" +  encodeURIComponent(url);
     }
@@ -105,7 +119,7 @@ facebookClient.getNotifications = function() {
     queries.users = "select id, name, pic from profile where id in (select actor_id from #user_stream)";            
     var queriesStr = encodeURIComponent(JSON.stringify(queries));    
     var req = new XMLHttpRequest();
-    req.open("GET", "https://api.facebook.com/method/fql.multiquery?access_token=" + facebookClient.appKey + "|" + facebookClient.oauthToken + "&queries=" + queriesStr + "&format=JSON");
+    req.open("GET", "https://api.facebook.com/method/fql.multiquery?access_token=" + facebookClient.oauthToken + "&queries=" + queriesStr + "&format=JSON");
     req.onreadystatechange = function () {
         if (req.readyState == 4) {
             if (req.status == 200) {

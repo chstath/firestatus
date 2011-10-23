@@ -20,12 +20,6 @@
 <overlay id="firestatus-overlay"
          xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
   <script src="chrome://firestatus/content/firestatus.js"/>
-  <script src="chrome://firestatus/content/statusInput.js"/>
-  <script src="chrome://firestatus/content/facebookClient.js"/>
-  <script src="chrome://firestatus/content/twitterClient.js"/>
-  <script src="chrome://firestatus/content/identicaClient.js"/>
-  <script src="chrome://firestatus/content/oauth.js"/>
-  <script src="chrome://firestatus/content/sha1.js"/>
   <stringbundleset id="stringbundleset">
     <stringbundle id="firestatus-strings" src="chrome://firestatus/locale/firestatus.properties"/>
   </stringbundleset>
@@ -37,37 +31,37 @@
       <hbox id="firestatusPanelBox">
 
 	    <hbox align="center">
-			<toolbarbutton id="status-close" onclick="firestatus.hide()" tooltiptext="&firestatus.close;"/>
+			<toolbarbutton id="firestatus-status-close" onclick="firestatus.hide()" tooltiptext="&firestatus.close;"/>
 			<vbox>
-	        	<textbox id="statusText" spellcheck="true" onkeyup="statusInput.updateCharCount(event)"/>
-	        	<textbox id="deliciousTags" spellcheck="true" hidden="true" tooltiptext="&firestatus.labelTags;"/>
+	        	<textbox id="firestatus-statusText" spellcheck="true" onkeyup="firestatus.statusInput.updateCharCount(event)"/>
+	        	<textbox id="firestatus-deliciousTags" spellcheck="true" hidden="true" tooltiptext="&firestatus.labelTags;"/>
 	        </vbox>
-	        <label id="charcount" value="0"/>
-	        <vbox id="urlGroup">
-	            <checkbox id="sendUrl" checked="false" label="&firestatus.sendUrl;" onclick="statusInput.toggleSendUrl()"/>
-	            <checkbox id="shortenUrl" disabled="true" checked="true" label="&firestatus.shortenUrl;" onclick="statusInput.toggleShortenUrl()"/>
+	        <label id="firestatus-charcount" value="0"/>
+	        <vbox id="firestatus-urlGroup">
+	            <checkbox id="firestatus-sendUrl" checked="false" label="&firestatus.sendUrl;" onclick="firestatus.statusInput.toggleSendUrl()"/>
+	            <checkbox id="firestatus-shortenUrl" disabled="true" checked="true" label="&firestatus.shortenUrl;" onclick="firestatus.statusInput.toggleShortenUrl()"/>
 	        </vbox>
         	<vbox align="start">
-	            <image id="twitter-icon" tooltiptext="&firestatus.labelTwitter;"/>
-	            <checkbox id="selectedConsumerTwitter" checked="true" tooltiptext="&firestatus.labelTwitter;"/>
+	            <image id="firestatus-twitter-icon" tooltiptext="&firestatus.labelTwitter;"/>
+	            <checkbox id="firestatus-selectedConsumerTwitter" checked="true" tooltiptext="&firestatus.labelTwitter;"/>
         	</vbox>
         	<vbox align="start">
-	            <image id="facebook-icon" tooltiptext="&firestatus.labelFacebook;"/>
-	            <checkbox id="selectedConsumerFacebook" checked="false" tooltiptext="&firestatus.labelFacebook;"/>
+	            <image id="firestatus-facebook-icon" tooltiptext="&firestatus.labelFacebook;"/>
+	            <checkbox id="firestatus-selectedConsumerFacebook" checked="false" tooltiptext="&firestatus.labelFacebook;"/>
         	</vbox>
         	<vbox align="start">
-	            <image id="friendfeed-icon" tooltiptext="&firestatus.labelFriendFeed;"/>
-		    	<checkbox id="selectedConsumerFriendfeed" checked="false" tooltiptext="&firestatus.labelFriendFeed;"/>
+	            <image id="firestatus-friendfeed-icon" tooltiptext="&firestatus.labelFriendFeed;"/>
+		    	<checkbox id="firestatus-selectedConsumerFriendfeed" checked="false" tooltiptext="&firestatus.labelFriendFeed;"/>
         	</vbox>
         	<vbox align="start">
-	            <image id="delicious-icon" tooltiptext="&firestatus.labelDelicious;"/>
-		    	<checkbox id="selectedConsumerDelicious" checked="false" tooltiptext="&firestatus.labelDelicious;" onclick="firestatus.showTagsBox();"/>
+	            <image id="firestatus-delicious-icon" tooltiptext="&firestatus.labelDelicious;"/>
+		    	<checkbox id="firestatus-selectedConsumerDelicious" checked="false" tooltiptext="&firestatus.labelDelicious;" onclick="firestatus.showTagsBox();"/>
         	</vbox>
         	<vbox align="start">
-	            <image id="identica-icon" tooltiptext="&firestatus.labelIdentica;"/>
-		    	<checkbox id="selectedConsumerIdentica" checked="false" tooltiptext="&firestatus.labelIdentica;"/>
+	            <image id="firestatus-identica-icon" tooltiptext="&firestatus.labelIdentica;"/>
+		    	<checkbox id="firestatus-selectedConsumerIdentica" checked="false" tooltiptext="&firestatus.labelIdentica;"/>
         	</vbox>
-			<toolbarbutton id="status-send" label="&firestatus.send;" onclick="statusInput.sendStatusUpdate()" tooltiptext="&firestatus.sendTooltip;"/>
+			<toolbarbutton id="firestatus-status-send" label="&firestatus.send;" onclick="firestatus.statusInput.sendStatusUpdate()" tooltiptext="&firestatus.sendTooltip;"/>
 	    </hbox>
 
 	  </hbox>

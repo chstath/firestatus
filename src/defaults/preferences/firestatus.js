@@ -5,8 +5,6 @@ pref("extensions.firestatus.lastTwitterId", 0);
 pref("extensions.firestatus.lastTwitterTimestamp", "0");
 pref("extensions.firestatus.friendfeedEnabled", false);
 pref("extensions.firestatus.friendfeedUpdatesEnabled", false);
-pref("extensions.firestatus.friendfeedUsername", "");
-pref("extensions.firestatus.friendfeedKey", "");
 pref("extensions.firestatus.friendfeedTimeout", 4);
 pref("extensions.firestatus.lastFriendfeedId", "");
 pref("extensions.firestatus.facebookEnabled", false);
