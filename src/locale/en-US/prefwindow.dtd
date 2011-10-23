@@ -20,8 +20,8 @@
 <!ENTITY bitlyData.label "User account bit.ly">
 <!ENTITY bitly.note1 "Note: your own user account data">
 <!ENTITY bitly.note2 "can be found in the following page:">
-<!ENTITY friendfeed.note1 "Note: your own Remote Key can">
-<!ENTITY friendfeed.note2 "be found in the following page:">
+<!ENTITY friendfeed.note1 "Note: If you are asked for a password enter your Remote Key">
+<!ENTITY friendfeed.note2 "which can be found in the following page:">
 <!ENTITY shared.accesskey "b">
 <!ENTITY enabled.accesskey "S">
 <!ENTITY updatesEnabled.accesskey "R">

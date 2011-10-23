@@ -20,8 +20,8 @@
 <!ENTITY bitlyData.label "Λογαριασμός χρήστη bit.ly">
 <!ENTITY bitly.note1 "Σημείωση: Μπορείτε να βρείτε τα δεδομένα>
 <!ENTITY bitly.note2 "πρόσβασης στην επόμενη σελίδα:">
-<!ENTITY friendfeed.note1 "Σημείωση: το δικό σας Remote Key">
-<!ENTITY friendfeed.note2 "μπορεί να βρεθεί στην ακόλουθη σελίδα:">
+<!ENTITY friendfeed.note1 "Σημείωση: Αν σας ζητηθεί password χρησιμοποιήστε το Remote Key">
+<!ENTITY friendfeed.note2 "που βρίσκεται στην ακόλουθη σελίδα:">
 <!ENTITY shared.accesskey "b">
 <!ENTITY enabled.accesskey "T">
 <!ENTITY updatesEnabled.accesskey "S">

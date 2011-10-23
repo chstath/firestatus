@@ -37,9 +37,9 @@ twitterClient.getOauthHeader = function(httpMethod, url, parameters) {
     message.parameters.push(["oauth_consumer_key", twitterClient.oauthConsumerKey]);
     message.parameters.push(["oauth_signature_method", twitterClient.signatureMethod]);
     message.parameters.push(["oauth_version", twitterClient.version]);
-    OAuth.setTimestampAndNonce(message);
-    OAuth.SignatureMethod.sign(message, accessor);
-    return OAuth.getAuthorizationHeader("", message.parameters);
+    firestatus.OAuth.setTimestampAndNonce(message);
+    firestatus.OAuth.SignatureMethod.sign(message, accessor);
+    return firestatus.OAuth.getAuthorizationHeader("", message.parameters);
 };
 
 twitterClient.requestAccessToken = function(requestToken, pin, doNext, nextParams) {
@@ -64,10 +64,28 @@ twitterClient.requestAccessToken = function(requestToken, pin, doNext, nextParam
                     var screen_name = tokens[3].substring(tokens[3].indexOf('=') + 1);
                     twitterClient.oauthToken = oauth_token;
                     twitterClient.oauthTokenSecret = oauth_token_secret;
-                    firestatus.prefs.setCharPref("twitter_oauth_token", oauth_token);
-                    firestatus.prefs.setCharPref("twitter_oauth_token_secret", oauth_token_secret);
-                    firestatus.prefs.setCharPref("twitter_user_id", user_id);
-                    firestatus.prefs.setCharPref("twitter_screen_name", screen_name);
+					var passwordManager = Components.classes["@mozilla.org/login-manager;1"].  
+                        getService(Components.interfaces.nsILoginManager);
+					var nsLoginInfo = new Components.Constructor("@mozilla.org/login-manager/loginInfo;1",  
+                                             Components.interfaces.nsILoginInfo, "init");  
+					var logins = passwordManager.findLogins({}, "chrome://firestatus", null, "twitter_oauth_token");
+					for (var i = 0; i < logins.length; i++) {  
+						if (logins[i].username == "firestatus") {
+							passwordManager.removeLogin(logins[i]);
+						}  
+					} 
+					var logins = passwordManager.findLogins({}, "chrome://firestatus", null, "twitter_oauth_token_secret");
+					for (var i = 0; i < logins.length; i++) {  
+						if (logins[i].username == "firestatus") {  
+							passwordManager.removeLogin(logins[i]);
+						}  
+					} 
+					var loginInfo = new nsLoginInfo("chrome://firestatus", null, "twitter_oauth_token", "firestatus", oauth_token,  
+                                "", "");
+					passwordManager.addLogin(loginInfo);
+					var loginInfo = new nsLoginInfo("chrome://firestatus", null, "twitter_oauth_token_secret", "firestatus", oauth_token_secret,  
+                                "", "");
+					passwordManager.addLogin(loginInfo);
                     if (nextParams)
                         doNext(nextParams[0]);
                     else
@@ -117,15 +135,26 @@ twitterClient.authenticate = function (doNext, nextParams) {
 };
 
 twitterClient.loadOauthPrefs = function() {
-    if (firestatus.prefs.prefHasUserValue("twitter_oauth_token") &&
-            firestatus.prefs.prefHasUserValue("twitter_oauth_token_secret")) {
-        twitterClient.oauthToken = firestatus.prefs.getCharPref("twitter_oauth_token");
-        twitterClient.oauthTokenSecret = firestatus.prefs.getCharPref("twitter_oauth_token_secret");
-    }
-    else {
-        twitterClient.oauthToken = "";
-        twitterClient.oauthTokenSecret = "";
-    }
+    twitterClient.oauthToken = "";
+    twitterClient.oauthTokenSecret = "";
+	var passwordManager = Components.classes["@mozilla.org/login-manager;1"].  
+                        getService(Components.interfaces.nsILoginManager);
+	var nsLoginInfo = new Components.Constructor("@mozilla.org/login-manager/loginInfo;1",  
+                            Components.interfaces.nsILoginInfo, "init");  
+	var logins = passwordManager.findLogins({}, "chrome://firestatus", null, "twitter_oauth_token");
+	for (var i = 0; i < logins.length; i++) {  
+		if (logins[i].username == "firestatus") {  
+			twitterClient.oauthToken = logins[i].password;
+			break;  
+		}  
+	} 
+	var logins = passwordManager.findLogins({}, "chrome://firestatus", null, "twitter_oauth_token_secret");
+	for (var i = 0; i < logins.length; i++) {  
+		if (logins[i].username == "firestatus") {  
+			twitterClient.oauthTokenSecret = logins[i].password;
+			break;  
+		}  
+	} 
 };
 
 twitterClient.twitterUpdates = function() {

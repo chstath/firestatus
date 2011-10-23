@@ -23,78 +23,78 @@
   max-height: 54px;
 }
 
-#statusText {
+#firestatus-statusText {
   font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
 }
 
-#statusText[focused="true"] {
+#firestatus-statusText[focused="true"] {
   outline: 2px solid #4A8BC7;
   outline-offset: -2px;
   -moz-outline-radius: 11px;
 }
 
-#deliciousTags[focused="true"] {
+#firestatus-deliciousTags[focused="true"] {
   outline: 2px solid #4A8BC7;
   outline-offset: -2px;
   -moz-outline-radius: 11px;
 }
 
-#charcount {
+#firestatus-charcount {
 	font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
 	font-weight: bold;
 	width: 24px;
 }
 
-#urlGroup {
+#firestatus-urlGroup {
 	padding-right: 20px;
 }
 
-#selectedConsumerTwitter {
+#firestatus-selectedConsumerTwitter {
 	padding: 0;
 }
 
-#selectedConsumerFacebook {
+#firestatus-selectedConsumerFacebook {
 	padding: 0;
 }
 
-#selectedConsumerFriendfeed {
+#firestatus-selectedConsumerFriendfeed {
 	padding: 0;
 }
 
-#selectedConsumerDelicious {
+#firestatus-selectedConsumerDelicious {
 	padding: 0;
 }
 
-#selectedConsumerIdentica {
+#firestatus-selectedConsumerIdentica {
 	padding: 0;
 }
 
-#twitter-icon {
+#firestatus-twitter-icon {
 	list-style-image: url("chrome://firestatus/skin/twitter.png");
 	padding-left: 2px;
 }
 
-#friendfeed-icon {
+#firestatus-friendfeed-icon {
 	list-style-image: url("chrome://firestatus/skin/friendfeed.png");
 	padding-left: 2px;
 }
 
-#facebook-icon {
+#firestatus-facebook-icon {
 	list-style-image: url("chrome://firestatus/skin/facebook.png");
 	padding-left: 2px;
 }
 
-#delicious-icon {
+#firestatus-delicious-icon {
 	list-style-image: url("chrome://firestatus/skin/delicious.png");
 	padding-left: 2px;
 }
 
-#identica-icon {
+#firestatus-identica-icon {
 	list-style-image: url("chrome://firestatus/skin/identica.png");
 	padding-left: 2px;
 }
 
-#status-close {
+#firestatus-status-close {
   -moz-appearance: none;
   list-style-image: url("chrome://firestatus/skin/close.png");
   border: none;
@@ -103,11 +103,11 @@
   min-width: 1px;
 }
 
-#status-close:hover {
+#firestatus-status-close:hover {
   list-style-image: url("chrome://firestatus/skin/close-hover.png") !important;
 }
 
-#statusText {
+#firestatus-statusText {
   -moz-appearance: none;
   border: 3px solid;
   -moz-border-top-colors: #5F5F5F #CFCFCF -moz-Field;
@@ -119,7 +119,7 @@
   padding: 0 8px;
 }
 
-#deliciousTags {
+#firestatus-deliciousTags {
   -moz-appearance: none;
   border: 3px solid;
   -moz-border-top-colors: #5F5F5F #CFCFCF -moz-Field;
@@ -131,13 +131,13 @@
   padding: 0 8px;
 }
 
-#status-send {
+#firestatus-status-send {
   border: 1px solid #5F5F5F;
   -moz-border-radius: 10px;
   margin: 0 4px 1px 20px;
   padding: 0 8px;
 }
 
-#status-send:hover {
+#firestatus-status-send:hover {
   border-color: #00FF00;
 }
