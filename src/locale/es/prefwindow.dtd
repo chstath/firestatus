@@ -16,8 +16,6 @@
 <!ENTITY urlborg.label "urlBorg">
 <!ENTITY google.label "goo.gl">
 <!ENTITY bitly.label "bit.ly">
-<!ENTITY textBitlyKey.label "API Key">
-<!ENTITY bitlyData.label "Datos acceso bit.ly">
 <!ENTITY bitly.note1 "Nota: puedes encontrar tus datos">
 <!ENTITY bitly.note2 "de acceso en la siguiente página:">
 <!ENTITY friendfeed.note1 "Nota: puedes encontrar tu clave">
@@ -32,5 +30,4 @@
 <!ENTITY urlborg.accesskey "B">
 <!ENTITY google.accesskey "G">
 <!ENTITY bitly.accesskey "L">
-<!ENTITY textBitlyKey.accesskey "A">
 

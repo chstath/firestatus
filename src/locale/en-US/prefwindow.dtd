@@ -16,11 +16,9 @@
 <!ENTITY urlborg.label "urlBorg">
 <!ENTITY google.label "goo.gl">
 <!ENTITY bitly.label "bit.ly">
-<!ENTITY textBitlyKey.label "API Key">
-<!ENTITY bitlyData.label "User account bit.ly">
 <!ENTITY bitly.note1 "Note: your own user account data">
 <!ENTITY bitly.note2 "can be found in the following page:">
-<!ENTITY friendfeed.note1 "Note: If you are asked for a password enter your Remote Key">
+<!ENTITY friendfeed.note1 "When you are asked for a username/key enter your Remote Key">
 <!ENTITY friendfeed.note2 "which can be found in the following page:">
 <!ENTITY shared.accesskey "b">
 <!ENTITY enabled.accesskey "S">
@@ -32,5 +30,4 @@
 <!ENTITY urlborg.accesskey "B">
 <!ENTITY google.accesskey "G">
 <!ENTITY bitly.accesskey "L">
-<!ENTITY textBitlyKey.accesskey "A">
 

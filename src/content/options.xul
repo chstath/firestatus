@@ -23,34 +23,25 @@
 			type="prefwindow">
   <prefpane id="firestatus-pref-pane" label="&prefwindow.title;">
     <preferences>
-      <preference id="firestatus-twitterEnabled" name="extensions.firestatus.twitterEnabled" type="bool"/>
       <preference id="firestatus-twitterUpdatesEnabled" name="extensions.firestatus.twitterUpdatesEnabled" type="bool"/>
       <preference id="firestatus-twitterTimeout" name="extensions.firestatus.twitterTimeout" type="int"/>
       <preference id="firestatus-lastTwitterId" name="extensions.firestatus.lastTwitterId" type="int"/>
       <preference id="firestatus-lastTwitterTimestamp" name="extensions.firestatus.lastTwitterTimestamp" type="string"/>
-      <preference id="firestatus-friendfeedEnabled" name="extensions.firestatus.friendfeedEnabled" type="bool"/>
       <preference id="firestatus-friendfeedUpdatesEnabled" name="extensions.firestatus.friendfeedUpdatesEnabled" type="bool"/>
-      <preference id="firestatus-friendfeedUsername" name="extensions.firestatus.friendfeedUsername" type="string"/>
-      <preference id="firestatus-friendfeedKey" name="extensions.firestatus.friendfeedKey" type="string"/> <!-- note that this is only an ASCII string - use unichar for unicode strings -->
       <preference id="firestatus-friendfeedTimeout" name="extensions.firestatus.friendfeedTimeout" type="int"/>
       <preference id="firestatus-lastFriendfeedId" name="extensions.firestatus.lastFriendfeedId" type="string"/>
-      <preference id="firestatus-facebookEnabled" name="extensions.firestatus.facebookEnabled" type="bool"/>
       <preference id="firestatus-facebookUpdatesEnabled" name="extensions.firestatus.facebookUpdatesEnabled" type="bool"/>
       <preference id="firestatus-facebookTimeout" name="extensions.firestatus.facebookTimeout" type="int"/>
       <preference id="firestatus-deliciousEnabled" name="extensions.firestatus.deliciousEnabled" type="bool"/>
       <preference id="firestatus-deliciousShared" name="extensions.firestatus.deliciousShared" type="bool"/>
       <preference id="firestatus-deliciousUpdatesEnabled" name="extensions.firestatus.deliciousUpdatesEnabled" type="bool"/>
-      <preference id="firestatus-deliciousUsername" name="extensions.firestatus.deliciousUsername" type="string"/>
       <preference id="firestatus-deliciousTimeout" name="extensions.firestatus.deliciousTimeout" type="int"/>
       <preference id="firestatus-lastDeliciousTimestamp" name="extensions.firestatus.lastDeliciousTimestamp" type="string"/>
-      <preference id="firestatus-identicaEnabled" name="extensions.firestatus.identicaEnabled" type="bool"/>
       <preference id="firestatus-identicaUpdatesEnabled" name="extensions.firestatus.identicaUpdatesEnabled" type="bool"/>
       <preference id="firestatus-identicaTimeout" name="extensions.firestatus.identicaTimeout" type="int"/>
       <preference id="firestatus-lastIdenticaId" name="extensions.firestatus.lastIdenticaId" type="int"/>
       <preference id="firestatus-lastIdenticaTimestamp" name="extensions.firestatus.lastIdenticaTimestamp" type="string"/>
       <preference id="firestatus-shortURLService" name="extensions.firestatus.shortURLService" type="string"/>
-      <preference id="firestatus-bitlyUsername" name="extensions.firestatus.bitlyUsername" type="string"/>
-      <preference id="firestatus-bitlyKey" name="extensions.firestatus.bitlyKey" type="string"/>
     </preferences>
 
     <tabbox>
@@ -72,8 +63,6 @@
             <tabpanel id="firestatus-twitterTab">
 	            <groupbox>
 		            <caption label="&twitterTab.label;"/>
-
-		                <checkbox id="firestatus-twitterEnabled" preference="firestatus-twitterEnabled" label="&enabled.label;" accesskey="&enabled.accesskey;" image="chrome://firestatus/skin/twitter.png"/>
 		                <checkbox id="firestatus-twitterUpdatesEnabled" preference="firestatus-twitterUpdatesEnabled" label="&updatesEnabled.label;" accesskey="&updatesEnabled.accesskey;" image="chrome://firestatus/skin/twitter.png"/>
 		                <label accesskey="&timeout.accesskey;" control="textTwitterTimeout">&timeout.label;</label><textbox id="firestatus-textTwitterTimeout" preference="firestatus-twitterTimeout"/>
 	            </groupbox>
@@ -81,8 +70,6 @@
             <tabpanel id="firestatus-friendfeedTab">
 	            <groupbox>
                     <caption label="&friendfeedTab.label;"/>
-
-		                <checkbox id="firestatus-friendfeedEnabled" preference="firestatus-friendfeedEnabled" label="&enabled.label;" accesskey="&enabled.accesskey;" image="chrome://firestatus/skin/friendfeed.png"/>
 		                <checkbox id="firestatus-friendfeedUpdatesEnabled" preference="firestatus-friendfeedUpdatesEnabled" label="&updatesEnabled.label;" accesskey="&updatesEnabled.accesskey;" image="chrome://firestatus/skin/friendfeed.png"/>
 		                <label accesskey="&timeout.accesskey;" control="textFriendfeedTimeout">&timeout.label;</label><textbox id="firestatus-textFriendfeedTimeout" preference="firestatus-friendfeedTimeout"/>
                		    <label>&friendfeed.note1;</label>
@@ -93,7 +80,6 @@
             <tabpanel id="firestatus-facebookTab">
 	            <groupbox>
                     <caption label="&facebookTab.label;"/>
-	                <checkbox id="firestatus-facebookEnabled" preference="firestatus-facebookEnabled" label="&enabled.label;" accesskey="&enabled.accesskey;" image="chrome://firestatus/skin/facebook.png"/>
 	                <checkbox id="firestatus-facebookUpdatesEnabled" preference="firestatus-facebookUpdatesEnabled" label="&updatesEnabled.label;" accesskey="&updatesEnabled.accesskey;" image="chrome://firestatus/skin/facebook.png"/>
 	                <label accesskey="&timeout.accesskey;" control="textFacebookTimeout">&timeout.label;</label><textbox id="firestatus-textFacebookTimeout" preference="firestatus-facebookTimeout"/>
 	            </groupbox>
@@ -101,17 +87,14 @@
             <tabpanel id="firestatus-deliciousTab">
 	            <groupbox>
 		            <caption label="&deliciousTab.label;"/>
-		                <checkbox id="firestatus-deliciousEnabled" preference="firestatus-deliciousEnabled" label="&enabled.label;" accesskey="&enabled.accesskey;" image="chrome://firestatus/skin/delicious.png"/>
 		                <checkbox id="firestatus-deliciousShared" preference="firestatus-deliciousShared" label="&shared.label;" accesskey="&shared.accesskey;" image="chrome://firestatus/skin/delicious.png"/>
 		                <checkbox id="firestatus-deliciousUpdatesEnabled" preference="firestatus-deliciousUpdatesEnabled" accesskey="&updatesEnabled.accesskey;" label="&updatesEnabled.label;" image="chrome://firestatus/skin/delicious.png"/>
-		                <label accesskey="&username.accesskey;" control="textDeliciousUsername">&username.label;</label><textbox id="firestatus-textDeliciousUsername" preference="firestatus-deliciousUsername"/>
 		                <label accesskey="&timeout.accesskey;" control="textDeliciousTimeout">&timeout.label;</label><textbox id="firestatus-textDeliciousTimeout" preference="firestatus-deliciousTimeout"/>
 	            </groupbox>
             </tabpanel>
             <tabpanel id="firestatus-identicaTab">
 	            <groupbox>
 		            <caption label="&identicaTab.label;"/>
-		                <checkbox id="firestatus-identicaEnabled" preference="firestatus-identicaEnabled" label="&enabled.label;" accesskey="&enabled.accesskey;" image="chrome://firestatus/skin/identica.png"/>
 		                <checkbox id="firestatus-identicaUpdatesEnabled" preference="firestatus-identicaUpdatesEnabled" label="&updatesEnabled.label;" accesskey="&updatesEnabled.accesskey;" image="chrome://firestatus/skin/identica.png"/>
 		                <label accesskey="&timeout.accesskey;" control="textIdenticaTimeout">&timeout.label;</label><textbox id="firestatus-textIdenticaTimeout" preference="firestatus-identicaTimeout"/>
 	            </groupbox>
@@ -127,12 +110,9 @@
 	                	<hbox>
                 	    <spacer width="20px"/>
 	                    <groupbox id="firestatus-bitlydata">
-	                        <caption label="&bitlyData.label;"/>
-	                        <label accesskey="&username.accesskey;" control="textBitlyUsername">&username.label;</label><textbox id="firestatus-textBitlyUsername" preference="firestatus-bitlyUsername"/>
-	                        <label accesskey="&textBitlyKey.accesskey;" control="textBitlyKey">&textBitlyKey.label;</label><textbox id="firestatus-textBitlyKey" preference="firestatus-bitlyKey"/>
-                   		    <label>&bitly.note1;</label>
-			                    <label>&bitly.note2;</label>
-			                    <label href='http://bit.ly/a/your_api_key' class='text-link'>http://bit.ly/a/your_api_key</label>
+	                        <label>&bitly.note1;</label>
+			                <label>&bitly.note2;</label>
+			                <label href='http://bit.ly/a/your_api_key' class='text-link'>http://bit.ly/a/your_api_key</label>
 	                    </groupbox>
 	                    </hbox>
 	                </radiogroup>
