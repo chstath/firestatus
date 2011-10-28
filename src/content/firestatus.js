@@ -98,8 +98,6 @@ if (typeof firestatus == "undefined") {
             this.queue.lastFacebookTimestamp = this.prefs.getCharPref("lastFacebookTimestamp");
     
             this.shortURLService = this.prefs.getCharPref("shortURLService");
-            this.bitlyUsername = this.prefs.getCharPref("bitlyUsername");
-            this.bitlyKey = this.prefs.getCharPref("bitlyKey");
     
             this.deliciousEnabled = this.prefs.getBoolPref("deliciousEnabled");
             this.deliciousShared = this.prefs.getBoolPref("deliciousShared");
@@ -152,7 +150,7 @@ if (typeof firestatus == "undefined") {
             var textField = window.document.getElementById('firestatus-statusText');
             var title = document.title;
             title = title.substr(0, title.lastIndexOf('-')-1).trim();
-            firestatus.url = document.getElementById("urlbar").value;
+            firestatus.url = window.top.getBrowser().selectedBrowser.contentWindow.location.href;
             firestatus.shortUrl = null;
             if (document.getElementById("firestatus-sendUrl").checked) {
                 if (document.getElementById("firestatus-shortenUrl").checked) {
@@ -444,12 +442,6 @@ if (typeof firestatus == "undefined") {
                                                                    this.identicaTimeout*60*1000);
                     }
                     break;
-                case "bitlyUsername":
-                    this.bitlyUsername = this.prefs.getCharPref("bitlyUsername");
-                    break;
-                case "bitlyKey":
-                    this.bitlyKey = this.prefs.getCharPref("bitlyKey");
-                    break;
             }
         },
     
@@ -658,6 +650,7 @@ if (typeof firestatus == "undefined") {
         },
         
         getTinyShortUrl: function (url, callback) {
+            dump(url);
             var req = new XMLHttpRequest();
             req.open('GET', 'http://tinyurl.com/api-create.php?url='+encodeURIComponent(url));
             
@@ -692,13 +685,38 @@ if (typeof firestatus == "undefined") {
         },
         
         getBitlyShortUrl: function (url, callback) {
+            var passwordManager = Components.classes["@mozilla.org/login-manager;1"].getService(Components.interfaces.nsILoginManager);
+            var nsLoginInfo = new Components.Constructor("@mozilla.org/login-manager/loginInfo;1",  
+                                     Components.interfaces.nsILoginInfo, "init");  
+            var logins = passwordManager.findLogins({}, "chrome://firestatus", null, "bitly_api");
+            if (logins.length > 0) {
+                var bitlyUsername = logins[0].username;
+                var bitlyKey = logins[0].password;
+            }
+            else {
+                bitlyUsername = prompt("Enter your bit.ly username (You will be asked only once)");
+                bitlyKey = prompt("Enter your bit.ly API key (You will be asked only once)");
+                var loginInfo = new nsLoginInfo("chrome://firestatus", null, "bitly_api", bitlyUsername, bitlyKey, 
+                              "", "");
+                passwordManager.addLogin(loginInfo);
+            }
+
             var req = new XMLHttpRequest();
-            req.open('GET', 'http://api.bitly.com/v3/shorten?login='+this.bitlyUsername+'&apiKey='+this.bitlyKey+'&longUrl='+encodeURIComponent(url)+'&format=json');
+            req.open('GET', 'http://api.bitly.com/v3/shorten?login=' + bitlyUsername + '&apiKey=' + bitlyKey + '&longUrl=' + encodeURIComponent(url) + '&format=json');
             
             req.onreadystatechange = function () {
                 if (req.readyState == 4) {
                     if (req.status == 200) {
-                        firestatus.shortUrl = JSON.parse(req.responseText).data.url;
+                        var resp = JSON.parse(req.responseText);
+                        if (resp.status_code == 500 && (resp.status_txt == 'INVALID_APIKEY' ||
+                                                        resp.status_txt == 'INVALID_LOGIN')) {
+                            for (var i=0; i<logins.length; i++)
+                                passwordManager.removeLogin(logins[i]);
+                            firestatus.getBitlyShortUrl(url, callback);
+                            return;
+                        }
+                        else
+                            firestatus.shortUrl = resp.data.url;
                     } else {
                         firestatus.cons.logStringMessage("Bit.ly returned error message: " + JSON.parse(req.responseText).status_txt);
                     };
@@ -829,85 +847,45 @@ if (typeof firestatus == "undefined") {
         
         statusInput: {
             onLoad: function(event) {
-                if (firestatus.twitterEnabled) {
-                    document.getElementById("firestatus-selectedConsumerTwitter").disabled = false;
-                    if (firestatus.prefs.prefHasUserValue("lastTwitterChecked")) {
-                        document.getElementById("firestatus-selectedConsumerTwitter").checked = firestatus.prefs.getBoolPref("lastTwitterChecked");
-                    }
-                    else {
-                        document.getElementById("firestatus-selectedConsumerTwitter").checked = true;
-                        firestatus.prefs.setBoolPref("lastTwitterChecked", true);
-                    }
+                if (firestatus.prefs.prefHasUserValue("lastTwitterChecked")) {
+                    document.getElementById("firestatus-selectedConsumerTwitter").checked = firestatus.prefs.getBoolPref("lastTwitterChecked");
                 }
                 else {
-                    document.getElementById("firestatus-selectedConsumerTwitter").disabled = true;
-                    document.getElementById("firestatus-selectedConsumerTwitter").checked = false;
-                    firestatus.prefs.setBoolPref("lastTwitterChecked", false);
+                    document.getElementById("firestatus-selectedConsumerTwitter").checked = true;
+                    firestatus.prefs.setBoolPref("lastTwitterChecked", true);
                 }
-                if (firestatus.friendfeedEnabled) {
-                    document.getElementById("firestatus-selectedConsumerFriendfeed").disabled = false;
-                    if (firestatus.prefs.prefHasUserValue("lastFriendfeedChecked")) {
-                        document.getElementById("firestatus-selectedConsumerFriendfeed").checked = firestatus.prefs.getBoolPref("lastFriendfeedChecked");
-                    }
-                    else {
-                        document.getElementById("firestatus-selectedConsumerFriendfeed").checked = true;
-                        firestatus.prefs.setBoolPref("lastFriendfeedChecked", true);
-                    }
+                if (firestatus.prefs.prefHasUserValue("lastFriendfeedChecked")) {
+                    document.getElementById("firestatus-selectedConsumerFriendfeed").checked = firestatus.prefs.getBoolPref("lastFriendfeedChecked");
                 }
                 else {
-                    document.getElementById("firestatus-selectedConsumerFriendfeed").disabled = true;
-                    document.getElementById("firestatus-selectedConsumerFriendfeed").checked = false;
-                    firestatus.prefs.setBoolPref("lastFriendfeedChecked", false);
+                    document.getElementById("firestatus-selectedConsumerFriendfeed").checked = true;
+                    firestatus.prefs.setBoolPref("lastFriendfeedChecked", true);
                 }
-                if (firestatus.facebookEnabled) {
-                    document.getElementById("firestatus-selectedConsumerFacebook").disabled = false;
-                    if (firestatus.prefs.prefHasUserValue("lastFacebookChecked")) {
-                        document.getElementById("firestatus-selectedConsumerFacebook").checked = firestatus.prefs.getBoolPref("lastFacebookChecked");
-                    }
-                    else {
-                        document.getElementById("firestatus-selectedConsumerFacebook").checked = true;
-                        firestatus.prefs.setBoolPref("lastFacebookChecked", true);
-                    }
+                document.getElementById("firestatus-selectedConsumerFacebook").disabled = false;
+                if (firestatus.prefs.prefHasUserValue("lastFacebookChecked")) {
+                    document.getElementById("firestatus-selectedConsumerFacebook").checked = firestatus.prefs.getBoolPref("lastFacebookChecked");
                 }
                 else {
-                    document.getElementById("firestatus-selectedConsumerFacebook").disabled = true;
-                    document.getElementById("firestatus-selectedConsumerFacebook").checked = false;
-                    firestatus.prefs.setBoolPref("lastFacebookChecked", false);
+                    document.getElementById("firestatus-selectedConsumerFacebook").checked = true;
+                    firestatus.prefs.setBoolPref("lastFacebookChecked", true);
                 }
-                if (firestatus.deliciousEnabled) {
-                    document.getElementById("firestatus-selectedConsumerDelicious").disabled = false;
-                    if (firestatus.prefs.prefHasUserValue("lastDeliciousChecked")) {
-                        document.getElementById("firestatus-selectedConsumerDelicious").checked = firestatus.prefs.getBoolPref("lastDeliciousChecked");
-                    }
-                    else {
-                        document.getElementById("firestatus-selectedConsumerDelicious").checked = true;
-                        firestatus.prefs.setBoolPref("lastDeliciousChecked", true);
-                    }
-                    if (document.getElementById("firestatus-selectedConsumerDelicious").checked)
-                        document.getElementById("firestatus-deliciousTags").hidden = false;
-                    else
-                        document.getElementById("firestatus-deliciousTags").hidden = true;
+                if (firestatus.prefs.prefHasUserValue("lastDeliciousChecked")) {
+                    document.getElementById("firestatus-selectedConsumerDelicious").checked = firestatus.prefs.getBoolPref("lastDeliciousChecked");
                 }
                 else {
-                    document.getElementById("firestatus-selectedConsumerDelicious").disabled = true;
-                    document.getElementById("firestatus-selectedConsumerDelicious").checked = false;
-                    firestatus.prefs.setBoolPref("lastDeliciousChecked", false);
+                    document.getElementById("firestatus-selectedConsumerDelicious").checked = true;
+                    firestatus.prefs.setBoolPref("lastDeliciousChecked", true);
+                }
+                if (document.getElementById("firestatus-selectedConsumerDelicious").checked)
+                    document.getElementById("firestatus-deliciousTags").hidden = false;
+                else
                     document.getElementById("firestatus-deliciousTags").hidden = true;
-                }
-                if (firestatus.identicaEnabled) {
-                    document.getElementById("firestatus-selectedConsumerIdentica").disabled = false;
-                    if (firestatus.prefs.prefHasUserValue("lastIdenticaChecked")) {
-                        document.getElementById("firestatus-selectedConsumerIdentica").checked = firestatus.prefs.getBoolPref("lastIdenticaChecked");
-                    }
-                    else {
-                        document.getElementById("firestatus-selectedConsumerIdentica").checked = true;
-                        firestatus.prefs.setBoolPref("lastIdenticaChecked", true);
-                    }
+                if (firestatus.prefs.prefHasUserValue("lastIdenticaChecked")) {
+                    document.getElementById("firestatus-selectedConsumerIdentica").checked = firestatus.prefs.getBoolPref("lastIdenticaChecked");
                 }
                 else {
-                    document.getElementById("firestatus-selectedConsumerIdentica").disabled = true;
-                    document.getElementById("firestatus-selectedConsumerIdentica").checked = false;
-                    firestatus.prefs.setBoolPref("lastIdenticaChecked", false);
+                    document.getElementById("firestatus-selectedConsumerIdentica").checked = true;
+                    firestatus.prefs.setBoolPref("lastIdenticaChecked", true);
                 }
                 document.getElementById("firestatus-statusText").focus();
             },
@@ -923,11 +901,11 @@ if (typeof firestatus == "undefined") {
             sendStatusUpdate: function() {
                 var statusText = document.getElementById('firestatus-statusText').value;
                 var deliciousTags = document.getElementById('firestatus-deliciousTags').value;
-                var sendTwitter = firestatus.twitterEnabled && document.getElementById("firestatus-selectedConsumerTwitter").checked;
-                var sendFriendfeed = firestatus.friendfeedEnabled && document.getElementById("firestatus-selectedConsumerFriendfeed").checked;
-                var sendFacebook = firestatus.facebookEnabled && document.getElementById("firestatus-selectedConsumerFacebook").checked;
-                var sendDelicious = firestatus.deliciousEnabled && document.getElementById("firestatus-selectedConsumerDelicious").checked;
-                var sendIdentica = firestatus.identicaEnabled && document.getElementById("firestatus-selectedConsumerIdentica").checked;
+                var sendTwitter = document.getElementById("firestatus-selectedConsumerTwitter").checked;
+                var sendFriendfeed = document.getElementById("firestatus-selectedConsumerFriendfeed").checked;
+                var sendFacebook = document.getElementById("firestatus-selectedConsumerFacebook").checked;
+                var sendDelicious = document.getElementById("firestatus-selectedConsumerDelicious").checked;
+                var sendIdentica = document.getElementById("firestatus-selectedConsumerIdentica").checked;
                 firestatus.actuallySendUpdate(statusText, deliciousTags, sendTwitter, sendFriendfeed, sendFacebook, sendDelicious, sendIdentica);
                 firestatus.hide();
             },
@@ -941,7 +919,7 @@ if (typeof firestatus == "undefined") {
                             firestatus.hide();
                             break;
                         case 13:
-                            statusInput.sendStatusUpdate();
+                            firestatus.statusInput.sendStatusUpdate();
                             break;
                     }
             },
@@ -956,19 +934,19 @@ if (typeof firestatus == "undefined") {
                 document.getElementById("firestatus-shortenUrl").disabled = document.getElementById("firestatus-sendUrl").checked;
                 var statusText = document.getElementById('firestatus-statusText').value;
                 if (document.getElementById("firestatus-sendUrl").checked) {
-                    document.getElementById('firestatus-statusText').value = statusInput.clearUrlFromStatus(statusText, document.getElementById("firestatus-shortenUrl").checked);
-                    statusInput.updateCharCount();
+                    document.getElementById('firestatus-statusText').value = firestatus.statusInput.clearUrlFromStatus(statusText, document.getElementById("firestatus-shortenUrl").checked);
+                    firestatus.statusInput.updateCharCount();
                 }
                 else {		
                     var mustShortenUrl = document.getElementById("firestatus-shortenUrl").checked;
                     if (!mustShortenUrl) {
                         document.getElementById('firestatus-statusText').value = statusText.trim() + " " + firestatus.url;
-                        statusInput.updateCharCount();
+                        firestatus.statusInput.updateCharCount();
                     }
                     else {
                         var doAfterShort = function () {
                             document.getElementById('firestatus-statusText').value = statusText.trim() + " " + firestatus.shortUrl;
-                            statusInput.updateCharCount();
+                            firestatus.statusInput.updateCharCount();
                         }
                         if (firestatus.shortUrl) {
                             doAfterShort();
@@ -982,15 +960,15 @@ if (typeof firestatus == "undefined") {
             toggleShortenUrl: function () {
                 var mustShortenUrl = !document.getElementById("firestatus-shortenUrl").checked;
                 var statusText = document.getElementById('firestatus-statusText').value;
-                var temp = statusInput.clearUrlFromStatus(statusText, !mustShortenUrl);
+                var temp = firestatus.statusInput.clearUrlFromStatus(statusText, !mustShortenUrl);
                 if (!mustShortenUrl) {
                     document.getElementById('firestatus-statusText').value = temp + " " + firestatus.url;
-                    statusInput.updateCharCount();
+                    firestatus.statusInput.updateCharCount();
                 }
                 else {
                     var doAfterShort = function () {
                         document.getElementById('firestatus-statusText').value = temp + " " + firestatus.shortUrl;
-                        statusInput.updateCharCount();
+                        firestatus.statusInput.updateCharCount();
                     }
                     if (firestatus.shortUrl) {
                         doAfterShort();
