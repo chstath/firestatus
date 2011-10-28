@@ -650,7 +650,6 @@ if (typeof firestatus == "undefined") {
         },
         
         getTinyShortUrl: function (url, callback) {
-            dump(url);
             var req = new XMLHttpRequest();
             req.open('GET', 'http://tinyurl.com/api-create.php?url='+encodeURIComponent(url));
             
