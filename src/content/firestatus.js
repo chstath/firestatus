@@ -25,20 +25,16 @@ if (typeof firestatus == "undefined") {
         IDENTICA_URL: 'http://identi.ca',
         cons: null,
         prefs: null,
-        twitterEnabled: false,
         twitterUpdatesEnabled: false,
         twitterTimeoutId: 0,
         twitterTimeout: 5,
-        friendfeedEnabled: false,
         friendfeedUpdatesEnabled: false,
         friendfeedTimeoutId: 0,
         friendfeedTimeout: 4,
-        facebookEnabled: false,
         facebookUpdatesEnabled: false,
         facebookTimeout: 6,
         facebookTimeoutId: 0,
         shortURLService: 0, //tinyUrl
-        deliciousEnabled: false,
         deliciousShared: true,
         deliciousUpdatesEnabled: false,
         deliciousUsername: "",
@@ -46,7 +42,6 @@ if (typeof firestatus == "undefined") {
         DELICIOUS_HOST: "https://api.del.icio.us",
         deliciousTimeoutId: 0,
         deliciousTimeout: 5,
-        identicaEnabled: false,
         identicaUpdatesEnabled: false,
         identicaUsername: "",
         IDENTICA_HOST: "http://identi.ca",
@@ -80,18 +75,15 @@ if (typeof firestatus == "undefined") {
             this.prefs.QueryInterface(Components.interfaces.nsIPrefBranch2);
             this.prefs.addObserver("", this, false);
     
-            this.twitterEnabled = this.prefs.getBoolPref("twitterEnabled");
             this.twitterUpdatesEnabled = this.prefs.getBoolPref("twitterUpdatesEnabled");
             firestatus.twitterClient.loadOauthPrefs();
             this.twitterTimeout = this.prefs.getIntPref("twitterTimeout");
             this.queue.lastTwitterId = this.prefs.getIntPref("lastTwitterId");
     
-            this.friendfeedEnabled = this.prefs.getBoolPref("friendfeedEnabled");
             this.friendfeedUpdatesEnabled = this.prefs.getBoolPref("friendfeedUpdatesEnabled");
             this.friendfeedTimeout = this.prefs.getIntPref("friendfeedTimeout");
             this.queue.lastFriendfeedId = this.prefs.getCharPref("lastFriendfeedId");
     
-            this.facebookEnabled = this.prefs.getBoolPref("facebookEnabled");
             this.facebookUpdatesEnabled = this.prefs.getBoolPref("facebookUpdatesEnabled");
             this.facebookClient.loadOauthPrefs();
             this.facebookTimeout = this.prefs.getIntPref("facebookTimeout");
@@ -99,18 +91,16 @@ if (typeof firestatus == "undefined") {
     
             this.shortURLService = this.prefs.getCharPref("shortURLService");
     
-            this.deliciousEnabled = this.prefs.getBoolPref("deliciousEnabled");
             this.deliciousShared = this.prefs.getBoolPref("deliciousShared");
             this.deliciousUpdatesEnabled = this.prefs.getBoolPref("deliciousUpdatesEnabled");
             this.deliciousUsername = this.prefs.getCharPref("deliciousUsername");
             this.deliciousTimeout = this.prefs.getIntPref("deliciousTimeout");
-            if (this.deliciousEnabled && window.document.getElementById("firestatus-selectedConsumerDelicious").checked)
+            if (window.document.getElementById("firestatus-selectedConsumerDelicious").checked)
                 window.document.getElementById("firestatus-deliciousTags").hidden = false;
             else
                 window.document.getElementById("firestatus-deliciousTags").hidden = true;
             this.queue.lastDeliciousTimestamp = this.prefs.getCharPref("lastDeliciousTimestamp");
     
-            this.identicaEnabled = this.prefs.getBoolPref("identicaEnabled");
             this.identicaUpdatesEnabled = this.prefs.getBoolPref("identicaUpdatesEnabled");
             firestatus.identicaClient.loadOauthPrefs();
             this.identicaTimeout = this.prefs.getIntPref("identicaTimeout");
@@ -258,24 +248,6 @@ if (typeof firestatus == "undefined") {
             }
     
             switch(data) {
-                case "twitterEnabled":
-                    this.twitterEnabled = this.prefs.getBoolPref("twitterEnabled");
-                    if (this.twitterEnabled) {
-                        window.document.getElementById("firestatus-selectedConsumerTwitter").disabled = false;
-                        if (this.prefs.prefHasUserValue("lastTwitterChecked")) {
-                            window.document.getElementById("firestatus-selectedConsumerTwitter").checked = this.prefs.getBoolPref("lastTwitterChecked");
-                        }
-                        else {
-                            window.document.getElementById("firestatus-selectedConsumerTwitter").checked = true;
-                            this.prefs.setBoolPref("lastTwitterChecked", true);
-                        }
-                    }
-                    else {
-                        window.document.getElementById("firestatus-selectedConsumerTwitter").disabled = true;
-                        window.document.getElementById("firestatus-selectedConsumerTwitter").checked = false;
-                        firestatus.prefs.setBoolPref("lastTwitterChecked", false);
-                    }
-                    break;
                 case "twitterUpdatesEnabled":
                     this.twitterUpdatesEnabled = this.prefs.getBoolPref("twitterUpdatesEnabled");
                     if (this.twitterUpdatesEnabled) {
@@ -291,24 +263,6 @@ if (typeof firestatus == "undefined") {
                         this.cancelUpdates("twitter");
                         this.twitterTimeoutId = window.setInterval(firestatus.twitterClient.twitterUpdates,
                                                                    this.twitterTimeout*60*1000);
-                    }
-                    break;
-                case "friendfeedEnabled":
-                    this.friendfeedEnabled = this.prefs.getBoolPref("friendfeedEnabled");
-                    if (this.friendfeedEnabled) {
-                        window.document.getElementById("firestatus-selectedConsumerFriendfeed").disabled = false;
-                        if (this.prefs.prefHasUserValue("lastFriendfeedChecked")) {
-                            window.document.getElementById("firestatus-selectedConsumerFriendfeed").checked = this.prefs.getBoolPref("lastFriendfeedChecked");
-                        }
-                        else {
-                            window.document.getElementById("firestatus-selectedConsumerFriendfeed").checked = true;
-                            this.prefs.setBoolPref("lastFriendfeedChecked", true);
-                        }
-                    }
-                    else {
-                        window.document.getElementById("firestatus-selectedConsumerFriendfeed").disabled = true;
-                        window.document.getElementById("firestatus-selectedConsumerFriendfeed").checked = false;
-                        firestatus.prefs.setBoolPref("lastFriendfeedChecked", false);
                     }
                     break;
                 case "friendfeedUpdatesEnabled":
@@ -328,24 +282,6 @@ if (typeof firestatus == "undefined") {
                                                                       this.friendfeedTimeout*60*1000);
                     }
                     break;
-                case "facebookEnabled":
-                    this.facebookEnabled = this.prefs.getBoolPref("facebookEnabled");
-                    if (this.facebookEnabled) {
-                        window.document.getElementById("firestatus-selectedConsumerFacebook").disabled = false;
-                        if (this.prefs.prefHasUserValue("lastFacebookChecked")) {
-                            window.document.getElementById("firestatus-selectedConsumerFacebook").checked = this.prefs.getBoolPref("lastFacebookChecked");
-                        }
-                        else {
-                            window.document.getElementById("firestatus-selectedConsumerFacebook").checked = true;
-                            this.prefs.setBoolPref("lastFacebookChecked", true);
-                        }
-                    }
-                    else {
-                        window.document.getElementById("firestatus-selectedConsumerFacebook").disabled = true;
-                        window.document.getElementById("firestatus-selectedConsumerFacebook").checked = false;
-                        firestatus.prefs.setBoolPref("lastFacebookChecked", false);
-                    }
-                    break;
                 case "facebookUpdatesEnabled":
                     this.facebookUpdatesEnabled = this.prefs.getBoolPref("facebookUpdatesEnabled");
                     if (this.facebookUpdatesEnabled) {
@@ -354,29 +290,6 @@ if (typeof firestatus == "undefined") {
                                                                       this.facebookTimeout*60*1000);
                     } else
                         this.cancelUpdates("facebook");
-                    break;
-                case "deliciousEnabled":
-                    this.deliciousEnabled = this.prefs.getBoolPref("deliciousEnabled");
-                    if (this.deliciousEnabled) {
-                        window.document.getElementById("firestatus-selectedConsumerDelicious").disabled = false;
-                        if (this.prefs.prefHasUserValue("lastDeliciousChecked")) {
-                            window.document.getElementById("firestatus-selectedConsumerDelicious").checked = this.prefs.getBoolPref("lastDeliciousChecked");
-                        }
-                        else {
-                            window.document.getElementById("firestatus-selectedConsumerDelicious").checked = true;
-                            this.prefs.setBoolPref("lastDeliciousChecked", true);
-                        }
-                        if (window.document.getElementById("firestatus-selectedConsumerDelicious").checked)
-                            window.document.getElementById("firestatus-deliciousTags").hidden = false;
-                        else
-                            window.document.getElementById("firestatus-deliciousTags").hidden = true;
-                    }
-                    else {
-                        window.document.getElementById("firestatus-selectedConsumerDelicious").disabled = true;
-                        window.document.getElementById("firestatus-selectedConsumerDelicious").checked = false;
-                        firestatus.prefs.setBoolPref("lastDeliciousChecked", false);
-                        window.document.getElementById("firestatus-deliciousTags").hidden = true;
-                    }
                     break;
                 case "deliciousShared":
                     this.deliciousShared = this.prefs.getBoolPref("deliciousShared");
@@ -403,24 +316,6 @@ if (typeof firestatus == "undefined") {
                     break;
                 case "shortURLService":
                     this.shortURLService = this.prefs.getCharPref("shortURLService");
-                    break;
-                case "identicaEnabled":
-                    this.identicaEnabled = this.prefs.getBoolPref("identicaEnabled");
-                    if (this.identicaEnabled) {
-                        window.document.getElementById("firestatus-selectedConsumerIdentica").disabled = false;
-                        if (this.prefs.prefHasUserValue("lastIdenticaChecked")) {
-                            window.document.getElementById("firestatus-selectedConsumerIdentica").checked = this.prefs.getBoolPref("lastIdenticaChecked");
-                        }
-                        else {
-                            window.document.getElementById("firestatus-selectedConsumerIdentica").checked = true;
-                            this.prefs.setBoolPref("lastIdenticaChecked", true);
-                        }
-                    }
-                    else {
-                        window.document.getElementById("firestatus-selectedConsumerIdentica").disabled = true;
-                        window.document.getElementById("firestatus-selectedConsumerIdentica").checked = false;
-                        firestatus.prefs.setBoolPref("lastIdenticaChecked", false);
-                    }
                     break;
                 case "identicaUpdatesEnabled":
                     this.identicaUpdatesEnabled = this.prefs.getBoolPref("identicaUpdatesEnabled");
