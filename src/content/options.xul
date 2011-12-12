@@ -32,7 +32,6 @@
       <preference id="firestatus-lastFriendfeedId" name="extensions.firestatus.lastFriendfeedId" type="string"/>
       <preference id="firestatus-facebookUpdatesEnabled" name="extensions.firestatus.facebookUpdatesEnabled" type="bool"/>
       <preference id="firestatus-facebookTimeout" name="extensions.firestatus.facebookTimeout" type="int"/>
-      <preference id="firestatus-deliciousEnabled" name="extensions.firestatus.deliciousEnabled" type="bool"/>
       <preference id="firestatus-deliciousShared" name="extensions.firestatus.deliciousShared" type="bool"/>
       <preference id="firestatus-deliciousUpdatesEnabled" name="extensions.firestatus.deliciousUpdatesEnabled" type="bool"/>
       <preference id="firestatus-deliciousTimeout" name="extensions.firestatus.deliciousTimeout" type="int"/>
