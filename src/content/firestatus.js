@@ -78,7 +78,7 @@ if (typeof firestatus == "undefined") {
             this.twitterUpdatesEnabled = this.prefs.getBoolPref("twitterUpdatesEnabled");
             firestatus.twitterClient.loadOauthPrefs();
             this.twitterTimeout = this.prefs.getIntPref("twitterTimeout");
-            this.queue.lastTwitterId = this.prefs.getIntPref("lastTwitterId");
+            this.queue.lastTwitterId = this.prefs.getCharPref("lastTwitterIdStr");
     
             this.friendfeedUpdatesEnabled = this.prefs.getBoolPref("friendfeedUpdatesEnabled");
             this.friendfeedTimeout = this.prefs.getIntPref("friendfeedTimeout");
@@ -359,15 +359,36 @@ if (typeof firestatus == "undefined") {
                     break;
             }
         },
-    
+        
+        loadFriendfeedCredentials: function() {
+            firestatus.friendfeedUsername = "";
+            firestatus.friendfeedRemoteKey = "";
+            var passwordManager = Components.classes["@mozilla.org/login-manager;1"].  
+                                getService(Components.interfaces.nsILoginManager);
+            var nsLoginInfo = new Components.Constructor("@mozilla.org/login-manager/loginInfo;1",  
+                                    Components.interfaces.nsILoginInfo, "init");  
+            var logins = passwordManager.findLogins({}, "http://friendfeed.com", null, "FriendFeed API");
+            if (logins) {
+                firestatus.friendfeedUsername = logins[0].username;
+                firestatus.friendfeedRemoteKey = logins[0].password;
+            }
+            dump("Friendfeed username: " + firestatus.friendfeedUsername + "\n");
+            dump("Friendfeed key: " + firestatus.friendfeedRemoteKey + "\n");
+        },
+
         friendfeedUpdates: function() {
             if (firestatus.queue.processingQueue) return;
+            if (!firestatus.friendfeedUsername || !firestatus.friendfeedRemoteKey) {
+                dump("No friendfeed credentials\n");
+                firestatus.loadFriendfeedCredentials();
+            }
             var FRIENDS_URL = firestatus.FRIENDFEED_URL + '/api/feed/home';
             var req = new XMLHttpRequest();
             req.open('GET', FRIENDS_URL, true);
             req.onreadystatechange = function (aEvt) {
               if (req.readyState == 4) {
-                     if(req.status == 200) {
+                    dump(req.status + ":" + req.responseText + "\n");
+                    if(req.status == 200) {
                             var Ci = Components.interfaces;
                             var Cc = Components.classes;
                             var jsonString = req.responseText;
@@ -402,11 +423,14 @@ if (typeof firestatus == "undefined") {
                                 firestatus.queue.processingQueue = true;
                                 firestatus.queue.displayNotification();
                             }
-                     } else
-                        firestatus.cons.logStringMessage("Error loading FF page. req.status="+req.status);
+                    } else
+                        firestatus.cons.logStringMessage("Error loading FF page. req.status=" + req.status);
               }
             };
+            var auth = firestatus.friendfeedUsername + ":" + firestatus.friendfeedRemoteKey;
+		    req.setRequestHeader("Authorization", "Basic " + btoa(auth));
             req.send(null);
+            dump("Friendfeed request sent\n");
         },
     
         facebookUpdates: function() {
@@ -661,7 +685,7 @@ if (typeof firestatus == "undefined") {
         sendStatusUpdateFacebook: function(statusText, url) {
             var title = document.title;
             title = title.substr(0, title.lastIndexOf('-')-1).trim();
-            st = firestatus.statusInput.clearUrlFromStatus(statusText, document.getElementById("firestatus-shortenUrl").checked);
+            var st = firestatus.statusInput.clearUrlFromStatus(statusText, document.getElementById("firestatus-shortenUrl").checked);
             if ((title == st) && url)
                 st = "";
             firestatus.facebookClient.sendStatus(st, url);

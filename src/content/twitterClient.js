@@ -42,12 +42,11 @@ twitterClient.getOauthHeader = function(httpMethod, url, parameters) {
     return firestatus.OAuth.getAuthorizationHeader("", message.parameters);
 };
 
-twitterClient.requestAccessToken = function(requestToken, pin, doNext, nextParams) {
+twitterClient.requestAccessToken = function(requestToken, verifier, doNext, nextParams) {
     var httpMethod = "POST";
     var accessTokenUrl = "https://api.twitter.com/oauth/access_token";    
     var parameters = [];
     parameters.push(["oauth_token", requestToken]);
-    parameters.push(["oauth_verifier", pin]);
     var oauthHeader = twitterClient.getOauthHeader(httpMethod, accessTokenUrl, parameters);
     var req = new XMLHttpRequest();
     req.open(httpMethod, accessTokenUrl, true);
@@ -96,7 +95,7 @@ twitterClient.requestAccessToken = function(requestToken, pin, doNext, nextParam
             }
         }
     }
-    req.send(null);
+    req.send("oauth_verifier=" + verifier);
 };
 
 twitterClient.authenticate = function (doNext, nextParams) {
@@ -104,8 +103,7 @@ twitterClient.authenticate = function (doNext, nextParams) {
     twitterClient.oauthTokenSecret = ""; //Must be cleared
     var httpMethod = "POST";
     var requestTokenUrl = "https://api.twitter.com/oauth/request_token";
-    var authorizationUrl = "https://api.twitter.com/oauth/authorize";
-    var callback = "oob";
+	var callback = "http://localhost/sign-in-with-twitter/";
     var parameters = [];
     parameters.push(["oauth_callback", callback]);
     
@@ -122,9 +120,14 @@ twitterClient.authenticate = function (doNext, nextParams) {
                     var tokens = response.split('&');
                     var oauth_token = tokens[0].substring(tokens[0].indexOf('=') + 1);
                     twitterClient.oauthTokenSecret = tokens[1].substring(tokens[1].indexOf('=') + 1);
-                    window.open(authorizationUrl + "?oauth_token=" + oauth_token, "", "centerscreen,width=646,height=520,modal=yes,close=yes,chrome");
-                    var pin = prompt("Enter PIN from twitter:");
-                    twitterClient.requestAccessToken(oauth_token, pin, doNext, nextParams);
+					var params = {
+						url: "https://api.twitter.com/oauth/authenticate",
+						oauth_token: oauth_token,
+						callback: "http://localhost/sign-in-with-twitter/",
+						retVal: ""
+					};
+                    window.openDialog("chrome://firestatus/content/twitterOAuth.xul", "", "centerscreen,width=646,height=520,modal=yes,close=yes,chrome", params);
+                    twitterClient.requestAccessToken(oauth_token, params.retVal, doNext, nextParams);
                     break;
                 default:
                     alert("Failed to authenticate with twitter. Reponse was " + req.status);
@@ -191,7 +194,7 @@ twitterClient.twitterUpdates = function() {
 					for (var i = 0; i < statuses.length; i++) {
 						var status = statuses[i];
 						var t = Date.parse(status.created_at);
-						if (status.id <= firestatus.queue.lastTwitterId)
+						if (status.id_str <= firestatus.queue.lastTwitterId)
 							continue;
 						var text = "";
 						try {
@@ -201,15 +204,15 @@ twitterClient.twitterUpdates = function() {
 										   status.text);
 						  text = status.text;
 						}
-						firestatus.queue.updateQueue.push({id: status.id,
+						firestatus.queue.updateQueue.push({id: status.id_str,
 								image: status.user.profile_image_url,
 								title: status.user.name,
 								text: status.text.length > 140 ? status.text.substring(0, 140) : status.text,
 								link: firestatus.TWITTER_URL + '/' + status.user.screen_name +
-                                        '/status/' + status.id});
+                                        '/status/' + status.id_str});
 					}
-					firestatus.queue.lastTwitterId = status.id;
-					firestatus.prefs.setIntPref("lastTwitterId", status.id);
+					firestatus.queue.lastTwitterId = status.id_str;
+					firestatus.prefs.setCharPref("lastTwitterIdStr", status.id_str);
 					if (!firestatus.queue.processingQueue) {
 						firestatus.queue.processingQueue = true;
 						firestatus.queue.displayNotification();
