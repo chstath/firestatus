@@ -9,10 +9,8 @@ if (typeof oAuthTwitterListener == "undefined") {
         },
     
         onLocationChange: function(aProgress, aRequest, aURI) {
-            dump("url=" + aURI.spec + '\n');
             var patt=/http:\/\/localhost\/sign-in-with-twitter\/\?oauth_token=(.*)&oauth_verifier=(.*)/;
             var grupo = patt.exec(aURI.spec);
-                dump("grupo=" +  grupo + "\n");
             if (grupo != null) {
                 window.arguments[0].retVal = grupo[2];
                 aProgress.removeProgressListener(this);
