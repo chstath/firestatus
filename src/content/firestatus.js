@@ -372,14 +372,11 @@ if (typeof firestatus == "undefined") {
                 firestatus.friendfeedUsername = logins[0].username;
                 firestatus.friendfeedRemoteKey = logins[0].password;
             }
-            dump("Friendfeed username: " + firestatus.friendfeedUsername + "\n");
-            dump("Friendfeed key: " + firestatus.friendfeedRemoteKey + "\n");
         },
 
         friendfeedUpdates: function() {
             if (firestatus.queue.processingQueue) return;
             if (!firestatus.friendfeedUsername || !firestatus.friendfeedRemoteKey) {
-                dump("No friendfeed credentials\n");
                 firestatus.loadFriendfeedCredentials();
             }
             var FRIENDS_URL = firestatus.FRIENDFEED_URL + '/api/feed/home';
@@ -387,7 +384,6 @@ if (typeof firestatus == "undefined") {
             req.open('GET', FRIENDS_URL, true);
             req.onreadystatechange = function (aEvt) {
               if (req.readyState == 4) {
-                    dump(req.status + ":" + req.responseText + "\n");
                     if(req.status == 200) {
                             var Ci = Components.interfaces;
                             var Cc = Components.classes;
@@ -430,7 +426,6 @@ if (typeof firestatus == "undefined") {
             var auth = firestatus.friendfeedUsername + ":" + firestatus.friendfeedRemoteKey;
 		    req.setRequestHeader("Authorization", "Basic " + btoa(auth));
             req.send(null);
-            dump("Friendfeed request sent\n");
         },
     
         facebookUpdates: function() {
