@@ -21,7 +21,7 @@ var EXPORTED_SYMBOLS = ["queue"]
 var queue = {
     // A FIFO queue that contains pending notifications.
     updateQueue: [],
-    lastTwitterId: 0,
+    lastTwitterId: "1",
     lastFriendfeedId: 0,
     lastDeliciousTimestamp: "0",
     lastIdenticaId: 0,

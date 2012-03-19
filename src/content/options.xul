@@ -25,7 +25,7 @@
     <preferences>
       <preference id="firestatus-twitterUpdatesEnabled" name="extensions.firestatus.twitterUpdatesEnabled" type="bool"/>
       <preference id="firestatus-twitterTimeout" name="extensions.firestatus.twitterTimeout" type="int"/>
-      <preference id="firestatus-lastTwitterId" name="extensions.firestatus.lastTwitterId" type="int"/>
+      <preference id="firestatus-lastTwitterId" name="extensions.firestatus.lastTwitterIdStr" type="string"/>
       <preference id="firestatus-lastTwitterTimestamp" name="extensions.firestatus.lastTwitterTimestamp" type="string"/>
       <preference id="firestatus-friendfeedUpdatesEnabled" name="extensions.firestatus.friendfeedUpdatesEnabled" type="bool"/>
       <preference id="firestatus-friendfeedTimeout" name="extensions.firestatus.friendfeedTimeout" type="int"/>
