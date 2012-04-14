@@ -39,7 +39,7 @@ if (typeof oAuthFBListener == "undefined") {
         oAuthProcess: function() {
             const XUL_NS = "http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul";
             var browser = document.createElementNS(XUL_NS, "browser");
-            browser.setAttribute("src", "https://www.facebook.com/dialog/oauth?client_id=11871218332&redirect_uri=https://www.facebook.com/connect/login_success.html&scope=read_stream,publish_stream,offline_access&response_type=token");
+            browser.setAttribute("src", "https://www.facebook.com/dialog/oauth?client_id=11871218332&redirect_uri=https://www.facebook.com/connect/login_success.html&scope=read_stream,publish_stream,offline_access,manage_notifications&response_type=token");
             browser.setAttribute("type", "content");
             browser.setAttribute("flex", "1");        
             browser.setAttribute("disablehistory", "true");                        

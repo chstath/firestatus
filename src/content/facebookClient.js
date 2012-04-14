@@ -111,11 +111,11 @@ facebookClient.getNotifications = function() {
         facebookClient.authenticate(facebookClient.getNotifications);
         return;
     }
-    
+
     var queries = {};
     queries.notifications = "select notification_id, title_text, href, updated_time from notification " + 
-        "where recipient_id=" + this.uid + " and is_unread=1 and is_hidden=0 and updated_time>" + firestatus.queue.lastFacebookTimestamp;
-    queries.user_stream = "select post_id, updated_time, message, permalink, attribution, actor_id, attachment from stream where updated_time>" + firestatus.queue.lastFacebookTimestamp + " and is_hidden=0 and source_id in (SELECT target_id FROM connection WHERE is_following=1 and source_id=" + this.uid + ")";    
+        "where recipient_id=" + facebookClient.uid + " and is_unread=1 and is_hidden=0 and updated_time>" + firestatus.queue.lastFacebookTimestamp;
+    queries.user_stream = "select post_id, updated_time, message, permalink, attribution, actor_id, attachment from stream where updated_time>" + firestatus.queue.lastFacebookTimestamp + " and is_hidden=0 and source_id in (SELECT target_id FROM connection WHERE is_following=1 and source_id=" + facebookClient.uid + ")";    
     queries.users = "select id, name, pic from profile where id in (select actor_id from #user_stream)";            
     var queriesStr = encodeURIComponent(JSON.stringify(queries));    
     var req = new XMLHttpRequest();
@@ -127,7 +127,7 @@ facebookClient.getNotifications = function() {
                 if (!response.error_code) {
                     facebookClient.showNotifications(response);
                 } else {
-                    alert("Error: " + response.error_msg);    
+                    alert("Error: " + response.error_msg); 
                 }
             } else {
                 alert("Error: " + req.status + ", " + JSON.parse(req.responseText).error_msg);                      

@@ -107,13 +107,12 @@ if (typeof firestatus == "undefined") {
             this.queue.lastIdenticaId = this.prefs.getIntPref("lastIdenticaId");
             this.queue.lastIdenticaTimestamp = this.prefs.getCharPref("lastIdenticaTimestamp");
     
-            this.initialTimeoutId = window.setTimeout(this.resume, 7*1000);
-    
             window.document.addEventListener('resize', function () {
                 window.document.getElementById('firestatus-statusText').width = window.innerWidth * 0.9 - 350;
                 window.document.getElementById('firestatus-deliciousTags').width = window.innerWidth * 0.9 - 350;
             }, false);
             firestatus.statusInput.onLoad(event);
+            this.initialTimeoutId = window.setTimeout(this.resume, 1*1000);
         },
     
         onUnload: function(event) {
